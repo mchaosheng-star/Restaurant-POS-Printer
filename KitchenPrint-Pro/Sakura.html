@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; font-family: Inter, sans-serif; }
+    :root {
+      --primary: #e07a5f;
+      --secondary: #81b29a;
+      --bg: #f5f5f5;
+      --text: #2d2d2d;
+      --card: #ffffff;
+      --line: #e7e7e7;
+    }
+    body {
+      display: flex;
+      height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 380px;
+      min-width: 380px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-right: 1px solid #ddd;
+      overflow: hidden;
+    }
+    .content {
+      flex: 1;
+      padding: 16px;
+      overflow: auto;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      padding: 14px;
+      overflow: auto;
+    }
+    .card.fill {
+      flex: 1;
+      min-height: 0;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+    }
+    .subtitle {
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #f0f0f0;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn.secondary {
+      background: #ddd;
+      color: #222;
+    }
+    .btn.green {
+      background: var(--secondary);
+      color: white;
+    }
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .order-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .grow {
+      flex: 1;
+      min-width: 0;
+    }
+    .small {
+      font-size: 12px;
+      color: #666;
+    }
+    .price {
+      color: var(--primary);
+      font-weight: 800;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .tab {
+      border: 1px solid #d0d0d0;
+      border-radius: 999px;
+      padding: 8px 14px;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .product {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      padding: 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 92px;
+    }
+    .product-name {
+      font-weight: 800;
+      line-height: 1.25;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d8d8d8;
+      border-radius: 10px;
+      background: white;
+    }
+    .gear {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      font-size: 22px;
+      z-index: 3000;
+    }
+    .toast {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+      display: none;
+      z-index: 4000;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 3500;
+    }
+    .modal-panel {
+      width: min(760px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .settings-layout {
+      display: grid;
+      gap: 16px;
+    }
+    .settings-section {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fafafa;
+    }
+    .settings-section-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .settings-section-note {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+    .settings-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    .settings-map-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 220px) 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .settings-map-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .settings-map-name {
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .settings-map-empty {
+      font-size: 13px;
+      color: #777;
+      padding: 10px 0;
+    }
+    .qty {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .qty button {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 8px;
+      background: #eee;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    @media (max-width: 1100px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100%; min-width: 0; max-height: 50vh; border-right: none; border-bottom: 1px solid #ddd; }
+      .grid { grid-template-columns: 1fr; }
+      .settings-map-row { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+
+  <div class="sidebar">
+    <div class="card fill">
+      <div class="row">
+        <div class="subtitle">Incoming Orders <span class="badge" id="incomingCount">0</span></div>
+        <button class="btn secondary" onclick="simulateUberOrder()">Simulate Uber</button>
+      </div>
+      <div class="order-list" id="incomingOrders"></div>
+    </div>
+
+    <div class="card fill">
+      <div class="subtitle">Accepted Orders <span class="badge" id="acceptedCount">0</span></div>
+      <div class="order-list" id="acceptedOrders"></div>
+    </div>
+
+    <div class="card" style="max-height:220px;">
+      <div class="subtitle">History Orders <span class="badge" id="historyCount">0</span></div>
+      <div class="order-list" id="historyOrders"></div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div class="subtitle">Order #<span id="orderNumber">1</span></div>
+        <button class="btn secondary" onclick="newOrder()">New</button>
+      </div>
+      <div class="order-list" id="currentOrder"></div>
+      <div class="row" style="margin-top:12px;">
+        <div class="subtitle" id="orderTotal">Total: $0.00</div>
+        <button class="btn primary" onclick="sendOrder()">Send</button>
+      </div>
+      <div class="field" style="margin-top:12px;">
+        <label>Order Notes</label>
+        <textarea id="orderNotes" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="title" style="margin-bottom:14px;">Sakura</div>
+    <div class="tabs" id="categories"></div>
+    <div class="grid" id="products"></div>
+  </div>
+
+  <div class="gear" onclick="openSettings()">⚙</div>
+
+  <div class="modal" id="settingsModal" onclick="if(event.target===this) closeSettings()">
+    <div class="modal-panel">
+      <div class="row" style="margin-bottom:14px;">
+        <div class="title" style="font-size:22px;">Settings</div>
+        <button class="btn secondary" onclick="closeSettings()">Close</button>
+      </div>
+      <div class="settings-layout">
+        <div class="settings-section">
+          <div class="settings-section-title">Default Printer</div>
+          <div class="settings-section-note">Used when no category printer is assigned.</div>
+          <div class="settings-grid">
+            <div class="field">
+              <label>Printer</label>
+              <select id="defaultPrinter"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">Special Printer</div>
+          <div class="settings-section-note">For sushi shrimp/crab add-on ticket.</div>
+          <div class="settings-grid">
+            <div class="field">
+              <label>Sushi Add-on Printer</label>
+              <select id="sushiAddonPrinter"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">Category To Printer</div>
+          <div class="settings-section-note">Choose which printer handles each menu category.</div>
+          <div class="stack" id="categoryPrinterMapping"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="optionsModal" onclick="if(event.target===this) closeOptions()">
+    <div class="modal-panel" style="max-width:560px;">
+      <div class="title" style="font-size:22px; margin-bottom:6px;" id="optionsTitle"></div>
+      <div class="small" id="optionsHint" style="margin-bottom:12px;"></div>
+      <div class="stack" id="optionsList"></div>
+      <div class="row" style="margin-top:14px;">
+        <button class="btn secondary" onclick="closeOptions()">Cancel</button>
+        <button class="btn primary" id="optionsConfirm" onclick="confirmOptions()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let menu = {};
+    let selectedCategory = null;
+    let currentOrder = JSON.parse(localStorage.getItem("currentOrder") || "[]");
+    let orderNotes = localStorage.getItem("orderNotes") || "";
+    let orderNumber = Number(localStorage.getItem("orderNumber") || "1") || 1;
+    let lineCounter = Number(localStorage.getItem("lineCounter") || "0") || 0;
+    let selectedPrinter = localStorage.getItem("selectedPrinter") || "";
+    let categoryPrinters = JSON.parse(localStorage.getItem("categoryPrinters") || "{}");
+    let specialPrinters = JSON.parse(localStorage.getItem("specialPrinters") || "{}");
+    let incomingOrders = [];
+    let acceptedOrders = [];
+    let optionItem = null;
+    let optionCategory = null;
+    let optionMin = 0;
+    let optionMax = 0;
+
+    function showToast(message) {
+      const t = document.getElementById("toast");
+      t.textContent = message;
+      t.style.display = "block";
+      setTimeout(() => t.style.display = "none", 1600);
+    }
+
+    function persistLocalOrder() {
+      localStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+      localStorage.setItem("orderNotes", orderNotes);
+      localStorage.setItem("orderNumber", String(orderNumber));
+      localStorage.setItem("lineCounter", String(lineCounter));
+    }
+
+    async function loadMenu() {
+      const res = await fetch("/api/menu");
+      menu = await res.json();
+      const categories = Object.keys(menu || {});
+      selectedCategory = categories[0] || null;
+      renderCategories();
+      renderProducts();
+      renderCurrentOrder();
+    }
+
+    function renderCategories() {
+      const el = document.getElementById("categories");
+      el.innerHTML = "";
+      Object.keys(menu || {}).forEach(category => {
+        const btn = document.createElement("button");
+        btn.className = "tab" + (category === selectedCategory ? " active" : "");
+        btn.textContent = category;
+        btn.onclick = () => {
+          selectedCategory = category;
+          renderCategories();
+          renderProducts();
+        };
+        el.appendChild(btn);
+      });
+    }
+
+    function renderProducts() {
+      const el = document.getElementById("products");
+      el.innerHTML = "";
+      (menu[selectedCategory] || []).forEach(item => {
+        const card = document.createElement("div");
+        card.className = "product";
+        card.innerHTML = `
+          <div class="product-name">${item.name}</div>
+          <div class="price">$${Number(item.price || 0).toFixed(2)}</div>
+        `;
+        card.onclick = () => addToOrder(item, selectedCategory);
+        el.appendChild(card);
+      });
+    }
+
+    function addToOrder(item, category) {
+      if (item.options && Array.isArray(item.options) && item.options.length) {
+        openOptions(item, category);
+        return;
+      }
+      lineCounter += 1;
+      currentOrder.push({
+        ...item,
+        quantity: 1,
+        comment: "",
+        orderId: `${item.id}-line-${lineCounter}`,
+        category,
+        selectedOptions: []
+      });
+      persistLocalOrder();
+      renderCurrentOrder();
+    }
+
+    function renderCurrentOrder() {
+      const list = document.getElementById("currentOrder");
+      const notesEl = document.getElementById("orderNotes");
+      list.innerHTML = "";
+      let total = 0;
+
+      currentOrder.forEach(item => {
+        let optionTotal = 0;
+        (item.selectedOptions || []).forEach(opt => optionTotal += Number(opt.price || 0));
+        const lineTotal = (Number(item.price || 0) + optionTotal) * Number(item.quantity || 1);
+        total += lineTotal;
+        const optionsText = (item.selectedOptions || []).map(o => o.name).join(", ");
+
+        const row = document.createElement("div");
+        row.className = "order-item";
+        row.innerHTML = `
+          <div class="grow">
+            <div style="font-weight:800;">${item.name}</div>
+            ${optionsText ? `<div class="small">${optionsText}</div>` : ""}
+            ${item.comment ? `<div class="small">Note: ${item.comment}</div>` : ""}
+          </div>
+          <div style="text-align:right;">
+            <div class="price">$${lineTotal.toFixed(2)}</div>
+            <div class="qty" style="margin-top:8px;">
+              <button onclick="changeQty('${item.orderId}', -1)">-</button>
+              <span>${item.quantity || 1}</span>
+              <button onclick="changeQty('${item.orderId}', 1)">+</button>
+            </div>
+            <div class="actions" style="margin-top:8px; justify-content:flex-end;">
+              <button class="btn secondary" style="padding:6px 10px;" onclick="editItemNote('${item.orderId}')">Note</button>
+              <button class="btn secondary" style="padding:6px 10px;" onclick="removeItem('${item.orderId}')">Remove</button>
+            </div>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+
+      document.getElementById("orderNumber").textContent = String(orderNumber);
+      document.getElementById("orderTotal").textContent = `Total: $${total.toFixed(2)}`;
+      notesEl.value = orderNotes;
+      notesEl.oninput = e => {
+        orderNotes = e.target.value;
+        persistLocalOrder();
+      };
+    }
+
+    function changeQty(orderId, delta) {
+      const item = currentOrder.find(i => String(i.orderId) === String(orderId));
+      if (!item) return;
+      item.quantity = Math.max(1, Number(item.quantity || 1) + delta);
+      persistLocalOrder();
+      renderCurrentOrder();
+    }
+
+    function removeItem(orderId) {
+      currentOrder = currentOrder.filter(i => String(i.orderId) !== String(orderId));
+      persistLocalOrder();
+      renderCurrentOrder();
+    }
+
+    function editItemNote(orderId) {
+      const item = currentOrder.find(i => String(i.orderId) === String(orderId));
+      if (!item) return;
+      const value = prompt("Item note:", item.comment || "");
+      if (value === null) return;
+      item.comment = String(value).trim();
+      persistLocalOrder();
+      renderCurrentOrder();
+    }
+
+    function newOrder() {
+      currentOrder = [];
+      orderNotes = "";
+      orderNumber += 1;
+      persistLocalOrder();
+      renderCurrentOrder();
+    }
+
+    async function sendOrder() {
+      if (!currentOrder.length) {
+        showToast("Order is empty");
+        return;
+      }
+      const notesEl = document.getElementById("orderNotes");
+      orderNotes = notesEl ? String(notesEl.value || "") : String(orderNotes || "");
+      persistLocalOrder();
+      const payload = {
+        number: orderNumber,
+        items: currentOrder,
+        universalComment: orderNotes,
+        printer: selectedPrinter || undefined,
+        categoryPrinters: categoryPrinters || {},
+        specialPrinters: specialPrinters || {}
+      };
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        showToast("Order sent");
+        newOrder();
+      } else {
+        showToast("Send failed");
+      }
+    }
+
+    async function pollQueues() {
+      try {
+        const [a, b] = await Promise.all([
+          fetch("/api/incoming"),
+          fetch("/api/accepted")
+        ]);
+        incomingOrders = await a.json();
+        acceptedOrders = await b.json();
+        renderIncomingOrders();
+        renderAcceptedOrders();
+        renderHistoryOrders();
+      } catch (e) {
+      }
+    }
+
+    function renderIncomingOrders() {
+      document.getElementById("incomingCount").textContent = String((incomingOrders || []).length || 0);
+      const el = document.getElementById("incomingOrders");
+      el.innerHTML = "";
+      (incomingOrders || []).slice().reverse().forEach(order => {
+        const data = order.order || {};
+        const summary = (data.items || []).map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
+        const isSimulated =
+          String(data.tableNumber || "").toLowerCase() === "uber" ||
+          String(data.universalComment || "").toLowerCase() === "simulated" ||
+          String(data.number || "").startsWith("UE-");
+
+        const row = document.createElement("div");
+        row.className = "order-item";
+        row.innerHTML = `
+          <div class="grow">
+            <div style="font-weight:800;">#${data.number || order.id}</div>
+            <div class="small">${order.received_at || ""}</div>
+            <div class="small" style="margin-top:4px;">${summary}</div>
+          </div>
+          <div class="actions" style="justify-content:flex-end;">
+            ${isSimulated ? `<button class="btn secondary" onclick="removeIncoming(${order.id})">Remove</button>` : ""}
+            <button class="btn primary" onclick="acceptIncoming(${order.id})">Accept</button>
+          </div>
+        `;
+        el.appendChild(row);
+      });
+    }
+
+    function renderAcceptedOrders() {
+      const active = (acceptedOrders || []).filter(o => o.status !== "finished");
+      document.getElementById("acceptedCount").textContent = String(active.length || 0);
+      const el = document.getElementById("acceptedOrders");
+      el.innerHTML = "";
+
+      active.slice().reverse().forEach(order => {
+        const data = order.order || {};
+        const summary = (data.items || []).map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
+        const row = document.createElement("div");
+        row.className = "order-item";
+        row.innerHTML = `
+          <div class="grow">
+            <div style="font-weight:800;">#${data.number || order.id}</div>
+            <div class="small">${order.accepted_at || ""}</div>
+            <div class="small" style="margin-top:4px;">${summary}</div>
+          </div>
+          <button class="btn green" onclick="finishAccepted(${order.id})">Done</button>
+        `;
+        el.appendChild(row);
+      });
+    }
+
+    function renderHistoryOrders() {
+      const finished = (acceptedOrders || []).filter(o => o.status === "finished");
+      document.getElementById("historyCount").textContent = String(finished.length || 0);
+      const el = document.getElementById("historyOrders");
+      el.innerHTML = "";
+
+      finished.slice().reverse().forEach(order => {
+        const data = order.order || {};
+        const summary = (data.items || []).map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
+        const row = document.createElement("div");
+        row.className = "order-item";
+        row.innerHTML = `
+          <div class="grow">
+            <div style="font-weight:800;">#${data.number || order.id}</div>
+            <div class="small">Accepted: ${order.accepted_at || ""}</div>
+            <div class="small">Done: ${order.finished_at || ""}</div>
+            <div class="small" style="margin-top:4px;">${summary}</div>
+          </div>
+        `;
+        el.appendChild(row);
+      });
+    }
+
+    async function acceptIncoming(id) {
+      const res = await fetch(`/api/incoming/${id}/accept`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          categoryPrinters: categoryPrinters || {},
+          specialPrinters: specialPrinters || {}
+        })
+      });
+      if (res.ok) {
+        showToast("Accepted");
+        pollQueues();
+      } else {
+        showToast("Accept failed");
+      }
+    }
+
+    async function removeIncoming(id) {
+      const res = await fetch(`/api/incoming/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        showToast("Removed");
+        pollQueues();
+      } else {
+        showToast("Remove failed");
+      }
+    }
+
+    async function finishAccepted(id) {
+      const res = await fetch(`/api/accepted/${id}/finish`, { method: "POST" });
+      if (res.ok) {
+        showToast("Finished");
+        pollQueues();
+      } else {
+        showToast("Finish failed");
+      }
+    }
+
+    async function simulateUberOrder() {
+      const now = Date.now();
+      const payload = {
+        order_id: `UE-${now}`,
+        tableNumber: "Uber",
+        items: [
+          { name: "California Roll", quantity: 1, price: 6.95 },
+          { name: "Shrimp Tempura Roll", quantity: 1, price: 9.95 }
+        ],
+        note: "Simulated"
+      };
+      const res = await fetch("/api/ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        showToast("Incoming added");
+        pollQueues();
+      } else {
+        showToast("Simulate failed");
+      }
+    }
+
+    async function openSettings() {
+      document.getElementById("settingsModal").style.display = "flex";
+      const [printerRes, menuRes] = await Promise.all([
+        fetch("/api/printers"),
+        fetch("/api/menu")
+      ]);
+      const printers = await printerRes.json();
+      const liveMenu = await menuRes.json();
+      menu = liveMenu || menu;
+
+      const printerOptions = `<option value="">(auto)</option>` + (Array.isArray(printers) ? printers.map(p => `<option value="${String(p).replace(/"/g, "&quot;")}">${p}</option>`).join("") : "");
+      const defaultSelect = document.getElementById("defaultPrinter");
+      defaultSelect.innerHTML = printerOptions;
+      defaultSelect.value = selectedPrinter || "";
+      defaultSelect.onchange = () => {
+        selectedPrinter = defaultSelect.value || "";
+        localStorage.setItem("selectedPrinter", selectedPrinter);
+      };
+
+      const sushiAddonSelect = document.getElementById("sushiAddonPrinter");
+      if (sushiAddonSelect) {
+        sushiAddonSelect.innerHTML = printerOptions;
+        sushiAddonSelect.value = specialPrinters.sushi_addon || "";
+        sushiAddonSelect.onchange = () => {
+          if (sushiAddonSelect.value) specialPrinters.sushi_addon = sushiAddonSelect.value;
+          else delete specialPrinters.sushi_addon;
+          localStorage.setItem("specialPrinters", JSON.stringify(specialPrinters));
+        };
+      }
+
+      const wrap = document.getElementById("categoryPrinterMapping");
+      wrap.innerHTML = "";
+      const categories = Object.keys(menu || {});
+      if (!categories.length) {
+        wrap.innerHTML = `<div class="settings-map-empty">No categories found.</div>`;
+        return;
+      }
+      categories.forEach(category => {
+        const row = document.createElement("div");
+        row.className = "settings-map-row";
+        row.innerHTML = `<div class="settings-map-name">${category}</div><select></select>`;
+        const select = row.querySelector("select");
+        select.innerHTML = `<option value="">(none)</option>` + (Array.isArray(printers) ? printers.map(p => `<option value="${String(p).replace(/"/g, "&quot;")}">${p}</option>`).join("") : "");
+        select.value = categoryPrinters[category] || "";
+        select.onchange = () => {
+          if (select.value) categoryPrinters[category] = select.value;
+          else delete categoryPrinters[category];
+          localStorage.setItem("categoryPrinters", JSON.stringify(categoryPrinters));
+        };
+        wrap.appendChild(row);
+      });
+    }
+
+    function closeSettings() {
+      document.getElementById("settingsModal").style.display = "none";
+    }
+
+    function openOptions(item, category) {
+      optionItem = item;
+      optionCategory = category;
+      optionMin = Number(item.selectMin || 0) || 0;
+      optionMax = Number(item.selectMax || 0) || 0;
+
+      document.getElementById("optionsTitle").textContent = item.name;
+      const minNeed = optionMin || optionMax || 1;
+      document.getElementById("optionsHint").textContent = optionMax ? `Pick ${minNeed}${optionMax !== minNeed ? `-${optionMax}` : ""}` : "Pick option(s)";
+
+      const list = document.getElementById("optionsList");
+      list.innerHTML = "";
+      (item.options || []).forEach(opt => {
+        const name = typeof opt === "string" ? opt : opt.name;
+        const price = typeof opt === "string" ? 0 : Number(opt.price || 0);
+        const row = document.createElement("label");
+        row.className = "order-item";
+        row.style.cursor = "pointer";
+        row.innerHTML = `
+          <div class="grow">
+            <div style="font-weight:800;">${name}</div>
+            ${price ? `<div class="small">+$${price.toFixed(2)}</div>` : ""}
+          </div>
+          <input type="checkbox">
+        `;
+        row.querySelector("input").onchange = updateOptionState;
+        list.appendChild(row);
+      });
+
+      updateOptionState();
+      document.getElementById("optionsModal").style.display = "flex";
+    }
+
+    function updateOptionState() {
+      const checkboxes = [...document.querySelectorAll("#optionsList input[type=checkbox]")];
+      let checked = checkboxes.filter(c => c.checked).length;
+      if (optionMax && checked > optionMax) {
+        for (let i = checkboxes.length - 1; i >= 0 && checked > optionMax; i--) {
+          if (checkboxes[i].checked) {
+            checkboxes[i].checked = false;
+            checked -= 1;
+          }
+        }
+      }
+      const confirm = document.getElementById("optionsConfirm");
+      if (optionMax) {
+        const minNeed = optionMin || optionMax;
+        confirm.disabled = !(checked >= minNeed && checked <= optionMax);
+      } else {
+        confirm.disabled = checked === 0;
+      }
+    }
+
+    function confirmOptions() {
+      const rows = [...document.querySelectorAll("#optionsList .order-item")];
+      const selected = [];
+      rows.forEach(row => {
+        const checked = row.querySelector("input").checked;
+        if (!checked) return;
+        const name = row.querySelector(".grow div").textContent;
+        const small = row.querySelector(".small");
+        let price = 0;
+        if (small) {
+          const m = small.textContent.match(/([0-9]+(\.[0-9]+)?)/);
+          if (m) price = Number(m[1]);
+        }
+        selected.push({ name, price });
+      });
+
+      lineCounter += 1;
+      currentOrder.push({
+        ...optionItem,
+        quantity: 1,
+        comment: "",
+        orderId: `${optionItem.id}-line-${lineCounter}`,
+        category: optionCategory || "",
+        selectedOptions: selected
+      });
+      persistLocalOrder();
+      renderCurrentOrder();
+      closeOptions();
+    }
+
+    function closeOptions() {
+      document.getElementById("optionsModal").style.display = "none";
+      optionItem = null;
+      optionCategory = null;
+      optionMin = 0;
+      optionMax = 0;
+    }
+
+    loadMenu();
+    pollQueues();
+    setInterval(pollQueues, 2000);
+  </script>
+</body>
+</html>
