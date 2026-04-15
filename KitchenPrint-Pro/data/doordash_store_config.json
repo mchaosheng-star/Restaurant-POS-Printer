@@ -1,0 +1,17 @@
+{
+  "accessKey": {
+    "developer_id": "",
+    "key_id": "",
+    "signing_secret": ""
+  },
+  "webhookToken": "",
+  "storeLocationId": "",
+  "printer": "",
+  "categoryPrinters": {},
+  "specialPrinters": {},
+  "storeHours": {
+    "merchant_supplied_store_id": "",
+    "open_hours": [],
+    "special_hours": []
+  }
+}

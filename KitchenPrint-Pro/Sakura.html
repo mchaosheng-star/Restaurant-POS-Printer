@@ -4,16 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sakura</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; font-family: Inter, sans-serif; }
     :root {
-      --primary: #e07a5f;
-      --secondary: #81b29a;
-      --bg: #f5f5f5;
-      --text: #2d2d2d;
+      --primary: #d7654b;
+      --primary-dark: #b94f38;
+      --secondary: #4d9d83;
+      --bg: #f4f1ec;
+      --text: #2f261f;
+      --muted: #726457;
       --card: #ffffff;
+      --card-soft: #fcfaf7;
       --line: #e7e7e7;
+      --line-strong: #ddd2c6;
+      --shadow-sm: 0 8px 20px rgba(66, 42, 24, 0.06);
+      --shadow-md: 0 18px 34px rgba(66, 42, 24, 0.09);
+      --radius-lg: 20px;
+      --radius-md: 16px;
     }
     body {
       display: flex;
@@ -21,32 +29,117 @@
       background: var(--bg);
       color: var(--text);
       overflow: hidden;
+      line-height: 1.4;
     }
     .sidebar {
-      width: 380px;
-      min-width: 380px;
-      padding: 16px;
+      width: 420px;
+      min-width: 420px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      border-right: 1px solid #ddd;
-      overflow: hidden;
+      gap: 14px;
+      border-right: 1px solid var(--line-strong);
+      background: linear-gradient(180deg, #f8f3ee 0%, #f1ebe5 100%);
+      overflow: auto;
     }
     .content {
       flex: 1;
-      padding: 16px;
+      padding: 20px;
       overflow: auto;
+    }
+    .main-shell {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .main-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .main-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .main-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
+    .content-card {
+      background: linear-gradient(180deg, #fffdfa 0%, #f9f5f0 100%);
+      border: 1px solid rgba(221, 210, 198, 0.8);
+      border-radius: 24px;
+      box-shadow: var(--shadow-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 0;
     }
     .card {
       background: var(--card);
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-      padding: 14px;
-      overflow: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(221, 210, 198, 0.85);
+      box-shadow: var(--shadow-sm);
+      padding: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     .card.fill {
-      flex: 1;
       min-height: 0;
+    }
+    .queue-card {
+      flex: 0 1 200px;
+      min-height: 180px;
+    }
+    .queue-card .order-list {
+      flex: 1;
+    }
+    .queue-card .order-item {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .queue-card .order-right {
+      width: 100%;
+      min-width: 0;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .queue-card .actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+    .queue-card .order-title-row {
+      flex-wrap: wrap;
+    }
+    .queue-card .order-chip {
+      max-width: 100%;
+    }
+    .current-order-card {
+      background: linear-gradient(180deg, #fffdf9 0%, #fff8f1 100%);
+      flex: 1.5 1 460px;
+      min-height: 430px;
+    }
+    .current-order-card .order-list {
+      flex: 1;
+      min-height: 220px;
+      max-height: none;
     }
     .row {
       display: flex;
@@ -54,44 +147,96 @@
       justify-content: space-between;
       gap: 10px;
     }
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .section-title-group {
+      min-width: 0;
+    }
     .title {
-      font-size: 24px;
+      font-size: 30px;
       font-weight: 800;
+      letter-spacing: -0.03em;
     }
     .subtitle {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
     }
     .badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 22px;
-      height: 22px;
+      min-width: 24px;
+      height: 24px;
       padding: 0 8px;
       border-radius: 999px;
-      background: #f0f0f0;
+      background: rgba(215, 101, 75, 0.12);
+      color: var(--primary);
       font-size: 12px;
       font-weight: 700;
     }
     .btn {
       border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 999px;
+      padding: 10px 16px;
       cursor: pointer;
       font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+      box-shadow: none;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+    .btn:focus-visible,
+    .tab:focus-visible,
+    .product:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid rgba(215, 101, 75, 0.18);
+      outline-offset: 2px;
+    }
+    .btn:disabled {
+      cursor: not-allowed;
+      transform: none;
+      opacity: 0.55;
+    }
+    .btn.small {
+      padding: 7px 12px;
+      font-size: 12px;
     }
     .btn.primary {
       background: var(--primary);
       color: white;
+      box-shadow: 0 10px 20px rgba(215, 101, 75, 0.22);
+    }
+    .btn.primary:hover {
+      background: var(--primary-dark);
     }
     .btn.secondary {
-      background: #ddd;
-      color: #222;
+      background: #f2ebe4;
+      color: var(--text);
+      border: 1px solid rgba(221, 210, 198, 0.9);
     }
     .btn.green {
       background: var(--secondary);
       color: white;
+      box-shadow: 0 10px 20px rgba(77, 157, 131, 0.2);
+    }
+    .btn.green:hover {
+      background: #3b876f;
     }
     .stack {
       display: flex;
@@ -102,45 +247,133 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      min-height: 0;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .order-list:empty {
+      overflow: hidden;
+    }
+    .history-item {
+      cursor: pointer;
+      display: block;
+    }
+    .history-item-details {
+      display: none;
       margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+    .history-item.open .history-item-details {
+      display: block;
+    }
+    @keyframes historyReveal {
+      from { opacity: 0; transform: translateY(-2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .history-item.open .history-item-details {
+      animation: historyReveal 0.15s ease;
     }
     .order-item {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px;
+      border: 1px solid rgba(221, 210, 198, 0.9);
+      border-radius: var(--radius-md);
+      padding: 14px;
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: flex-start;
+      background: var(--card-soft);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    .order-item:hover {
+      border-color: rgba(215, 101, 75, 0.24);
+      box-shadow: 0 8px 18px rgba(66, 42, 24, 0.05);
     }
     .grow {
       flex: 1;
       min-width: 0;
     }
+    .order-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .order-title {
+      font-weight: 800;
+      line-height: 1.2;
+      font-size: 15px;
+    }
+    .order-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .order-summary {
+      font-size: 13px;
+      color: var(--text);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .order-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+    .order-right {
+      min-width: 92px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .order-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(77, 157, 131, 0.12);
+      color: var(--secondary);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
     .small {
       font-size: 12px;
-      color: #666;
+      color: var(--muted);
+    }
+    .detail-line {
+      margin-top: 4px;
     }
     .actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
+    .actions-end {
+      justify-content: flex-end;
+    }
     .tabs {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
+      gap: 10px;
     }
     .tab {
-      border: 1px solid #d0d0d0;
+      border: 1px solid rgba(221, 210, 198, 0.9);
       border-radius: 999px;
-      padding: 8px 14px;
-      background: white;
+      padding: 10px 15px;
+      background: rgba(255, 255, 255, 0.92);
       cursor: pointer;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      color: var(--text);
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .tab:hover {
+      transform: translateY(-1px);
+      border-color: rgba(215, 101, 75, 0.28);
+      box-shadow: 0 8px 18px rgba(66, 42, 24, 0.05);
     }
     .tab-icon {
       font-size: 1.2em;
@@ -153,42 +386,105 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+      align-content: start;
+    }
+    .grid .empty-state {
+      grid-column: 1 / -1;
     }
     .product {
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-      padding: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 18px;
+      border: 1px solid rgba(221, 210, 198, 0.9);
+      box-shadow: var(--shadow-sm);
+      padding: 16px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       gap: 8px;
-      min-height: 92px;
+      min-height: 112px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .product:hover {
+      transform: translateY(-2px);
+      border-color: rgba(215, 101, 75, 0.28);
+      box-shadow: 0 16px 28px rgba(66, 42, 24, 0.08);
     }
     .product-name {
       font-weight: 800;
       line-height: 1.25;
+      font-size: 16px;
+    }
+    .product-subtitle {
+      color: var(--muted);
+      font-size: 13px;
     }
     .field {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
+    .current-order-card .field {
+      margin-top: auto;
+    }
     input, select, textarea {
       width: 100%;
+      padding: 11px 12px;
+      border: 1px solid rgba(221, 210, 198, 0.95);
+      border-radius: 14px;
+      background: #fffdfa;
+      color: var(--text);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 92px;
+    }
+    .history-select {
+      width: auto;
+      min-width: 148px;
+      background: #fff;
+    }
+    .history-page-modal {
       padding: 10px;
-      border: 1px solid #d8d8d8;
-      border-radius: 10px;
-      background: white;
+    }
+    .history-page-panel {
+      width: min(1180px, 100%);
+      height: min(92vh, 980px);
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .history-page-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .history-page-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .history-page-body {
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .history-page-body .order-list {
+      flex: 1;
     }
     .gear {
       position: fixed;
-      right: 16px;
-      bottom: 16px;
-      width: 52px;
-      height: 52px;
+      right: 20px;
+      bottom: 20px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       background: var(--primary);
       color: white;
@@ -196,7 +492,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 18px 28px rgba(215, 101, 75, 0.24);
       font-size: 22px;
       z-index: 3000;
     }
@@ -205,17 +501,18 @@
       top: 18px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--primary);
+      background: rgba(47, 38, 31, 0.94);
       color: white;
-      padding: 10px 16px;
-      border-radius: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
       display: none;
       z-index: 4000;
+      box-shadow: 0 16px 24px rgba(47, 38, 31, 0.16);
     }
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
+      background: rgba(37, 28, 20, 0.38);
       display: none;
       align-items: center;
       justify-content: center;
@@ -226,9 +523,11 @@
       width: min(760px, 100%);
       max-height: 90vh;
       overflow: auto;
-      background: white;
-      border-radius: 16px;
-      padding: 16px;
+      background: linear-gradient(180deg, #fffdf9 0%, #f9f4ee 100%);
+      border-radius: 24px;
+      padding: 20px;
+      border: 1px solid rgba(221, 210, 198, 0.9);
+      box-shadow: var(--shadow-md);
     }
     .settings-layout {
       display: grid;
@@ -236,9 +535,9 @@
     }
     .settings-section {
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 14px;
-      background: #fafafa;
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.72);
     }
     .settings-section-title {
       font-size: 16px;
@@ -247,7 +546,7 @@
     }
     .settings-section-note {
       font-size: 12px;
-      color: #666;
+      color: var(--muted);
       margin-bottom: 12px;
     }
     .settings-grid {
@@ -280,28 +579,137 @@
     }
     .settings-map-empty {
       font-size: 13px;
-      color: #777;
+      color: var(--muted);
       padding: 10px 0;
+    }
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .modal-title-zh {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .empty-state {
+      border: 1px dashed rgba(221, 210, 198, 0.95);
+      border-radius: 18px;
+      padding: 18px 16px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.72);
+    }
+    .empty-state-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .empty-state-text {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
     }
     .qty {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(242, 235, 228, 0.95);
     }
     .qty button {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border: none;
-      border-radius: 8px;
-      background: #eee;
+      border-radius: 999px;
+      background: white;
       cursor: pointer;
       font-weight: 800;
+      color: var(--text);
+    }
+    .qty span {
+      min-width: 26px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .option-row {
+      cursor: pointer;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .option-row input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
     }
     @media (max-width: 1100px) {
       body { flex-direction: column; }
-      .sidebar { width: 100%; min-width: 0; max-height: 50vh; border-right: none; border-bottom: 1px solid #ddd; }
-      .grid { grid-template-columns: 1fr; }
+      .sidebar {
+        width: 100%;
+        min-width: 0;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid var(--line-strong);
+      }
+      .queue-card {
+        flex: 0 1 180px;
+      }
+      .current-order-card {
+        flex: 1 1 360px;
+        min-height: 360px;
+      }
+      .content {
+        padding: 16px;
+      }
+      .title {
+        font-size: 26px;
+      }
       .settings-map-row { grid-template-columns: 1fr; gap: 8px; }
+    }
+    @media (max-width: 720px) {
+      .sidebar {
+        padding: 14px;
+        max-height: none;
+      }
+      .content {
+        padding: 14px;
+      }
+      .card,
+      .content-card,
+      .modal-panel {
+        border-radius: 18px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .section-head,
+      .row {
+        flex-wrap: wrap;
+      }
+      .order-right {
+        width: 100%;
+        min-width: 0;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .current-order-card {
+        min-height: 320px;
+      }
+      .history-select {
+        width: 100%;
+      }
+      .history-page-panel {
+        height: 94vh;
+      }
+      .main-header-actions,
+      .history-page-controls {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -309,34 +717,40 @@
   <div class="toast" id="toast"></div>
 
   <div class="sidebar">
-    <div class="card fill">
-      <div class="row">
-        <div class="subtitle">Incoming Orders <span class="badge" id="incomingCount">0</span></div>
-        <button class="btn secondary" onclick="simulateUberOrder()">Simulate Uber</button>
+    <div class="card fill queue-card">
+      <div class="section-head">
+        <div class="section-title-group">
+          <div class="subtitle">Incoming Orders <span class="badge" id="incomingCount">0</span></div>
+          <div class="section-note">New orders waiting for action.</div>
+        </div>
+        <button class="btn secondary small" onclick="simulateUberOrder()">Simulate Uber</button>
       </div>
       <div class="order-list" id="incomingOrders"></div>
     </div>
 
-    <div class="card fill">
-      <div class="subtitle">Accepted Orders <span class="badge" id="acceptedCount">0</span></div>
+    <div class="card fill queue-card">
+      <div class="section-head">
+        <div class="section-title-group">
+          <div class="subtitle">Accepted Orders <span class="badge" id="acceptedCount">0</span></div>
+          <div class="section-note">Active kitchen tickets in progress.</div>
+        </div>
+      </div>
       <div class="order-list" id="acceptedOrders"></div>
     </div>
 
-    <div class="card" style="max-height:220px;">
-      <div class="subtitle">History Orders <span class="badge" id="historyCount">0</span></div>
-      <div class="order-list" id="historyOrders"></div>
-    </div>
-
-    <div class="card">
-      <div class="row">
-        <div class="subtitle">Order #<span id="orderNumber">1</span></div>
-        <button class="btn secondary" onclick="newOrder()">New</button>
+    <div class="card current-order-card fill">
+      <div class="section-head">
+        <div class="section-title-group">
+          <div class="subtitle">Order #<span id="orderNumber">1</span></div>
+          <div class="section-note">Build the current ticket here.</div>
+        </div>
+        <button class="btn secondary small" onclick="newOrder()">New</button>
       </div>
       <div class="order-list" id="currentOrder"></div>
-      <div class="row" style="margin-top:12px; justify-content:flex-end;">
+      <div class="row" style="justify-content:flex-end;">
         <button class="btn primary" onclick="sendOrder()">Send</button>
       </div>
-      <div class="field" style="margin-top:12px;">
+      <div class="field">
         <label>Order Notes</label>
         <textarea id="orderNotes" rows="3"></textarea>
       </div>
@@ -344,17 +758,33 @@
   </div>
 
   <div class="content">
-    <div class="title" style="margin-bottom:14px;">Sakura</div>
-    <div class="tabs" id="categories"></div>
-    <div class="grid" id="products"></div>
+    <div class="main-shell">
+      <div class="main-header">
+        <div>
+          <div class="eyebrow">Sakura Kitchen</div>
+          <div class="title">Order Console</div>
+          <div class="main-subtitle">Fast tablet-friendly ordering for front desk and service staff.</div>
+        </div>
+        <div class="main-header-actions">
+          <button class="btn secondary" onclick="openHistoryPage()">History <span class="badge" id="historyCount">0</span></button>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="tabs" id="categories"></div>
+        <div class="grid" id="products"></div>
+      </div>
+    </div>
   </div>
 
   <div class="gear" onclick="openSettings()">⚙</div>
 
   <div class="modal" id="settingsModal" onclick="if(event.target===this) closeSettings()">
     <div class="modal-panel">
-      <div class="row" style="margin-bottom:14px;">
-        <div class="title" style="font-size:22px;">Settings</div>
+      <div class="section-head" style="margin-bottom:14px;">
+        <div class="section-title-group">
+          <div class="title" style="font-size:22px;">Settings</div>
+          <div class="section-note">Adjust printers without changing the order flow.</div>
+        </div>
         <button class="btn secondary" onclick="closeSettings()">Close</button>
       </div>
       <div class="settings-layout">
@@ -391,12 +821,30 @@
 
   <div class="modal" id="optionsModal" onclick="if(event.target===this) closeOptions()">
     <div class="modal-panel" style="max-width:560px;">
-      <div class="title" style="font-size:22px; margin-bottom:6px;" id="optionsTitle"></div>
-      <div class="small" id="optionsHint" style="margin-bottom:12px;"></div>
+      <div class="title" style="font-size:22px;" id="optionsTitle"></div>
+      <div class="small" id="optionsHint"></div>
       <div class="stack" id="optionsList"></div>
-      <div class="row" style="margin-top:14px;">
+      <div class="modal-actions">
         <button class="btn secondary" onclick="closeOptions()">Cancel</button>
         <button class="btn primary" id="optionsConfirm" onclick="confirmOptions()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal history-page-modal" id="historyPageModal" onclick="if(event.target===this) closeHistoryPage()">
+    <div class="modal-panel history-page-panel">
+      <div class="history-page-toolbar">
+        <div class="section-title-group">
+          <div class="title" style="font-size:24px;">History Orders</div>
+          <div class="section-note">Full-screen daily history with expandable details.</div>
+        </div>
+        <div class="history-page-controls">
+          <select id="historyDateSelect" class="history-select"></select>
+          <button class="btn secondary" onclick="closeHistoryPage()">Close</button>
+        </div>
+      </div>
+      <div class="history-page-body">
+        <div class="order-list" id="historyOrders"></div>
       </div>
     </div>
   </div>
@@ -413,6 +861,10 @@
     let specialPrinters = JSON.parse(localStorage.getItem("specialPrinters") || "{}");
     let incomingOrders = [];
     let acceptedOrders = [];
+    let historyOrders = [];
+    let historyDates = [];
+    let selectedHistoryDate = "";
+    let historyExpanded = {};
     let optionItem = null;
     let optionCategory = null;
     let optionMin = 0;
@@ -427,6 +879,15 @@
 
     function escapeHtml(s) {
       return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function renderEmptyState(el, title, text) {
+      el.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-title">${escapeHtml(title)}</div>
+          <div class="empty-state-text">${escapeHtml(text)}</div>
+        </div>
+      `;
     }
 
     const CATEGORY_ICONS = {
@@ -503,11 +964,16 @@
     function renderProducts() {
       const el = document.getElementById("products");
       el.innerHTML = "";
-      (menu[selectedCategory] || []).forEach(item => {
+      const items = menu[selectedCategory] || [];
+      if (!items.length) {
+        renderEmptyState(el, "No items here", "Choose another category or update the menu.");
+        return;
+      }
+      items.forEach(item => {
         const card = document.createElement("div");
         card.className = "product";
         const zh = String(item.nameZh || "").trim();
-        card.innerHTML = `<div class="product-name">${escapeHtml(item.name)}</div>${zh ? `<div class="small">${escapeHtml(zh)}</div>` : ""}`;
+        card.innerHTML = `<div class="product-name">${escapeHtml(item.name)}</div>${zh ? `<div class="product-subtitle">${escapeHtml(zh)}</div>` : ""}`;
         card.onclick = () => addToOrder(item, selectedCategory);
         el.appendChild(card);
       });
@@ -535,6 +1001,9 @@
       const list = document.getElementById("currentOrder");
       const notesEl = document.getElementById("orderNotes");
       list.innerHTML = "";
+      if (!currentOrder.length) {
+        renderEmptyState(list, "No items yet", "Tap menu items on the right to build the order.");
+      }
 
       currentOrder.forEach(item => {
         const optionsText = (item.selectedOptions || []).map(o => o.name).join(", ");
@@ -543,21 +1012,21 @@
         const row = document.createElement("div");
         row.className = "order-item";
         row.innerHTML = `
-          <div class="grow">
-            <div style="font-weight:800;">${escapeHtml(item.name)}</div>
-            ${zh ? `<div class="small">${escapeHtml(zh)}</div>` : ""}
-            ${optionsText ? `<div class="small">${escapeHtml(optionsText)}</div>` : ""}
-            ${item.comment ? `<div class="small">Note: ${escapeHtml(item.comment)}</div>` : ""}
+          <div class="order-main">
+            <div class="order-title">${escapeHtml(item.name)}</div>
+            ${zh ? `<div class="order-meta">${escapeHtml(zh)}</div>` : ""}
+            ${optionsText ? `<div class="order-meta">Options: ${escapeHtml(optionsText)}</div>` : ""}
+            ${item.comment ? `<div class="order-meta">Note: ${escapeHtml(item.comment)}</div>` : ""}
           </div>
-          <div style="text-align:right;">
-            <div class="qty" style="margin-top:8px;">
+          <div class="order-right">
+            <div class="qty">
               <button onclick="changeQty('${item.orderId}', -1)">-</button>
               <span>${item.quantity || 1}</span>
               <button onclick="changeQty('${item.orderId}', 1)">+</button>
             </div>
-            <div class="actions" style="margin-top:8px; justify-content:flex-end;">
-              <button class="btn secondary" style="padding:6px 10px;" onclick="editItemNote('${item.orderId}')">Note</button>
-              <button class="btn secondary" style="padding:6px 10px;" onclick="removeItem('${item.orderId}')">Remove</button>
+            <div class="actions actions-end">
+              <button class="btn secondary small" onclick="editItemNote('${item.orderId}')">Note</button>
+              <button class="btn secondary small" onclick="removeItem('${item.orderId}')">Remove</button>
             </div>
           </div>
         `;
@@ -635,23 +1104,52 @@
 
     async function pollQueues() {
       try {
-        const [a, b] = await Promise.all([
+        const historyQuery = selectedHistoryDate ? `?days=7&date=${encodeURIComponent(selectedHistoryDate)}` : "?days=7";
+        const [a, b, c] = await Promise.all([
           fetch("/api/incoming"),
-          fetch("/api/accepted")
+          fetch("/api/accepted"),
+          fetch(`/api/history_orders${historyQuery}`)
         ]);
         incomingOrders = await a.json();
         acceptedOrders = await b.json();
+        const historyData = await c.json();
+        historyOrders = Array.isArray(historyData.orders) ? historyData.orders : [];
+        historyDates = Array.isArray(historyData.available_dates) ? historyData.available_dates : [];
+        selectedHistoryDate = historyData.selected_date || historyDates[0] || "";
         renderIncomingOrders();
         renderAcceptedOrders();
+        renderHistoryDateSelect();
         renderHistoryOrders();
       } catch (e) {
       }
+    }
+
+    function renderHistoryDateSelect() {
+      const el = document.getElementById("historyDateSelect");
+      if (!el) return;
+      if (!historyDates.length) {
+        el.innerHTML = `<option value="">No dates</option>`;
+        el.disabled = true;
+        return;
+      }
+      el.disabled = false;
+      el.innerHTML = (historyDates || []).map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");
+      el.value = selectedHistoryDate || "";
+      el.onchange = async e => {
+        selectedHistoryDate = String(e.target.value || "");
+        historyExpanded = {};
+        await pollQueues();
+      };
     }
 
     function renderIncomingOrders() {
       document.getElementById("incomingCount").textContent = String((incomingOrders || []).length || 0);
       const el = document.getElementById("incomingOrders");
       el.innerHTML = "";
+      if (!(incomingOrders || []).length) {
+        renderEmptyState(el, "No incoming orders", "New orders will appear here automatically.");
+        return;
+      }
       (incomingOrders || []).slice().reverse().forEach(order => {
         const data = order.order || {};
         const summary = (data.items || []).map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
@@ -663,14 +1161,19 @@
         const row = document.createElement("div");
         row.className = "order-item";
         row.innerHTML = `
-          <div class="grow">
-            <div style="font-weight:800;">#${data.number || order.id}</div>
-            <div class="small">${order.received_at || ""}</div>
-            <div class="small" style="margin-top:4px;">${summary}</div>
+          <div class="order-main">
+            <div class="order-title-row">
+              <div class="order-title">#${escapeHtml(data.number || order.id)}</div>
+              ${isSimulated ? `<div class="order-chip">Simulated</div>` : ""}
+            </div>
+            <div class="order-meta">${escapeHtml(order.received_at || "")}</div>
+            <div class="order-summary">${escapeHtml(summary)}</div>
           </div>
-          <div class="actions" style="justify-content:flex-end;">
-            ${isSimulated ? `<button class="btn secondary" onclick="removeIncoming(${order.id})">Remove</button>` : ""}
-            <button class="btn primary" onclick="acceptIncoming(${order.id})">Accept</button>
+          <div class="order-right">
+            <div class="actions actions-end">
+              ${isSimulated ? `<button class="btn secondary small" onclick="removeIncoming(${order.id})">Remove</button>` : ""}
+              <button class="btn primary small" onclick="acceptIncoming(${order.id})">Accept</button>
+            </div>
           </div>
         `;
         el.appendChild(row);
@@ -682,6 +1185,10 @@
       document.getElementById("acceptedCount").textContent = String(active.length || 0);
       const el = document.getElementById("acceptedOrders");
       el.innerHTML = "";
+      if (!active.length) {
+        renderEmptyState(el, "Nothing in progress", "Accepted orders will stay here until they are marked done.");
+        return;
+      }
 
       active.slice().reverse().forEach(order => {
         const data = order.order || {};
@@ -689,38 +1196,71 @@
         const row = document.createElement("div");
         row.className = "order-item";
         row.innerHTML = `
-          <div class="grow">
-            <div style="font-weight:800;">#${data.number || order.id}</div>
-            <div class="small">${order.accepted_at || ""}</div>
-            <div class="small" style="margin-top:4px;">${summary}</div>
+          <div class="order-main">
+            <div class="order-title">#${escapeHtml(data.number || order.id)}</div>
+            <div class="order-meta">${escapeHtml(order.accepted_at || "")}</div>
+            <div class="order-summary">${escapeHtml(summary)}</div>
           </div>
-          <button class="btn green" onclick="finishAccepted(${order.id})">Done</button>
+          <div class="order-right">
+            <button class="btn green small" onclick="finishAccepted(${order.id})">Done</button>
+          </div>
         `;
         el.appendChild(row);
       });
     }
 
     function renderHistoryOrders() {
-      const finished = (acceptedOrders || []).filter(o => o.status === "finished");
+      const finished = Array.isArray(historyOrders) ? historyOrders : [];
       document.getElementById("historyCount").textContent = String(finished.length || 0);
       const el = document.getElementById("historyOrders");
       el.innerHTML = "";
+      if (!finished.length) {
+        renderEmptyState(el, "No history for this day", "Pick another date or send more orders.");
+        return;
+      }
 
-      finished.slice().reverse().forEach(order => {
-        const data = order.order || {};
-        const summary = (data.items || []).map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
+      finished.forEach(order => {
+        const items = Array.isArray(order.items) ? order.items : [];
+        const summary = order.items_summary || items.map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
+        const key = `${order.timestamp || ""}-${order.order_number || ""}`;
+        const open = !!historyExpanded[key];
+        const itemLines = items.map(i => {
+          const zh = String(i.nameZh || "").trim();
+          const options = Array.isArray(i.selectedOptions) ? i.selectedOptions.map(o => o.name).filter(Boolean).join(", ") : "";
+          const note = String(i.comment || "").trim();
+          return `<div class="order-meta detail-line">${escapeHtml(`${i.quantity || 1}x ${i.name || ""}`)}${zh ? ` / ${escapeHtml(zh)}` : ""}${options ? ` (Opts: ${escapeHtml(options)})` : ""}${note ? ` (Note: ${escapeHtml(note)})` : ""}</div>`;
+        }).join("");
         const row = document.createElement("div");
-        row.className = "order-item";
+        row.className = "order-item history-item" + (open ? " open" : "");
         row.innerHTML = `
-          <div class="grow">
-            <div style="font-weight:800;">#${data.number || order.id}</div>
-            <div class="small">Accepted: ${order.accepted_at || ""}</div>
-            <div class="small">Done: ${order.finished_at || ""}</div>
-            <div class="small" style="margin-top:4px;">${summary}</div>
+          <div class="order-main">
+            <div class="order-title-row">
+              <div class="order-title">#${escapeHtml(order.order_number || "")}</div>
+              <div class="order-chip">${escapeHtml(order.table_number || "N/A")}</div>
+            </div>
+            <div class="order-meta">${escapeHtml(order.timestamp || "")}</div>
+            <div class="order-summary">${escapeHtml(summary || "")}</div>
+            <div class="history-item-details">
+              ${order.printed_status ? `<div class="order-meta">Print: ${escapeHtml(order.printed_status)}</div>` : ""}
+              ${order.universal_comment ? `<div class="order-meta">Note: ${escapeHtml(order.universal_comment)}</div>` : ""}
+              ${itemLines}
+            </div>
           </div>
         `;
+        row.onclick = () => {
+          historyExpanded[key] = !historyExpanded[key];
+          renderHistoryOrders();
+        };
         el.appendChild(row);
       });
+    }
+
+    function openHistoryPage() {
+      document.getElementById("historyPageModal").style.display = "flex";
+    }
+
+    function closeHistoryPage() {
+      document.getElementById("historyPageModal").style.display = "none";
     }
 
     async function acceptIncoming(id) {
@@ -850,7 +1390,7 @@
       const ozh = String(item.nameZh || "").trim();
       const ot = document.getElementById("optionsTitle");
       ot.innerHTML = ozh
-        ? `${escapeHtml(item.name)}<div class="small" style="margin-top:6px;font-weight:600;">${escapeHtml(ozh)}</div>`
+        ? `${escapeHtml(item.name)}<div class="modal-title-zh">${escapeHtml(ozh)}</div>`
         : escapeHtml(item.name);
       const minNeed = optionMin || optionMax || 1;
       document.getElementById("optionsHint").textContent = optionMax ? `Pick ${minNeed}${optionMax !== minNeed ? `-${optionMax}` : ""}` : "Pick option(s)";
@@ -860,11 +1400,10 @@
       (item.options || []).forEach(opt => {
         const name = typeof opt === "string" ? opt : opt.name;
         const row = document.createElement("label");
-        row.className = "order-item";
-        row.style.cursor = "pointer";
+        row.className = "order-item option-row";
         row.innerHTML = `
-          <div class="grow">
-            <div style="font-weight:800;">${escapeHtml(name)}</div>
+          <div class="order-main">
+            <div class="order-title option-name">${escapeHtml(name)}</div>
           </div>
           <input type="checkbox">
         `;
@@ -902,7 +1441,7 @@
       rows.forEach(row => {
         const checked = row.querySelector("input").checked;
         if (!checked) return;
-        const name = row.querySelector(".grow div").textContent;
+        const name = row.querySelector(".option-name").textContent;
         selected.push({ name, price: 0 });
       });
 
