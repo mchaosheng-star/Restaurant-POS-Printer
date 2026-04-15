@@ -1,0 +1,13 @@
+{
+  "name": "kitchenprint-pro",
+  "version": "1.0.0",
+  "description": "```bat\r cd /d \"C:\\Users\\hlu\\Desktop\\Kitchen printer\\KitchenPrint-Pro\"\r python -m pip install Flask pywin32\r python app.py\r ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

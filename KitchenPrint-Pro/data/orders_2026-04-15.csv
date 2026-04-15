@@ -1,0 +1,2 @@
+order_number,table_number,timestamp,items_summary,universal_comment,order_total,printed_status,items_json
+UE-1776229763030,Uber,2026-04-15 00:09:24,1x California Roll | 1x Shrimp Tempura Roll,Simulated,,No (routed),"[{""name"": ""California Roll"", ""quantity"": 1, ""price"": 0.0, ""selectedOptions"": [], ""comment"": """", ""category"": ""Regular Roll""}, {""name"": ""Shrimp Tempura Roll"", ""quantity"": 1, ""price"": 0.0, ""selectedOptions"": [], ""comment"": """", ""category"": ""Regular Roll""}]"

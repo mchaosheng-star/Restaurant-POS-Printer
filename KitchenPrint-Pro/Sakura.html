@@ -120,10 +120,6 @@
       font-size: 12px;
       color: #666;
     }
-    .price {
-      color: var(--primary);
-      font-weight: 800;
-    }
     .actions {
       display: flex;
       gap: 8px;
@@ -142,6 +138,13 @@
       background: white;
       cursor: pointer;
       font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tab-icon {
+      font-size: 1.2em;
+      line-height: 1;
     }
     .tab.active {
       background: var(--primary);
@@ -267,6 +270,13 @@
     .settings-map-name {
       font-weight: 700;
       line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .settings-cat-icon {
+      font-size: 1.25em;
+      line-height: 1;
     }
     .settings-map-empty {
       font-size: 13px;
@@ -323,8 +333,7 @@
         <button class="btn secondary" onclick="newOrder()">New</button>
       </div>
       <div class="order-list" id="currentOrder"></div>
-      <div class="row" style="margin-top:12px;">
-        <div class="subtitle" id="orderTotal">Total: $0.00</div>
+      <div class="row" style="margin-top:12px; justify-content:flex-end;">
         <button class="btn primary" onclick="sendOrder()">Send</button>
       </div>
       <div class="field" style="margin-top:12px;">
@@ -416,6 +425,47 @@
       setTimeout(() => t.style.display = "none", 1600);
     }
 
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    const CATEGORY_ICONS = {
+      "Appetizers": "🥟",
+      "Soup & Salad": "🥗",
+      "Sushi": "🍣",
+      "Sashimi": "🐟",
+      "Regular Roll": "📜",
+      "Signature Roll": "⭐",
+      "Sushi Dinner Comb": "🍱",
+      "Teppanyaki (Hibachi)": "🔥",
+      "Sakura Kitchen Entree": "🍽️",
+      "Teriyaki Plate": "🍗",
+      "Noodle": "🍜",
+      "Fried Rice": "🍚",
+      "Beverage": "🥤",
+      "Side Order": "➕"
+    };
+
+    function categoryIcon(cat) {
+      if (CATEGORY_ICONS[cat]) return CATEGORY_ICONS[cat];
+      const c = String(cat || "").toLowerCase();
+      if (c.includes("appetiz")) return "🥟";
+      if (c.includes("soup") || c.includes("salad")) return "🥗";
+      if (c.includes("sashimi")) return "🐟";
+      if (c.includes("signature") && c.includes("roll")) return "⭐";
+      if (c.includes("regular") && c.includes("roll")) return "📜";
+      if (c.includes("dinner") && c.includes("comb")) return "🍱";
+      if (c.includes("teppanyaki") || c.includes("hibachi")) return "🔥";
+      if (c.includes("entree") || c.includes("kitchen")) return "🍽️";
+      if (c.includes("teriyaki")) return "🍗";
+      if (c.includes("noodle")) return "🍜";
+      if (c.includes("fried rice")) return "🍚";
+      if (c.includes("beverage") || c.includes("drink")) return "🥤";
+      if (c.includes("side")) return "➕";
+      if (c.includes("sushi")) return "🍣";
+      return "📋";
+    }
+
     function persistLocalOrder() {
       localStorage.setItem("currentOrder", JSON.stringify(currentOrder));
       localStorage.setItem("orderNotes", orderNotes);
@@ -439,7 +489,8 @@
       Object.keys(menu || {}).forEach(category => {
         const btn = document.createElement("button");
         btn.className = "tab" + (category === selectedCategory ? " active" : "");
-        btn.textContent = category;
+        const ic = categoryIcon(category);
+        btn.innerHTML = `<span class="tab-icon" aria-hidden="true">${ic}</span><span>${escapeHtml(category)}</span>`;
         btn.onclick = () => {
           selectedCategory = category;
           renderCategories();
@@ -455,10 +506,8 @@
       (menu[selectedCategory] || []).forEach(item => {
         const card = document.createElement("div");
         card.className = "product";
-        card.innerHTML = `
-          <div class="product-name">${item.name}</div>
-          <div class="price">$${Number(item.price || 0).toFixed(2)}</div>
-        `;
+        const zh = String(item.nameZh || "").trim();
+        card.innerHTML = `<div class="product-name">${escapeHtml(item.name)}</div>${zh ? `<div class="small">${escapeHtml(zh)}</div>` : ""}`;
         card.onclick = () => addToOrder(item, selectedCategory);
         el.appendChild(card);
       });
@@ -486,25 +535,21 @@
       const list = document.getElementById("currentOrder");
       const notesEl = document.getElementById("orderNotes");
       list.innerHTML = "";
-      let total = 0;
 
       currentOrder.forEach(item => {
-        let optionTotal = 0;
-        (item.selectedOptions || []).forEach(opt => optionTotal += Number(opt.price || 0));
-        const lineTotal = (Number(item.price || 0) + optionTotal) * Number(item.quantity || 1);
-        total += lineTotal;
         const optionsText = (item.selectedOptions || []).map(o => o.name).join(", ");
+        const zh = String(item.nameZh || "").trim();
 
         const row = document.createElement("div");
         row.className = "order-item";
         row.innerHTML = `
           <div class="grow">
-            <div style="font-weight:800;">${item.name}</div>
-            ${optionsText ? `<div class="small">${optionsText}</div>` : ""}
-            ${item.comment ? `<div class="small">Note: ${item.comment}</div>` : ""}
+            <div style="font-weight:800;">${escapeHtml(item.name)}</div>
+            ${zh ? `<div class="small">${escapeHtml(zh)}</div>` : ""}
+            ${optionsText ? `<div class="small">${escapeHtml(optionsText)}</div>` : ""}
+            ${item.comment ? `<div class="small">Note: ${escapeHtml(item.comment)}</div>` : ""}
           </div>
           <div style="text-align:right;">
-            <div class="price">$${lineTotal.toFixed(2)}</div>
             <div class="qty" style="margin-top:8px;">
               <button onclick="changeQty('${item.orderId}', -1)">-</button>
               <span>${item.quantity || 1}</span>
@@ -520,7 +565,6 @@
       });
 
       document.getElementById("orderNumber").textContent = String(orderNumber);
-      document.getElementById("orderTotal").textContent = `Total: $${total.toFixed(2)}`;
       notesEl.value = orderNotes;
       notesEl.oninput = e => {
         orderNotes = e.target.value;
@@ -722,8 +766,8 @@
         order_id: `UE-${now}`,
         tableNumber: "Uber",
         items: [
-          { name: "California Roll", quantity: 1, price: 6.95 },
-          { name: "Shrimp Tempura Roll", quantity: 1, price: 9.95 }
+          { name: "California Roll", quantity: 1, price: 0 },
+          { name: "Shrimp Tempura Roll", quantity: 1, price: 0 }
         ],
         note: "Simulated"
       };
@@ -780,7 +824,7 @@
       categories.forEach(category => {
         const row = document.createElement("div");
         row.className = "settings-map-row";
-        row.innerHTML = `<div class="settings-map-name">${category}</div><select></select>`;
+        row.innerHTML = `<div class="settings-map-name"><span class="settings-cat-icon" aria-hidden="true">${categoryIcon(category)}</span><span>${escapeHtml(category)}</span></div><select></select>`;
         const select = row.querySelector("select");
         select.innerHTML = `<option value="">(none)</option>` + (Array.isArray(printers) ? printers.map(p => `<option value="${String(p).replace(/"/g, "&quot;")}">${p}</option>`).join("") : "");
         select.value = categoryPrinters[category] || "";
@@ -803,7 +847,11 @@
       optionMin = Number(item.selectMin || 0) || 0;
       optionMax = Number(item.selectMax || 0) || 0;
 
-      document.getElementById("optionsTitle").textContent = item.name;
+      const ozh = String(item.nameZh || "").trim();
+      const ot = document.getElementById("optionsTitle");
+      ot.innerHTML = ozh
+        ? `${escapeHtml(item.name)}<div class="small" style="margin-top:6px;font-weight:600;">${escapeHtml(ozh)}</div>`
+        : escapeHtml(item.name);
       const minNeed = optionMin || optionMax || 1;
       document.getElementById("optionsHint").textContent = optionMax ? `Pick ${minNeed}${optionMax !== minNeed ? `-${optionMax}` : ""}` : "Pick option(s)";
 
@@ -811,14 +859,12 @@
       list.innerHTML = "";
       (item.options || []).forEach(opt => {
         const name = typeof opt === "string" ? opt : opt.name;
-        const price = typeof opt === "string" ? 0 : Number(opt.price || 0);
         const row = document.createElement("label");
         row.className = "order-item";
         row.style.cursor = "pointer";
         row.innerHTML = `
           <div class="grow">
-            <div style="font-weight:800;">${name}</div>
-            ${price ? `<div class="small">+$${price.toFixed(2)}</div>` : ""}
+            <div style="font-weight:800;">${escapeHtml(name)}</div>
           </div>
           <input type="checkbox">
         `;
@@ -857,13 +903,7 @@
         const checked = row.querySelector("input").checked;
         if (!checked) return;
         const name = row.querySelector(".grow div").textContent;
-        const small = row.querySelector(".small");
-        let price = 0;
-        if (small) {
-          const m = small.textContent.match(/([0-9]+(\.[0-9]+)?)/);
-          if (m) price = Number(m[1]);
-        }
-        selected.push({ name, price });
+        selected.push({ name, price: 0 });
       });
 
       lineCounter += 1;

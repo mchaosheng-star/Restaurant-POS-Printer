@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, make_response
 from datetime import datetime
 import csv
 import os
@@ -8,6 +8,9 @@ import tempfile
 import time
 import json
 import logging
+import threading
+
+import ubereats
 
 app = Flask(__name__)
 
@@ -29,6 +32,9 @@ KITCHEN_PRINTER_NAME = "Brother MFC-L5850DW series (Copy 1)"
 # CSV and Menu File Configuration
 CSV_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 MENU_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/menu.json')
+
+UBER_WEBHOOK_LOCK = threading.Lock()
+UBER_WEBHOOK_EVENT_IDS = set()
 
 # Menu cache for category lookup
 _MENU_CACHE = None
@@ -136,6 +142,90 @@ def normalize_order_data(order_data):
         order_data.get('customerNote')
     ))
     return normalized
+
+def _uber_env_bool(key, default=False):
+    v = os.environ.get(key, "")
+    if v == "":
+        return default
+    return v.lower() in ("1", "true", "yes", "on")
+
+def _load_uber_store_config():
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "ubereats_store_config.json")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def _uber_is_duplicate_event(event_id):
+    if not event_id:
+        return False
+    with UBER_WEBHOOK_LOCK:
+        if event_id in UBER_WEBHOOK_EVENT_IDS:
+            return True
+        UBER_WEBHOOK_EVENT_IDS.add(event_id)
+        if len(UBER_WEBHOOK_EVENT_IDS) > 6000:
+            UBER_WEBHOOK_EVENT_IDS.clear()
+        return False
+
+def _uber_webhook_worker(payload):
+    if not isinstance(payload, dict):
+        return
+    if _uber_is_duplicate_event(payload.get("event_id")):
+        return
+    if payload.get("event_type") != "orders.notification":
+        return
+    meta = payload.get("meta") or {}
+    order_id = meta.get("resource_id")
+    href = payload.get("resource_href")
+    if not order_id or not href:
+        app.logger.error("Uber webhook: missing resource_id or resource_href")
+        return
+    token = os.environ.get("UBEREATS_ACCESS_TOKEN", "").strip()
+    if not token:
+        app.logger.error("Uber webhook: set UBEREATS_ACCESS_TOKEN to fetch and accept orders")
+        return
+    detail = ubereats.fetch_order_details(href, token)
+    if not detail:
+        if _uber_env_bool("UBEREATS_DENY_ON_FETCH_FAIL"):
+            ubereats.deny_pos_order(order_id, token, reason="system_error")
+        return
+    raw = ubereats.uber_order_response_to_internal(detail, order_id)
+    order_data = normalize_order_data(raw)
+    if not order_data.get("items"):
+        app.logger.error("Uber webhook: no line items mapped for order %s", order_id)
+        if _uber_env_bool("UBEREATS_DENY_ON_FAILURE"):
+            ubereats.deny_pos_order(order_id, token, reason="invalid_cart")
+        return
+    cfg = _load_uber_store_config()
+    if isinstance(cfg.get("categoryPrinters"), dict):
+        order_data["categoryPrinters"] = cfg["categoryPrinters"]
+    if isinstance(cfg.get("specialPrinters"), dict):
+        order_data["specialPrinters"] = cfg["specialPrinters"]
+    printer_override = (cfg.get("printer") or cfg.get("defaultPrinter") or "").strip()
+    if printer_override:
+        order_data["printer"] = printer_override
+    if "number" not in order_data or order_data.get("number") is None:
+        order_data["number"] = int(datetime.now().timestamp() % 10000)
+
+    if _uber_env_bool("UBEREATS_AUTO_ACCEPT", default=False):
+        try:
+            ok = handle_order_internal(order_data)
+        except Exception as e:
+            app.logger.exception("Uber AUTO_ACCEPT handle_order_internal: %s", e)
+            ok = False
+        if ok:
+            if ubereats.accept_pos_order(order_id, token):
+                app.logger.info("Uber accept_pos_order success %s", order_id)
+            else:
+                app.logger.error("Uber accept_pos_order failed after print %s", order_id)
+        else:
+            app.logger.error("Uber order print/log failed %s", order_id)
+            if _uber_env_bool("UBEREATS_DENY_ON_FAILURE"):
+                ubereats.deny_pos_order(order_id, token, reason="system_error")
+        return
+    enqueue_incoming(order_data)
+    app.logger.info("Uber order queued for POS accept order_id=%s", order_id)
 
 # --- Word Wrap Helper Function (Updated to match app DUMMY.py for better wrapping) ---
 def word_wrap_text(text, max_width, initial_indent="", subsequent_indent=""):
@@ -329,6 +419,15 @@ def api_incoming_accept(incoming_id):
         'order': order_data
     })
     if ok:
+        uber_oid = order_data.get('uberOrderId')
+        if uber_oid and order_data.get('uberPendingAccept'):
+            utok = os.environ.get("UBEREATS_ACCESS_TOKEN", "").strip()
+            if utok:
+                if ubereats.accept_pos_order(uber_oid, utok):
+                    order_data['uberPendingAccept'] = False
+                    app.logger.info("Uber accept_pos_order ok for %s", uber_oid)
+                else:
+                    app.logger.error("Uber accept_pos_order failed for %s", uber_oid)
         return jsonify({"status": "success"}), 200
     return jsonify({"status": "error", "message": "Failed to process order"}), 500
 
@@ -499,71 +598,24 @@ def print_kitchen_ticket(order_data, copy_info="", original_timestamp_str=None, 
         ticket_content += to_bytes("-" * NORMAL_FONT_LINE_WIDTH + "\n")
         
         # --- Items Section (Logic from app DUMMY.py) ---
-        grand_total = 0.0
         for item_idx, item in enumerate(order_data.get('items', [])):
             item_quantity = item.get('quantity', 0)
             item_name_orig = item.get('name', 'Unknown Item')
-            item_price_unit = float(item.get('price', 0.0))
-            
             selected_options = item.get('selectedOptions', [])
-            total_options_price = 0.0
-            if selected_options and isinstance(selected_options, list):
-                for option in selected_options:
-                    total_options_price += float(option.get('price', 0.0))
-
-            line_total = item_quantity * (item_price_unit + total_options_price)
-            grand_total += line_total
 
             left_side = f"{item_quantity}x {item_name_orig}"
-            right_side = f"${line_total:.2f}"
-
-            large_text_width = len(left_side) * 2
-            normal_text_width = len(right_side)
-            
-            # Smartly print large item name and normal price on the same line if it fits
-            if large_text_width + normal_text_width < NORMAL_FONT_LINE_WIDTH:
-                ticket_content += SelectFontA + DoubleHeightWidth + BoldOn
-                ticket_content += to_bytes(left_side)
-                
-                ticket_content += NormalText + BoldOff
-                
-                padding_size = NORMAL_FONT_LINE_WIDTH - large_text_width - normal_text_width
-                padding = " " * padding_size
-                ticket_content += to_bytes(padding)
-                
-                ticket_content += to_bytes(right_side + "\n")
-            else:
-                # Handle multi-line items if they don't fit
-                ticket_content += SelectFontA + DoubleHeightWidth + BoldOn
-                DOUBLE_WIDTH_LINE_CHARS = NORMAL_FONT_LINE_WIDTH // 2
-                wrapped_name_lines = word_wrap_text(left_side, DOUBLE_WIDTH_LINE_CHARS)
-                
-                for line in wrapped_name_lines[:-1]:
-                    ticket_content += to_bytes(line + "\n")
-                
-                last_line = wrapped_name_lines[-1]
-                last_line_width = len(last_line) * 2
-                
-                available_space = NORMAL_FONT_LINE_WIDTH - last_line_width
-                padding = " " * max(0, available_space - normal_text_width)
-                
-                ticket_content += to_bytes(last_line)
-                
-                ticket_content += NormalText + BoldOff + to_bytes(padding + right_side + "\n")
-                ticket_content += AlignLeft
-
-            ticket_content += NormalText + BoldOff 
+            ticket_content += SelectFontA + DoubleHeightWidth + BoldOn
+            DOUBLE_WIDTH_LINE_CHARS = NORMAL_FONT_LINE_WIDTH // 2
+            wrapped_name_lines = word_wrap_text(left_side, DOUBLE_WIDTH_LINE_CHARS)
+            for line in wrapped_name_lines:
+                ticket_content += to_bytes(line + "\n")
+            ticket_content += NormalText + BoldOff
 
             # Print selected options (indented)
             if selected_options and isinstance(selected_options, list):
                 for option in selected_options:
                     option_name = option.get('name', 'N/A')
-                    option_price = float(option.get('price', 0.0))
-                    price_change_str = ""
-                    if option_price != 0:
-                        price_change_str = f" ({'+' if option_price > 0 else ''}${option_price:.2f})"
-                    
-                    option_line = f"  -> {option_name}{price_change_str}"
+                    option_line = f"  -> {option_name}"
                     wrapped_option_lines = word_wrap_text(option_line, NORMAL_FONT_LINE_WIDTH, initial_indent="  ", subsequent_indent="    ") 
                     for opt_line_part in wrapped_option_lines:
                         ticket_content += to_bytes(opt_line_part + "\n")
@@ -582,12 +634,6 @@ def print_kitchen_ticket(order_data, copy_info="", original_timestamp_str=None, 
                 ticket_content += to_bytes("." * NORMAL_FONT_LINE_WIDTH + "\n")
 
         # --- Footer Section (As per app DUMMY.py) ---
-        ticket_content += to_bytes("-" * NORMAL_FONT_LINE_WIDTH + "\n")
-        ticket_content += SelectFontA + DoubleHeightWidth + BoldOn + AlignRight
-        total_string = f"TOTAL: ${grand_total:.2f}"
-        ticket_content += to_bytes(total_string + "\n")
-        ticket_content += BoldOff + AlignLeft
-        
         ticket_content += SelectFontA + NormalText
         ticket_content += to_bytes("-" * NORMAL_FONT_LINE_WIDTH + "\n\n") 
         
@@ -672,23 +718,14 @@ def log_order_to_csv(order_data, printer_name=None, skip_print=False, printed_st
                     if row.get('order_number', '').lower() != 'total':
                         existing_rows.append(row)
         
-        new_order_total = 0.0
         items_summary_parts = []
         for item in order_data.get('items', []):
-            item_price = float(item.get('price', 0))
-            
-            total_options_price = 0.0
             option_summary_parts = []
             selected_options = item.get('selectedOptions', [])
             if selected_options and isinstance(selected_options, list):
                 for option in selected_options:
-                    option_price = float(option.get('price', 0.0))
-                    total_options_price += option_price
                     option_name = option.get('name', '')
-                    price_str = f" (+{option_price:.2f})" if option_price > 0 else ""
-                    option_summary_parts.append(f"{option_name}{price_str}")
-            
-            new_order_total += (item_price + total_options_price) * item.get('quantity', 0)
+                    option_summary_parts.append(option_name)
             
             summary_part = f"{item.get('quantity', 0)}x {item.get('name', 'N/A')}"
             if option_summary_parts:
@@ -708,7 +745,7 @@ def log_order_to_csv(order_data, printer_name=None, skip_print=False, printed_st
             'items_summary': items_summary_str,
             'items_json': json.dumps(order_data.get('items', [])),
             'universal_comment': normalize_print_text(order_data.get('universalComment', '')),
-            'order_total': f"€{new_order_total:.2f}",
+            'order_total': '',
             'printed_status': printed_status
         }
         existing_rows.append(new_row)
@@ -740,6 +777,31 @@ def handle_order():
     except Exception as e: 
         app.logger.error(f"Error in handle_order: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/webhooks/uber-eats', methods=['POST'])
+def uber_eats_webhook():
+    body = request.get_data(cache=False)
+    skip_sig = _uber_env_bool("UBEREATS_SKIP_SIGNATURE_VERIFY")
+    secret = os.environ.get("UBEREATS_CLIENT_SECRET", "").strip()
+    sig = request.headers.get("X-Uber-Signature")
+    if secret and not skip_sig:
+        if not ubereats.verify_webhook_signature(body, sig, secret):
+            app.logger.warning("Uber webhook: invalid X-Uber-Signature")
+            return make_response("", 401)
+    elif not secret and not skip_sig:
+        app.logger.warning("Uber webhook: UBEREATS_CLIENT_SECRET missing; set UBEREATS_SKIP_SIGNATURE_VERIFY=1 for local dev only")
+        return make_response("", 403)
+    try:
+        payload = json.loads(body.decode("utf-8") if body else "{}")
+    except Exception:
+        app.logger.warning("Uber webhook: invalid JSON body")
+        return make_response("", 400)
+    if isinstance(payload, dict) and payload.get("event_type") == "orders.notification":
+        if not os.environ.get("UBEREATS_ACCESS_TOKEN", "").strip():
+            app.logger.error("Uber webhook: UBEREATS_ACCESS_TOKEN not set (Uber will retry)")
+            return make_response("", 503)
+    threading.Thread(target=_uber_webhook_worker, args=(payload,), daemon=True).start()
+    return make_response("", 200)
 
 # Uber Eats (test) ingest: accept external JSON, convert to internal order, print+log
 @app.route('/api/ingest', methods=['POST'])

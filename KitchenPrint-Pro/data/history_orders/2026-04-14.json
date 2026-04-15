@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "accepted_at": "2026-04-14 23:30:34",
+    "finished_at": "2026-04-14 23:30:44",
+    "status": "finished",
+    "order": {
+      "number": "UE-1776227431317",
+      "tableNumber": "Uber",
+      "items": [
+        {
+          "name": "California Roll",
+          "quantity": 1,
+          "price": 6.95,
+          "selectedOptions": [],
+          "comment": "",
+          "category": "Regular Roll"
+        },
+        {
+          "name": "Shrimp Tempura Roll",
+          "quantity": 1,
+          "price": 9.95,
+          "selectedOptions": [],
+          "comment": "",
+          "category": "Regular Roll"
+        }
+      ],
+      "universalComment": "Simulated",
+      "categoryPrinters": {},
+      "specialPrinters": {}
+    }
+  }
+]

@@ -1,2436 +1,1104 @@
 {
   "Appetizers": [
     {
+      "id": 21969,
       "name": "Edamame",
-      "price": 3.95,
-      "id": 1
-    },
-    {
-      "name": "Agedashi Tofu",
       "price": 5.95,
-      "id": 2
+      "nameZh": "毛豆"
     },
     {
+      "id": 21972,
       "name": "Crab Rangoon (4pcs)",
-      "price": 6.95,
-      "id": 3
+      "price": 8.95,
+      "nameZh": "蟹肉角（4个）"
     },
     {
+      "id": 21974,
+      "name": "Shumai (Steamed or Fried)",
+      "price": 8.95,
+      "nameZh": "烧卖（蒸或炸）"
+    },
+    {
+      "id": 21973,
       "name": "Gyoza (6pcs)",
-      "price": 6.95,
-      "id": 4
+      "price": 9.95,
+      "nameZh": "饺子（6个）"
     },
     {
-      "name": "Shumai (Steamed or Fried, 6pcs)",
-      "price": 6.95,
-      "id": 5
+      "id": 114326,
+      "name": "Vegetable Gyoza (6pcs)",
+      "price": 9.95,
+      "nameZh": "蔬菜饺子（6个）"
     },
     {
+      "id": 21975,
       "name": "Vegetable Tempura",
-      "price": 6.95,
-      "id": 6
+      "price": 9.95,
+      "nameZh": "蔬菜天妇罗"
     },
     {
+      "id": 21976,
       "name": "Shrimp & Vegetable Tempura",
-      "price": 7.95,
-      "id": 7
+      "price": 11.95,
+      "nameZh": "虾仁蔬菜天妇罗"
     },
     {
-      "name": "Chicken on the Stick",
-      "price": 7.95,
-      "id": 8
-    },
-    {
-      "name": "Beef on the Stick",
-      "price": 9.95,
-      "id": 9
-    },
-    {
-      "name": "Soft Shell Crab",
-      "price": 9.95,
-      "id": 10
-    },
-    {
-      "name": "Fried Calamari",
-      "price": 9.95,
-      "id": 11
-    },
-    {
-      "name": "Stuffed Jalapeno",
-      "price": 9.95,
-      "id": 12
-    },
-    {
+      "id": 21981,
       "name": "Golden Shrimp (3pcs)",
-      "price": 9.95,
-      "id": 13
+      "price": 11.95,
+      "nameZh": "黄金虾（3只）"
     },
     {
+      "id": 21982,
       "name": "Garlic Shrimp (3pcs)",
-      "price": 9.95,
-      "id": 14
-    },
-    {
-      "name": "Fried Oyster",
-      "price": 10.95,
-      "id": 15
-    },
-    {
-      "name": "Sashimi Beef",
       "price": 11.95,
-      "id": 16
+      "nameZh": "蒜香虾（3只）"
     },
     {
-      "name": "Ginger Calamari",
-      "price": 11.95,
-      "id": 17
-    }
-  ],
-  "Sushi Bar Appetizers": [
+      "id": 21979,
+      "name": "Soft Shell Crab",
+      "price": 12.95,
+      "nameZh": "软壳蟹"
+    },
     {
+      "id": 21980,
+      "name": "Fried Calamari",
+      "price": 12.95,
+      "nameZh": "炸鱿鱼圈"
+    },
+    {
+      "id": 21983,
       "name": "Mango Shrimp Spring Roll",
-      "price": 6.95,
-      "id": 18
-    },
-    {
-      "name": "Kami Kaze (4pcs)",
       "price": 9.95,
-      "id": 19
+      "nameZh": "芒果虾春卷"
     },
     {
-      "name": "Sushi Sampler (5pcs)",
-      "price": 9.95,
-      "id": 20
-    },
-    {
+      "id": 21984,
       "name": "Yellowtail Jalapeno",
-      "price": 10.95,
-      "id": 21
+      "price": 13.95,
+      "nameZh": "黄尾鱼配墨西哥辣椒"
     },
     {
-      "name": "Pepper Tuna Tataki",
-      "price": 10.95,
-      "id": 22
+      "id": 21986,
+      "name": "Sushi Sampler (5pcs)",
+      "price": 12.95,
+      "nameZh": "寿司拼盘（5个）"
     },
     {
+      "id": 21987,
       "name": "Sashimi Sampler (9pcs)",
-      "price": 11.95,
-      "id": 23
+      "price": 15.95,
+      "nameZh": "刺身拼盘（9片）"
     },
     {
-      "name": "Hand Grenade (4pcs)",
-      "price": 12.95,
-      "id": 24
+      "id": 114327,
+      "name": "Salmon Combo",
+      "price": 13.95,
+      "nameZh": "三文鱼套餐"
+    },
+    {
+      "id": 152689,
+      "name": "Chicken Karaage",
+      "price": 9.95,
+      "nameZh": "日式炸鸡"
+    },
+    {
+      "id": 152690,
+      "name": "Takoyaki (6pcs)",
+      "price": 9.95,
+      "nameZh": "章鱼烧（6个）"
+    },
+    {
+      "id": 152691,
+      "name": "Fried Scallop (6pcs)",
+      "price": 9.95,
+      "nameZh": "炸扇贝（6个）"
+    },
+    {
+      "id": 156502,
+      "name": "Garlic Fries",
+      "price": 9.95,
+      "nameZh": "蒜香薯条"
     }
   ],
-  "Soup N Salad": [
+  "Soup & Salad": [
     {
+      "id": 22084,
       "name": "Miso Soup",
-      "price": 3.95,
-      "id": 25
+      "price": 4.95,
+      "nameZh": "味噌汤"
     },
     {
+      "id": 22085,
       "name": "Clear Mushroom Soup",
-      "price": 3.95,
-      "id": 26
-    },
-    {
-      "name": "Vegetable Soup",
       "price": 4.95,
-      "id": 27
+      "nameZh": "清炖蘑菇汤"
     },
     {
-      "name": "Coconut Shrimp hot & Sour Soup",
-      "price": 0.0,
-      "id": 28,
-      "options": [
-        {
-          "name": "S",
-          "price": 4.95
-        },
-        {
-          "name": "L",
-          "price": 6.95
-        }
-      ]
-    },
-    {
+      "id": 22086,
       "name": "Won Ton Soup",
-      "price": 0.0,
-      "id": 29,
-      "options": [
-        {
-          "name": "S",
-          "price": 4.95
-        },
-        {
-          "name": "L",
-          "price": 6.95
-        }
-      ]
+      "price": 5.95,
+      "nameZh": "云吞汤"
     },
     {
+      "id": 22087,
       "name": "Won Ton Noodle Soup",
-      "price": 0.0,
-      "id": 30,
-      "options": [
-        {
-          "name": "S",
-          "price": 4.95
-        },
-        {
-          "name": "L",
-          "price": 6.95
-        }
-      ]
+      "price": 5.95,
+      "nameZh": "云吞面"
     },
     {
+      "id": 22088,
       "name": "Ginger Salad",
-      "price": 4.95,
-      "id": 31
+      "price": 5.95,
+      "nameZh": "姜丝沙拉"
     },
     {
+      "id": 22089,
       "name": "Avocado Salad",
-      "price": 5.95,
-      "id": 32
+      "price": 6.95,
+      "nameZh": "牛油果沙拉"
     },
     {
+      "id": 22090,
       "name": "Seaweed Salad",
-      "price": 5.95,
-      "id": 33
+      "price": 7.95,
+      "nameZh": "海藻沙拉"
     },
     {
+      "id": 22091,
       "name": "Squid Salad",
-      "price": 6.95,
-      "id": 34
-    },
-    {
-      "name": "Kani Salad",
-      "price": 6.95,
-      "id": 35
-    },
-    {
-      "name": "Sakura Salad",
-      "price": 6.95,
-      "id": 36
-    }
-  ],
-  "Sushi (2pcs) Or Sashimi (3pcs)": [
-    {
-      "name": "Egg",
-      "price": 4.95,
-      "id": 37
-    },
-    {
-      "name": "Crab Stick",
-      "price": 4.95,
-      "id": 38
-    },
-    {
-      "name": "Shrimp",
-      "price": 5.95,
-      "id": 39
-    },
-    {
-      "name": "Red Snapper",
-      "price": 5.95,
-      "id": 40
-    },
-    {
-      "name": "Squid",
-      "price": 5.95,
-      "id": 41
-    },
-    {
-      "name": "Mackerel",
-      "price": 5.95,
-      "id": 42
-    },
-    {
-      "name": "Masago",
-      "price": 5.95,
-      "id": 43
-    },
-    {
-      "name": "Smoked Salmon",
-      "price": 5.95,
-      "id": 44
-    },
-    {
-      "name": "Stripe Bass",
-      "price": 6.95,
-      "id": 45
-    },
-    {
-      "name": "Tuna",
-      "price": 6.95,
-      "id": 46
-    },
-    {
-      "name": "Salmon",
-      "price": 6.95,
-      "id": 47
-    },
-    {
-      "name": "White Tuna",
-      "price": 6.95,
-      "id": 48
-    },
-    {
-      "name": "Scallop",
-      "price": 6.95,
-      "id": 49
-    },
-    {
-      "name": "Octopus",
-      "price": 6.95,
-      "id": 50
-    },
-    {
-      "name": "Tobiko (Red, black, green)",
-      "price": 6.95,
-      "id": 51
-    },
-    {
-      "name": "Yellow Tail",
-      "price": 6.95,
-      "id": 52
-    },
-    {
-      "name": "Salmon Roe",
-      "price": 7.95,
-      "id": 53
-    },
-    {
-      "name": "Eel",
-      "price": 7.95,
-      "id": 54
-    },
-    {
-      "name": "Sweet Shrimp",
       "price": 8.95,
-      "id": 55
+      "nameZh": "鱿鱼沙拉"
     },
     {
-      "name": "King Crab",
-      "price": 12.95,
-      "id": 56
-    }
-  ],
-  "Signature Roll": [
-    {
-      "name": "Crazy (5pcs)",
-      "price": 11.95,
-      "id": 57
-    },
-    {
-      "name": "007 (8pcs)",
-      "price": 12.95,
-      "id": 58
-    },
-    {
-      "name": "Volcano (6pcs)",
-      "price": 12.95,
-      "id": 59
-    },
-    {
-      "name": "Tropical Mango (8pcs)",
-      "price": 12.95,
-      "id": 60
-    },
-    {
-      "name": "Ichiban (8pcs)",
-      "price": 12.95,
-      "id": 61
-    },
-    {
-      "name": "Naruto (6pcs)",
-      "price": 13.95,
-      "id": 62
-    },
-    {
-      "name": "Angel Hair (8pcs)",
-      "price": 13.95,
-      "id": 63
-    },
-    {
-      "name": "New York (8pcs)",
-      "price": 13.95,
-      "id": 64
-    },
-    {
-      "name": "Honey (8pcs)",
-      "price": 14.95,
-      "id": 65
-    },
-    {
-      "name": "Hot Sexy Mama (8pcs)",
-      "price": 14.95,
-      "id": 66
-    },
-    {
-      "name": "Sandwich (4pcs)",
-      "price": 14.95,
-      "id": 67
-    },
-    {
-      "name": "Snow White (8pcs)",
-      "price": 14.95,
-      "id": 68
-    },
-    {
-      "name": "Sweetheart (8pcs)",
-      "price": 14.95,
-      "id": 69
-    },
-    {
-      "name": "Pink Lady (10pcs)",
-      "price": 14.95,
-      "id": 70
-    },
-    {
-      "name": "St. Patrick's (8pcs)",
-      "price": 14.95,
-      "id": 71
-    },
-    {
-      "name": "Sakura (8pcs)",
+      "id": 22093,
+      "name": "Poke Salad",
       "price": 15.95,
-      "id": 72
-    },
-    {
-      "name": "Diamond (8pcs)",
-      "price": 15.95,
-      "id": 73
-    },
-    {
-      "name": "Tiger (10pcs)",
-      "price": 15.95,
-      "id": 74
-    },
-    {
-      "name": "Godzilla (10pcs)",
-      "price": 16.95,
-      "id": 75
-    },
-    {
-      "name": "Monster (10pcs)",
-      "price": 16.95,
-      "id": 76
-    },
-    {
-      "name": "Caterpillar (10pcs)",
-      "price": 17.95,
-      "id": 77
-    }
-  ],
-  "Regular Roll": [
-    {
-      "name": "Avocado Roll",
-      "price": 4.95,
-      "id": 78
-    },
-    {
-      "name": "Cucumber Roll",
-      "price": 4.95,
-      "id": 79
-    },
-    {
-      "name": "Vegetable Roll",
-      "price": 4.95,
-      "id": 80
-    },
-    {
-      "name": "Sweet Potato Roll",
-      "price": 5.95,
-      "id": 81
-    },
-    {
-      "name": "Salmon Roll",
-      "price": 5.95,
-      "id": 82
-    },
-    {
-      "name": "Asparagus Roll",
-      "price": 5.95,
-      "id": 83
-    },
-    {
-      "name": "Tuna Roll",
-      "price": 5.95,
-      "id": 84
-    },
-    {
-      "name": "California Roll",
-      "price": 6.95,
-      "id": 85
-    },
-    {
-      "name": "Futo Maki",
-      "price": 6.95,
-      "id": 86
-    },
-    {
-      "name": "Yellowtail Scallion Roll",
-      "price": 6.95,
-      "id": 87
-    },
-    {
-      "name": "Spicy Salmon Roll",
-      "price": 7.95,
-      "id": 88
-    },
-    {
-      "name": "Spicy Tuna Roll",
-      "price": 7.95,
-      "id": 89
-    },
-    {
-      "name": "Spicy Yellowtail Roll",
-      "price": 7.95,
-      "id": 90
-    },
-    {
-      "name": "Spicy Shrimp Roll",
-      "price": 7.95,
-      "id": 91
-    },
-    {
-      "name": "Tuna Avocado Roll",
-      "price": 7.95,
-      "id": 92
-    },
-    {
-      "name": "Philadelphia Roll",
-      "price": 7.95,
-      "id": 93
-    },
-    {
-      "name": "Boston Roll",
-      "price": 7.95,
-      "id": 94
-    },
-    {
-      "name": "Alaska Roll",
-      "price": 7.95,
-      "id": 95
-    },
-    {
-      "name": "Eel Avocado Roll",
-      "price": 8.95,
-      "id": 96
-    },
-    {
-      "name": "Summer Roll",
-      "price": 9.95,
-      "id": 97
-    },
-    {
-      "name": "Spicy Scallop Roll",
-      "price": 9.95,
-      "id": 98
-    },
-    {
-      "name": "Shrimp Tempura Roll",
-      "price": 9.95,
-      "id": 99
-    },
-    {
-      "name": "Spider Roll",
-      "price": 10.95,
-      "id": 100
-    },
-    {
-      "name": "King Crab Avocado Roll",
-      "price": 10.95,
-      "id": 101
-    },
-    {
-      "name": "Rainbow Roll (8pcs)",
-      "price": 11.95,
-      "id": 102
-    },
-    {
-      "name": "Spicy Windy (8pcs)",
-      "price": 12.95,
-      "id": 103
-    },
-    {
-      "name": "Red Dragon (8pcs)",
-      "price": 12.95,
-      "id": 104
-    },
-    {
-      "name": "Dragon Roll (8pcs)",
-      "price": 13.95,
-      "id": 105
-    }
-  ],
-  "Sushi Dinner Combo": [
-    {
-      "name": "Vegetable Delight",
-      "price": 20.95,
-      "id": 106
-    },
-    {
-      "name": "Maki Combo",
-      "price": 21.95,
-      "id": 107
-    },
-    {
-      "name": "Spicy Maki Combo",
-      "price": 21.95,
-      "id": 108
-    },
-    {
-      "name": "Unagi Don",
-      "price": 21.95,
-      "id": 109
-    },
-    {
-      "name": "Chirashi",
-      "price": 22.95,
-      "id": 110
-    },
-    {
-      "name": "Sushi Deluxe",
-      "price": 28.95,
-      "id": 111
-    },
-    {
-      "name": "Sashimi Deluxe",
-      "price": 29.95,
-      "id": 112
-    },
-    {
-      "name": "Sushi Sashimi Combo",
-      "price": 29.95,
-      "id": 113
-    },
-    {
-      "name": "Love Boat",
-      "price": 53.95,
-      "id": 114
-    },
-    {
-      "name": "Party boat",
-      "price": 79.95,
-      "id": 115
-    }
-  ],
-  "Teppanyaki Dinner": [
-    {
-      "name": "Vegetable & Tofu",
-      "price": 19.95,
-      "id": 116
-    },
-    {
-      "name": "Chicken",
-      "price": 20.95,
-      "id": 117
-    },
-    {
-      "name": "Calamari",
-      "price": 24.95,
-      "id": 118
-    },
-    {
-      "name": "Salmon",
-      "price": 24.95,
-      "id": 119
-    },
-    {
-      "name": "Red Snapper",
-      "price": 24.95,
-      "id": 120
-    },
-    {
-      "name": "Steak",
-      "price": 25.95,
-      "id": 121,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Shrimp",
-      "price": 25.95,
-      "id": 122
-    },
-    {
-      "name": "Golden Shrimp",
-      "price": 25.95,
-      "id": 123
-    },
-    {
-      "name": "Garlic Shrimp",
-      "price": 25.95,
-      "id": 124
-    },
-    {
-      "name": "Scallop",
-      "price": 26.95,
-      "id": 125
-    },
-    {
-      "name": "Filet Mignon",
-      "price": 27.95,
-      "id": 126,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Twin Tuna",
-      "price": 27.95,
-      "id": 127
-    },
-    {
-      "name": "Sea Bass",
-      "price": 27.95,
-      "id": 128
-    },
-    {
-      "name": "Garlic Scallop",
-      "price": 28.95,
-      "id": 129
-    },
-    {
-      "name": "Lamb Chop",
-      "price": 29.95,
-      "id": 130
-    },
-    {
-      "name": "Twin Lobster (16oz)",
-      "price": 43.95,
-      "id": 131
-    }
-  ],
-  "Teppanyaki Dinner Combo": [
-    {
-      "name": "Teppanyaki Dinner Combo (Pick 2)",
-      "price": 29.95,
-      "id": 340,
-      "selectMin": 2,
-      "selectMax": 2,
-      "options": [
-        { "name": "Calamari", "price": 0 },
-        { "name": "Salmon", "price": 0 },
-        { "name": "Red Snapper", "price": 0 },
-        { "name": "Chicken", "price": 0 },
-        { "name": "Steak", "price": 0 },
-        { "name": "Shrimp", "price": 0 },
-        { "name": "Scallop", "price": 0 },
-        { "name": "Golden Shrimp", "price": 2.0 },
-        { "name": "Garlic Shrimp", "price": 2.0 },
-        { "name": "Garlic Scallop", "price": 3.0 },
-        { "name": "Tuna", "price": 3.0 },
-        { "name": "Sea Bass", "price": 3.0 },
-        { "name": "Filet Mignon", "price": 4.0 },
-        { "name": "Lamb Chop (2pcs)", "price": 6.0 },
-        { "name": "Lobster (8oz)", "price": 10.0 }
-      ]
-    },
-    {
-      "name": "Teppanyaki Dinner Combo (Pick 3)",
-      "price": 36.95,
-      "id": 341,
-      "selectMin": 3,
-      "selectMax": 3,
-      "options": [
-        { "name": "Calamari", "price": 0 },
-        { "name": "Salmon", "price": 0 },
-        { "name": "Red Snapper", "price": 0 },
-        { "name": "Chicken", "price": 0 },
-        { "name": "Steak", "price": 0 },
-        { "name": "Shrimp", "price": 0 },
-        { "name": "Scallop", "price": 0 },
-        { "name": "Golden Shrimp", "price": 2.0 },
-        { "name": "Garlic Shrimp", "price": 2.0 },
-        { "name": "Garlic Scallop", "price": 3.0 },
-        { "name": "Tuna", "price": 3.0 },
-        { "name": "Sea Bass", "price": 3.0 },
-        { "name": "Filet Mignon", "price": 4.0 },
-        { "name": "Lamb Chop (2pcs)", "price": 6.0 },
-        { "name": "Lobster (8oz)", "price": 10.0 }
-      ]
-    },
-    {
-      "name": "Calamari",
-      "price": 0.0,
-      "id": 132
-    },
-    {
-      "name": "Salmon",
-      "price": 0.0,
-      "id": 133
-    },
-    {
-      "name": "Red Snapper",
-      "price": 0.0,
-      "id": 134
-    },
-    {
-      "name": "Chicken",
-      "price": 0.0,
-      "id": 135
-    },
-    {
-      "name": "Steak",
-      "price": 0.0,
-      "id": 136,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Shrimp",
-      "price": 0.0,
-      "id": 137
-    },
-    {
-      "name": "Scallop",
-      "price": 0.0,
-      "id": 138
-    },
-    {
-      "name": "Golden Shrimp",
-      "price": 2.0,
-      "id": 139
-    },
-    {
-      "name": "Garlic Shrimp",
-      "price": 2.0,
-      "id": 140
-    },
-    {
-      "name": "Garlic Scallop",
-      "price": 3.0,
-      "id": 141
-    },
-    {
-      "name": "Tuna",
-      "price": 3.0,
-      "id": 142
-    },
-    {
-      "name": "Sea Bass",
-      "price": 3.0,
-      "id": 143
-    },
-    {
-      "name": "Filet Mignon",
-      "price": 4.0,
-      "id": 144,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Lamb Chop",
-      "price": 6.0,
-      "id": 145
-    },
-    {
-      "name": "Lobster",
-      "price": 10.0,
-      "id": 146
-    }
-  ],
-  "Teppanyaki Kids": [
-    {
-      "name": "Vegetable & Tofu",
-      "price": 12.95,
-      "id": 147
-    },
-    {
-      "name": "Chicken",
-      "price": 13.95,
-      "id": 148
-    },
-    {
-      "name": "Red Snapper",
-      "price": 13.95,
-      "id": 149
-    },
-    {
-      "name": "Salmon",
-      "price": 14.95,
-      "id": 150
-    },
-    {
-      "name": "Steak",
-      "price": 14.95,
-      "id": 151,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Scallop",
-      "price": 14.95,
-      "id": 152
-    },
-    {
-      "name": "Shrimp",
-      "price": 14.95,
-      "id": 153
-    },
-    {
-      "name": "Sea Bass",
-      "price": 15.95,
-      "id": 154
-    },
-    {
-      "name": "Golden Shrimp",
-      "price": 15.95,
-      "id": 155
-    },
-    {
-      "name": "Garlic Shrimp",
-      "price": 15.95,
-      "id": 156
-    },
-    {
-      "name": "Filet Mignon",
-      "price": 18.95,
-      "id": 157,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Lamb Chop",
-      "price": 18.95,
-      "id": 158
-    },
-    {
-      "name": "Lobster (8oz)",
-      "price": 19.95,
-      "id": 159
-    }
-  ],
-  "Entree": [
-    {
-      "name": "Ma Pa Tofu",
-      "price": 0.0,
-      "id": 160
-    },
-    {
-      "name": "Sesame Plates",
-      "price": 0.0,
-      "id": 161
-    },
-    {
-      "name": "Basil Plates",
-      "price": 0.0,
-      "id": 162
-    },
-    {
-      "name": "Mongolian",
-      "price": 0.0,
-      "id": 163
-    },
-    {
-      "name": "Panang Curry",
-      "price": 0.0,
-      "id": 164
-    },
-    {
-      "name": "Pineapple Curry",
-      "price": 0.0,
-      "id": 165
-    },
-    {
-      "name": "Red Chili",
-      "price": 0.0,
-      "id": 166
-    },
-    {
-      "name": "Spicy Broth",
-      "price": 0.0,
-      "id": 167
-    }
-  ],
-  "Teriyaki Dinner": [
-    {
-      "name": "Chicken",
-      "price": 16.95,
-      "id": 168
-    },
-    {
-      "name": "Salmon",
-      "price": 17.95,
-      "id": 169
-    },
-    {
-      "name": "Seabass",
-      "price": 18.95,
-      "id": 170
-    },
-    {
-      "name": "Steak",
-      "price": 19.95,
-      "id": 171,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Scallop",
-      "price": 19.95,
-      "id": 172
-    },
-    {
-      "name": "Lamb Chops",
-      "price": 20.95,
-      "id": 173
-    }
-  ],
-  "Noodle": [
-    {
-      "name": "Pad Sea Eiw",
-      "price": 0.0,
-      "id": 174
-    },
-    {
-      "name": "Thai Crazy Noodle",
-      "price": 0.0,
-      "id": 175
-    },
-    {
-      "name": "Yaki Udon",
-      "price": 0.0,
-      "id": 176
-    },
-    {
-      "name": "Pad Thai Noodle",
-      "price": 0.0,
-      "id": 177
-    },
-    {
-      "name": "Hibachi Noodle",
-      "price": 0.0,
-      "id": 178
-    },
-    {
-      "name": "Singapore Rice Noodle",
-      "price": 0.0,
-      "id": 179
-    }
-  ],
-  "Fried Rice": [
-    {
-      "name": "Thai Fried Rice",
-      "price": 0.0,
-      "id": 180
-    },
-    {
-      "name": "Pineapple Fried Rice",
-      "price": 0.0,
-      "id": 181
-    },
-    {
-      "name": "Curry Fried Rice",
-      "price": 0.0,
-      "id": 182
-    },
-    {
-      "name": "Hibachi Fried Rice",
-      "price": 0.0,
-      "id": 183
-    }
-  ],
-  "Special Ramen Noodle": [
-    {
-      "name": "Shoyu Ramen (Light Soy)",
-      "price": 11.95,
-      "id": 184
-    },
-    {
-      "name": "Veggies Lover Ramen (Vegetarian)",
-      "price": 11.95,
-      "id": 185
-    },
-    {
-      "name": "Miso Ramen (Mid Combination)",
-      "price": 11.95,
-      "id": 186
-    },
-    {
-      "name": "Tempura Ramen (Crispy Shrimp)",
-      "price": 12.95,
-      "id": 187
-    },
-    {
-      "name": "Grilled Chicken Ramen (Teriyaki Style)",
-      "price": 13.95,
-      "id": 188
-    },
-    {
-      "name": "Tonkotsu Ramen (Heavy Tonkotsu)",
-      "price": 13.95,
-      "id": 189
-    }
-  ],
-  "Extra": [
-    {
-      "name": "Chashu",
-      "price": 5.0,
-      "id": 190
-    },
-    {
-      "name": "Grilled Chicken",
-      "price": 5.0,
-      "id": 191
-    },
-    {
-      "name": "Tempura Shrimps",
-      "price": 5.0,
-      "id": 192
-    },
-    {
-      "name": "Noodle",
-      "price": 2.5,
-      "id": 193
-    },
-    {
-      "name": "Egg",
-      "price": 1.25,
-      "id": 194
-    },
-    {
-      "name": "Veggies",
-      "price": 0.0,
-      "id": 195,
-      "options": [
-        {
-          "name": "(each)",
-          "price": 0.5
-        }
-      ]
-    }
-  ],
-  "Dessert": [
-    {
-      "name": "Japanese Ice Cream",
-      "price": 3.95,
-      "id": 196
-    },
-    {
-      "name": "Ice Cream Sandwich",
-      "price": 4.95,
-      "id": 197
-    },
-    {
-      "name": "Yogurt Cheese Cake",
-      "price": 4.95,
-      "id": 198
-    },
-    {
-      "name": "Oreo Mousse Cake",
-      "price": 4.95,
-      "id": 199
-    },
-    {
-      "name": "Mango Mousse Cheese Cake",
-      "price": 5.5,
-      "id": 200
-    },
-    {
-      "name": "Mochi Ice Cream",
-      "price": 5.95,
-      "id": 201
-    },
-    {
-      "name": "Tempura Ice ream",
-      "price": 6.95,
-      "id": 202
-    },
-    {
-      "name": "Banana Split",
-      "price": 7.95,
-      "id": 203
-    },
-    {
-      "name": "Macarons",
-      "price": 7.95,
-      "id": 204
-    },
-    {
-      "name": "Chocolate Lava with Ice Cream",
-      "price": 7.95,
-      "id": 205
+      "nameZh": "夏威夷拌饭"
     }
   ],
   "Sushi": [
     {
-      "name": "Any Two Rolls",
-      "price": 11.99,
-      "id": 206
+      "id": 22111,
+      "name": "Egg Sushi",
+      "price": 6.95,
+      "nameZh": "玉子寿司"
     },
     {
-      "name": "Any Three Rolls",
-      "price": 13.99,
-      "id": 207
+      "id": 22112,
+      "name": "Crab Stick Sushi",
+      "price": 6.95,
+      "nameZh": "蟹棒寿司"
     },
     {
-      "name": "Spicy Tuna Roll & 5pcs Sushi",
-      "price": 13.99,
-      "id": 208
+      "id": 22113,
+      "name": "Shrimp Sushi",
+      "price": 7.95,
+      "nameZh": "鲜虾寿司"
     },
     {
-      "name": "12 pcs Sashimi",
-      "price": 14.99,
-      "id": 209
+      "id": 22114,
+      "name": "Red Snapper Sushi",
+      "price": 7.95,
+      "nameZh": "红鲷鱼寿司"
     },
     {
-      "name": "Spicy Salmon Roll & 12 pcs Sashimi",
-      "price": 16.99,
-      "id": 210
+      "id": 22115,
+      "name": "Squid Sushi",
+      "price": 7.95,
+      "nameZh": "鱿鱼寿司"
     },
     {
-      "name": "Vegetable Roll & 5 pcs Sashimi",
-      "price": 12.99,
-      "id": 211
+      "id": 22116,
+      "name": "Mackerel Sushi",
+      "price": 7.95,
+      "nameZh": "鲭鱼寿司"
     },
     {
-      "name": "Eel Don",
-      "price": 14.99,
-      "id": 212
+      "id": 22118,
+      "name": "Smoked Salmon Sushi",
+      "price": 8.95,
+      "nameZh": "烟熏三文鱼寿司"
     },
     {
-      "name": "Shrimp Tempura Roll, 4 pcs Sushi & 6 pcs Sashimi",
-      "price": 17.99,
-      "id": 213
-    }
-  ],
-  "Bento": [
-    {
-      "name": "Bento",
-      "price": 14.99,
-      "id": 214
-    }
-  ],
-  "Teppanyaki Combo": [
-    {
-      "name": "Calamari",
-      "price": 0.0,
-      "id": 215
+      "id": 22119,
+      "name": "Tuna Sushi",
+      "price": 8.95,
+      "nameZh": "金枪鱼寿司"
     },
     {
-      "name": "Salmon",
-      "price": 0.0,
-      "id": 216
+      "id": 22120,
+      "name": "Salmon Sushi",
+      "price": 8.95,
+      "nameZh": "三文鱼寿司"
     },
     {
-      "name": "Chicken",
-      "price": 0.0,
-      "id": 217
+      "id": 22121,
+      "name": "White Tuna Sushi",
+      "price": 8.95,
+      "nameZh": "白金枪鱼寿司"
     },
     {
-      "name": "Steak",
-      "price": 0.0,
-      "id": 218,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
+      "id": 22122,
+      "name": "Scallop Sushi",
+      "price": 8.95,
+      "nameZh": "扇贝寿司"
     },
     {
-      "name": "Shrimp",
-      "price": 0.0,
-      "id": 219
+      "id": 22123,
+      "name": "Octopus Sushi",
+      "price": 8.95,
+      "nameZh": "章鱼寿司"
     },
     {
-      "name": "Scallop",
-      "price": 0.0,
-      "id": 220
+      "id": 22124,
+      "name": "Black Tobiko Sushi",
+      "price": 8.95,
+      "nameZh": "黑飞鱼子寿司"
     },
     {
-      "name": "Red Snapper",
-      "price": 0.0,
-      "id": 221
+      "id": 22125,
+      "name": "Green Tobiko Sushi",
+      "price": 8.95,
+      "nameZh": "绿飞鱼子寿司"
     },
     {
-      "name": "Golden Shrimp",
-      "price": 2.0,
-      "id": 222
+      "id": 22126,
+      "name": "Red Tobiko Sushi",
+      "price": 8.95,
+      "nameZh": "红飞鱼子寿司"
     },
     {
-      "name": "Garlic Shrimp",
-      "price": 2.0,
-      "id": 223
+      "id": 22127,
+      "name": "Yellowtail Sushi",
+      "price": 8.95,
+      "nameZh": "黄尾鱼寿司"
     },
     {
-      "name": "Tuna",
-      "price": 3.0,
-      "id": 224
+      "id": 22128,
+      "name": "Salmon Roe Sushi",
+      "price": 9.95,
+      "nameZh": "鲑鱼籽寿司"
     },
     {
-      "name": "Sea Bass",
-      "price": 3.0,
-      "id": 225
+      "id": 22129,
+      "name": "Eel Sushi",
+      "price": 9.95,
+      "nameZh": "鳗鱼寿司"
     },
     {
-      "name": "Garlic Scallop",
-      "price": 3.0,
-      "id": 226
+      "id": 22130,
+      "name": "Sweet Shrimp Sushi",
+      "price": 10.95,
+      "nameZh": "甜虾寿司"
     },
     {
-      "name": "Filet Mignon",
-      "price": 4.0,
-      "id": 227,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Lamb Chop",
-      "price": 6.0,
-      "id": 228
-    },
-    {
-      "name": "Lobster",
-      "price": 10.0,
-      "id": 229
-    }
-  ],
-  "Teppanyaki": [
-    {
-      "name": "Vegetable & Tofu",
-      "price": 12.95,
-      "id": 230
-    },
-    {
-      "name": "Chicken",
+      "id": 22131,
+      "name": "King Crab Sushi",
       "price": 13.95,
-      "id": 231
+      "nameZh": "帝王蟹寿司"
     },
     {
-      "name": "Steak",
-      "price": 14.95,
-      "id": 232,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
+      "id": 114328,
+      "name": "Fatty Salmon Sushi",
+      "price": 10.95,
+      "nameZh": "肥鲑鱼寿司"
     },
     {
-      "name": "Salmon",
-      "price": 14.95,
-      "id": 233
-    },
-    {
-      "name": "Tuna",
-      "price": 14.95,
-      "id": 234
-    },
-    {
-      "name": "Hibachi Shrimp",
-      "price": 14.95,
-      "id": 235
-    },
-    {
-      "name": "Calamari",
-      "price": 14.95,
-      "id": 236
-    },
-    {
-      "name": "Red Snapper",
-      "price": 14.95,
-      "id": 237
-    },
-    {
-      "name": "Scallop",
-      "price": 15.95,
-      "id": 238
-    },
-    {
-      "name": "Sea Bass",
-      "price": 15.95,
-      "id": 239
-    },
-    {
-      "name": "Golden Shrimp",
-      "price": 15.95,
-      "id": 240
-    },
-    {
-      "name": "Garlic Shrimp",
-      "price": 15.95,
-      "id": 241
-    },
-    {
-      "name": "Lamb Chop",
-      "price": 16.95,
-      "id": 242
-    },
-    {
-      "name": "Filet Mignon",
-      "price": 16.95,
-      "id": 243,
-      "options": [
-        { "name": "Rare", "price": 0 },
-        { "name": "Medium Rare", "price": 0 },
-        { "name": "Medium", "price": 0 },
-        { "name": "Medium Well", "price": 0 },
-        { "name": "Well Done", "price": 0 }
-      ]
-    },
-    {
-      "name": "Garlic Scallop",
-      "price": 16.95,
-      "id": 244
-    },
-    {
-      "name": "Lobster (8oz)",
-      "price": 19.95,
-      "id": 245
+      "id": 114329,
+      "name": "Surf Clam Sushi",
+      "price": 8.95,
+      "nameZh": "海蛤寿司"
     }
   ],
-  "Cocktails": [
+  "Sashimi": [
     {
-      "name": "Sakura's Martini",
-      "price": 11.0,
-      "id": 246
+      "id": 22046,
+      "name": "Egg Sashimi",
+      "price": 6.95,
+      "nameZh": "鸡蛋刺身"
     },
     {
-      "name": "Asian Pear",
-      "price": 10.0,
-      "id": 247
+      "id": 22047,
+      "name": "Crab Stick Sashimi",
+      "price": 6.95,
+      "nameZh": "蟹棒刺身"
     },
     {
-      "name": "Iki Mule",
-      "price": 10.0,
-      "id": 248
+      "id": 22048,
+      "name": "Shrimp Sashimi",
+      "price": 7.95,
+      "nameZh": "鲜虾刺身"
     },
     {
-      "name": "Sparkling Fuji Apple",
-      "price": 10.0,
-      "id": 249
+      "id": 22049,
+      "name": "Red Snapper Sashimi",
+      "price": 7.95,
+      "nameZh": "红鲷鱼刺身"
     },
     {
-      "name": "Japanese Cocktail",
-      "price": 11.0,
-      "id": 250
+      "id": 22050,
+      "name": "Squid Sashimi",
+      "price": 7.95,
+      "nameZh": "鱿鱼刺身"
     },
     {
-      "name": "Plum Sour",
-      "price": 9.0,
-      "id": 251
+      "id": 22051,
+      "name": "Mackerel Sashimi",
+      "price": 7.95,
+      "nameZh": "鲭鱼刺身"
     },
     {
-      "name": "Lychee Martini",
-      "price": 10.0,
-      "id": 252
+      "id": 22053,
+      "name": "Smoked Salmon Sashimi",
+      "price": 8.95,
+      "nameZh": "烟熏三文鱼刺身"
     },
     {
-      "name": "Rising Sun Martini",
-      "price": 10.0,
-      "id": 253
+      "id": 22054,
+      "name": "Tuna Sashimi",
+      "price": 8.95,
+      "nameZh": "金枪鱼刺身"
     },
     {
-      "name": "Japanese Sex",
-      "price": 9.0,
-      "id": 254
+      "id": 22055,
+      "name": "Salmon Sashimi",
+      "price": 8.95,
+      "nameZh": "三文鱼刺身"
     },
     {
-      "name": "Blue Island Iced Tea",
-      "price": 11.0,
-      "id": 255
+      "id": 22056,
+      "name": "White Tuna Sashimi",
+      "price": 8.95,
+      "nameZh": "白金枪鱼刺身"
     },
     {
-      "name": "White Peach Sangria",
-      "price": 9.0,
-      "id": 256
+      "id": 22057,
+      "name": "Scallop Sashimi",
+      "price": 8.95,
+      "nameZh": "扇贝刺身"
     },
     {
-      "name": "Mojito",
-      "price": 9.0,
-      "id": 257
+      "id": 22058,
+      "name": "Octopus Sashimi",
+      "price": 8.95,
+      "nameZh": "章鱼刺身"
     },
     {
-      "name": "Mai-Tai",
-      "price": 10.0,
-      "id": 258
+      "id": 22059,
+      "name": "Black Tobiko Sashimi",
+      "price": 8.95,
+      "nameZh": "黑飞鱼子刺身"
     },
     {
-      "name": "Cosmopolitan",
-      "price": 9.0,
-      "id": 259
+      "id": 22060,
+      "name": "Green Tobiko Sashimi",
+      "price": 8.95,
+      "nameZh": "绿飞鱼子刺身"
     },
     {
-      "name": "Apple Martini",
-      "price": 9.0,
-      "id": 260
+      "id": 22061,
+      "name": "Red Tobiko Sashimi",
+      "price": 8.95,
+      "nameZh": "红飞鱼子刺身"
     },
     {
-      "name": "Japanese Jack",
-      "price": 11.0,
-      "id": 261
+      "id": 22062,
+      "name": "Yellowtail Sashimi",
+      "price": 8.95,
+      "nameZh": "黄尾鱼刺身"
     },
     {
-      "name": "Mimosa",
-      "price": 9.0,
-      "id": 262
+      "id": 22063,
+      "name": "Salmon Roe Sashimi",
+      "price": 9.95,
+      "nameZh": "三文鱼籽刺身"
     },
     {
-      "name": "Creamsicle",
-      "price": 10.0,
-      "id": 263
+      "id": 22064,
+      "name": "Eel Sashimi",
+      "price": 9.95,
+      "nameZh": "鳗鱼刺身"
     },
     {
-      "name": "Japanese Soho Martini",
-      "price": 10.0,
-      "id": 264
+      "id": 22065,
+      "name": "Sweet Shrimp Sashimi",
+      "price": 10.95,
+      "nameZh": "甜虾刺身"
+    },
+    {
+      "id": 22066,
+      "name": "King Crab Sashimi",
+      "price": 13.95,
+      "nameZh": "帝王蟹刺身"
+    },
+    {
+      "id": 114330,
+      "name": "Fatty Salmon Sashimi",
+      "price": 10.95,
+      "nameZh": "肥三文鱼刺身"
+    },
+    {
+      "id": 114331,
+      "name": "Surf Clam Sashimi",
+      "price": 8.95,
+      "nameZh": "海蛤刺身"
     }
   ],
-  "Weekday Special": [
+  "Regular Roll": [
     {
-      "name": "Monday - Beer",
-      "price": 0.0,
-      "id": 265,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 3.0
-        },
-        {
-          "name": "Bottle",
-          "price": 6.0
-        }
-      ]
-    },
-    {
-      "name": "Tuesday - House Sake",
-      "price": 0.0,
-      "id": 266,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 3.0
-        },
-        {
-          "name": "Bottle",
-          "price": 6.0
-        }
-      ]
-    },
-    {
-      "name": "Wednesday - House Wine",
-      "price": 0.0,
-      "id": 267,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 5.0
-        },
-        {
-          "name": "Bottle",
-          "price": 22.0
-        }
-      ]
-    },
-    {
-      "name": "Thursday - Martini Cocktails",
-      "price": 0.0,
-      "id": 268,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 6.0
-        }
-      ]
-    }
-  ],
-  "White Wine": [
-    {
-      "name": "Avissi Prosecco, Italy",
-      "price": 0.0,
-      "id": 269,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "Guenoc Chardonnay, CA",
-      "price": 0.0,
-      "id": 270,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 28.0
-        }
-      ]
-    },
-    {
-      "name": "Crossings Sauvuignon Blanc, NZ",
-      "price": 0.0,
-      "id": 271,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 10.0
-        },
-        {
-          "name": "Bottle",
-          "price": 34.0
-        }
-      ]
-    },
-    {
-      "name": "Chateau Lamothe Sauvignon Blanc, France",
-      "price": 0.0,
-      "id": 272,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 11.0
-        },
-        {
-          "name": "Bottle",
-          "price": 36.0
-        }
-      ]
-    },
-    {
-      "name": "Stellina Di Notte, Pinot Grigio, Italy",
-      "price": 0.0,
-      "id": 273,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "Chole Pinot Grigio, Italy",
-      "price": 0.0,
-      "id": 274,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 10.0
-        },
-        {
-          "name": "Bottle",
-          "price": 32.0
-        }
-      ]
-    },
-    {
-      "name": "Villa Wolf Gewurztraminer, Germany",
-      "price": 0.0,
-      "id": 275,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "House White Wine",
-      "price": 0.0,
-      "id": 276,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 27.0
-        }
-      ]
-    }
-  ],
-  "Red Wine": [
-    {
-      "name": "Tour De Luchey Bordeaux, France",
-      "price": 0.0,
-      "id": 277,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "Chateau Fontanes Blanc, France",
-      "price": 0.0,
-      "id": 278,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 11.0
-        },
-        {
-          "name": "Bottle",
-          "price": 36.0
-        }
-      ]
-    },
-    {
-      "name": "Navarra Correas Mablec, CA",
-      "price": 0.0,
-      "id": 279,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "Seven Falls Merlot, WA",
-      "price": 0.0,
-      "id": 280,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "Hidden Crush Cabernet Sauvignon, CA",
-      "price": 0.0,
-      "id": 281,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 10.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "Lost Angel Cabernet, CA",
-      "price": 0.0,
-      "id": 282,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 28.0
-        }
-      ]
-    },
-    {
-      "name": "Seaglass Pinot Noir, CA",
-      "price": 0.0,
-      "id": 283,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    },
-    {
-      "name": "House Red Wine",
-      "price": 0.0,
-      "id": 284,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 27.0
-        }
-      ]
-    }
-  ],
-  "Plum Wine": [
-    {
-      "name": "Kinsen Plum Wine (750ml)",
-      "price": 0.0,
-      "id": 285,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 26.0
-        }
-      ]
-    }
-  ],
-  "ShoChu": [
-    {
-      "name": "Nadeshiko True Beauty Shochu(750ml)",
-      "price": 0.0,
-      "id": 286,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 36.0
-        }
-      ]
-    },
-    {
-      "name": "Iichiko Shochu (750ml)",
-      "price": 0.0,
-      "id": 287,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 38.0
-        }
-      ]
-    }
-  ],
-  "Beer": [
-    {
-      "name": "Sapporo",
-      "price": 0.0,
-      "id": 288,
-      "options": [
-        {
-          "name": "Small",
-          "price": 5.0
-        },
-        {
-          "name": "Large",
-          "price": 9.0
-        }
-      ]
-    },
-    {
-      "name": "Kirin Ichiban",
-      "price": 0.0,
-      "id": 289,
-      "options": [
-        {
-          "name": "Small",
-          "price": 5.0
-        }
-      ]
-    },
-    {
-      "name": "Kirin Ichiban Lite",
-      "price": 0.0,
-      "id": 290,
-      "options": [
-        {
-          "name": "Small",
-          "price": 5.0
-        }
-      ]
-    },
-    {
-      "name": "Tsing Tao",
-      "price": 0.0,
-      "id": 291,
-      "options": [
-        {
-          "name": "Small",
-          "price": 5.0
-        }
-      ]
-    },
-    {
-      "name": "Asahi",
-      "price": 0.0,
-      "id": 292,
-      "options": [
-        {
-          "name": "Small",
-          "price": 5.0
-        }
-      ]
-    },
-    {
-      "name": "Bud Lite",
-      "price": 0.0,
-      "id": 293,
-      "options": [
-        {
-          "name": "Small",
-          "price": 4.0
-        }
-      ]
-    },
-    {
-      "name": "Miller Lite",
-      "price": 0.0,
-      "id": 294,
-      "options": [
-        {
-          "name": "Small",
-          "price": 4.0
-        }
-      ]
-    }
-  ],
-  "Cold Sake Flight": [
-    {
-      "name": "Cold Sake Flight",
-      "price": 0.0,
-      "id": 295
-    }
-  ],
-  "House Sake": [
-    {
-      "name": "Gekkeikan Junmai",
-      "price": 0.0,
-      "id": 296,
-      "options": [
-        {
-          "name": "Small",
-          "price": 6.0
-        },
-        {
-          "name": "Large",
-          "price": 9.0
-        }
-      ]
-    }
-  ],
-  "Classic": [
-    {
-      "name": "Yuri Masamune Honjozo (720ml",
-      "price": 0.0,
-      "id": 297,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 10.0
-        },
-        {
-          "name": "Bottle",
-          "price": 35.0
-        }
-      ]
-    }
-  ],
-  "Aromatic": [
-    {
-      "name": "Dassai Goju Junmai Daiginjo (720ml)",
-      "price": 0.0,
-      "id": 298,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 12.0
-        },
-        {
-          "name": "Bottle",
-          "price": 38.0
-        }
-      ]
-    }
-  ],
-  "Rich": [
-    {
-      "name": "Setsugetsu Bijin Junmai Ginjo (720ml)",
-      "price": 0.0,
-      "id": 299,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 28.0
-        }
-      ]
-    }
-  ],
-  "Clean": [
-    {
-      "name": "Hakkaisan Tokubetsu Junmai (720ml)",
-      "price": 0.0,
-      "id": 300,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 28.0
-        }
-      ]
-    },
-    {
-      "name": "Black & Gold Junmai Blend (750ml)",
-      "price": 0.0,
-      "id": 301,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 32.0
-        }
-      ]
-    },
-    {
-      "name": "Haiku Junmai (750ml)",
-      "price": 0.0,
-      "id": 302,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 30.0
-        }
-      ]
-    }
-  ],
-  "Sparkling": [
-    {
-      "name": "Bunny Junmai Sparking (300ml)",
-      "price": 0.0,
-      "id": 303,
-      "options": [
-        {
-          "name": "BTL",
-          "price": 20.0
-        }
-      ]
-    },
-    {
-      "name": "Zipang Sparking (250ml)",
-      "price": 0.0,
-      "id": 304,
-      "options": [
-        {
-          "name": "BTL",
-          "price": 18.0
-        }
-      ]
-    }
-  ],
-  "Nigori": [
-    {
-      "name": "Kurosawa Sake Nigori Kimoto \"Black River\"",
-      "price": 0.0,
-      "id": 305,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 9.0
-        },
-        {
-          "name": "Bottle",
-          "price": 32.0
-        }
-      ]
-    }
-  ],
-  "Flavored Sake": [
-    {
-      "name": "Hana Lychee Sake (750ml)",
-      "price": 0.0,
-      "id": 306,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 6.0
-        },
-        {
-          "name": "Bottle",
-          "price": 26.0
-        }
-      ]
-    },
-    {
-      "name": "Hana Fuji Apple Sake (750ml)",
-      "price": 0.0,
-      "id": 307,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 6.0
-        },
-        {
-          "name": "Bottle",
-          "price": 26.0
-        }
-      ]
-    },
-    {
-      "name": "Yuzu Lemon Sake (750ml)",
-      "price": 0.0,
-      "id": 308,
-      "options": [
-        {
-          "name": "Glass",
-          "price": 8.0
-        },
-        {
-          "name": "Bottle",
-          "price": 32.0
-        }
-      ]
-    }
-  ],
-  "Beverages": [
-    {
-      "name": "Thai Ice Tea",
-      "price": 5.0,
-      "id": 309
-    },
-    {
-      "name": "Soft drinks (Free refills)",
-      "price": 2.0,
-      "id": 310
-    },
-    {
-      "name": "San Pellegrino Sparkling Water (500ml)",
-      "price": 4.0,
-      "id": 311
-    },
-    {
-      "name": "Ramune (Japanese Soda)",
-      "price": 3.0,
-      "id": 312
-    },
-    {
-      "name": "Juice",
-      "price": 3.0,
-      "id": 313
-    }
-  ],
-  "Appetizer Platters": [
-    {
-      "name": "Gyoza",
-      "price": 35.0,
-      "id": 314
-    },
-    {
-      "name": "Shumai",
-      "price": 35.0,
-      "id": 315
-    },
-    {
-      "name": "Edamama",
-      "price": 18.0,
-      "id": 316
-    },
-    {
-      "name": "Kimchi",
-      "price": 19.0,
-      "id": 317
-    },
-    {
-      "name": "Seaweed Salad",
-      "price": 22.0,
-      "id": 318
-    },
-    {
-      "name": "Mango Shrimp Spring Roll",
-      "price": 38.0,
-      "id": 319
-    },
-    {
-      "name": "Ginger Calamari",
-      "price": 39.0,
-      "id": 320
-    },
-    {
-      "name": "Chicken Teriyaki",
-      "price": 49.0,
-      "id": 321
-    }
-  ],
-  "Sashimi Platters Chef's Choice": [
-    {
-      "name": "Assorted Sashimi Platter A",
-      "price": 0.0,
-      "id": 322,
-      "options": [
-        {
-          "name": "46 pcs",
-          "price": 79.0
-        }
-      ]
-    },
-    {
-      "name": "Assorted Sashimi Platter B",
-      "price": 0.0,
-      "id": 323,
-      "options": [
-        {
-          "name": "68 pcs",
-          "price": 109.0
-        }
-      ]
-    },
-    {
-      "name": "Assorted Sashimi Platter C",
-      "price": 0.0,
-      "id": 324,
-      "options": [
-        {
-          "name": "98 pcs",
-          "price": 139.0
-        }
-      ]
-    },
-    {
-      "name": "Assorted Sashimi Platter D",
-      "price": 0.0,
-      "id": 325,
-      "options": [
-        {
-          "name": "148 pcs",
-          "price": 199.0
-        }
-      ]
-    }
-  ],
-  "Sushi Combo Platters Chef's Choice": [
-    {
-      "name": "Assorted Sushi Platter A",
-      "price": 0.0,
-      "id": 326,
-      "options": [
-        {
-          "name": "48 pcs",
-          "price": 79.0
-        }
-      ]
-    },
-    {
-      "name": "Assorted Sushi Platter B",
-      "price": 0.0,
-      "id": 327,
-      "options": [
-        {
-          "name": "78 pcs",
-          "price": 119.0
-        }
-      ]
-    },
-    {
-      "name": "Assorted Sushi Platter C",
-      "price": 0.0,
-      "id": 328,
-      "options": [
-        {
-          "name": "110 pcs",
-          "price": 159.0
-        }
-      ]
-    },
-    {
-      "name": "Assorted Sushi Platter D",
-      "price": 0.0,
-      "id": 329,
-      "options": [
-        {
-          "name": "142 pcs",
-          "price": 189.0
-        }
-      ]
-    }
-  ],
-  "Vegetarian Delight Platters": [
-    {
+      "id": 22018,
       "name": "Avocado Roll",
-      "price": 0.0,
-      "id": 330
+      "price": 7.95,
+      "nameZh": "牛油果卷"
     },
     {
+      "id": 22019,
       "name": "Cucumber Roll",
-      "price": 0.0,
-      "id": 331
+      "price": 7.95,
+      "nameZh": "黄瓜卷"
     },
     {
-      "name": "Sweet Potato Roll",
-      "price": 0.0,
-      "id": 332
-    },
-    {
+      "id": 22020,
       "name": "Vegetable Roll",
-      "price": 0.0,
-      "id": 333
+      "price": 8.95,
+      "nameZh": "蔬菜卷"
     },
     {
-      "name": "Futo Maki",
-      "price": 0.0,
-      "id": 334
+      "id": 22021,
+      "name": "Sweet Potato Roll",
+      "price": 8.95,
+      "nameZh": "红薯卷"
+    },
+    {
+      "id": 22022,
+      "name": "Salmon Roll",
+      "price": 8.95,
+      "nameZh": "三文鱼卷"
+    },
+    {
+      "id": 22023,
+      "name": "Asparagus Roll",
+      "price": 8.95,
+      "nameZh": "芦笋卷"
+    },
+    {
+      "id": 22024,
+      "name": "Tuna Roll",
+      "price": 8.95,
+      "nameZh": "金枪鱼卷"
+    },
+    {
+      "id": 22025,
+      "name": "California Roll",
+      "price": 9.95,
+      "nameZh": "加州卷"
+    },
+    {
+      "id": 22027,
+      "name": "Yellowtail Scallion Roll",
+      "price": 9.95,
+      "nameZh": "黄尾鱼葱卷"
+    },
+    {
+      "id": 22028,
+      "name": "Spicy Salmon Roll",
+      "price": 10.95,
+      "nameZh": "辣味三文鱼卷"
+    },
+    {
+      "id": 22029,
+      "name": "Spicy Tuna Roll",
+      "price": 10.95,
+      "nameZh": "辣味金枪鱼卷"
+    },
+    {
+      "id": 22030,
+      "name": "Spicy Yellowtail Roll",
+      "price": 10.95,
+      "nameZh": "辣味黄尾鱼卷"
+    },
+    {
+      "id": 22031,
+      "name": "Spicy Shrimp Roll",
+      "price": 10.95,
+      "nameZh": "辣味虾卷"
+    },
+    {
+      "id": 22032,
+      "name": "Tuna Avocado Roll",
+      "price": 10.95,
+      "nameZh": "金枪鱼牛油果卷"
+    },
+    {
+      "id": 22033,
+      "name": "Philadelphia Roll",
+      "price": 10.95,
+      "nameZh": "费城卷"
+    },
+    {
+      "id": 22035,
+      "name": "Alaska Roll",
+      "price": 10.95,
+      "nameZh": "阿拉斯加卷"
+    },
+    {
+      "id": 22036,
+      "name": "Eel Avocado Roll",
+      "price": 10.95,
+      "nameZh": "鳗鱼牛油果卷"
+    },
+    {
+      "id": 22037,
+      "name": "Spicy Scallop Roll",
+      "price": 11.95,
+      "nameZh": "辣味扇贝卷"
+    },
+    {
+      "id": 22038,
+      "name": "Shrimp Tempura Roll",
+      "price": 12.95,
+      "nameZh": "天妇罗虾卷"
+    },
+    {
+      "id": 41911,
+      "name": "Snowflake Roll",
+      "price": 11.95,
+      "nameZh": "雪花卷"
+    },
+    {
+      "id": 22039,
+      "name": "Summer Roll",
+      "price": 13.95,
+      "nameZh": "夏日卷"
+    },
+    {
+      "id": 22040,
+      "name": "Spider Roll",
+      "price": 14.95,
+      "nameZh": "蜘蛛卷"
+    },
+    {
+      "id": 22041,
+      "name": "King Crab Avocado Roll",
+      "price": 14.95,
+      "nameZh": "帝王蟹牛油果卷"
+    },
+    {
+      "id": 22042,
+      "name": "Rainbow Roll",
+      "price": 14.95,
+      "nameZh": "彩虹卷"
+    },
+    {
+      "id": 22043,
+      "name": "Spicy Windy (8pcs)",
+      "price": 14.95,
+      "nameZh": "辣风卷 (8个)"
+    },
+    {
+      "id": 22044,
+      "name": "Red Dragon (8pcs)",
+      "price": 15.95,
+      "nameZh": "红龙卷 (8个)"
+    },
+    {
+      "id": 22045,
+      "name": "Dragon Roll (8pcs)",
+      "price": 15.95,
+      "nameZh": "龙卷 (8个)"
+    },
+    {
+      "id": 114332,
+      "name": "Big Phili Roll",
+      "price": 13.95,
+      "nameZh": "大费城卷"
     }
   ],
-  "Maki Lovers Platters": [
+  "Signature Roll": [
     {
-      "name": "California Roll Platter",
-      "price": 0.0,
-      "id": 335,
-      "options": [
-        {
-          "name": "48 pcs",
-          "price": 35.0
-        },
-        {
-          "name": "",
-          "price": 5.0
-        }
-      ]
+      "id": 22067,
+      "name": "Crazy Roll (5 pcs)",
+      "price": 14.95,
+      "nameZh": "疯狂卷 (5个)"
     },
     {
-      "name": "Spicy Combo Platter",
-      "price": 0.0,
-      "id": 336,
-      "options": [
-        {
-          "name": "60 pcs",
-          "price": 59.0
-        }
-      ]
+      "id": 22069,
+      "name": "Volcano Roll (6 pcs)",
+      "price": 15.95,
+      "nameZh": "火山卷 (6个)"
     },
     {
-      "name": "Premium Maki Platter",
-      "price": 0.0,
-      "id": 337,
-      "options": [
-        {
-          "name": "78 pcs",
-          "price": 72.0
-        }
-      ]
+      "id": 22070,
+      "name": "Tropical Mango (8 pcs)",
+      "price": 15.95,
+      "nameZh": "热带芒果卷 (8个)"
     },
     {
-      "name": "Deluxe Maki Platter",
-      "price": 0.0,
-      "id": 338,
-      "options": [
-        {
-          "name": "80 pcs",
-          "price": 109.0
-        }
-      ]
+      "id": 22071,
+      "name": "Naruto Roll (6 pcs)",
+      "price": 16.95,
+      "nameZh": "火影卷 (6个)"
     },
     {
-      "name": "Thai & Hibachi Platter",
-      "price": 0.0,
-      "id": 339,
-      "options": [
-        {
-          "name": "Vegetable",
-          "price": 29.0
-        },
-        {
-          "name": "Chicken",
-          "price": 42.0
-        },
-        {
-          "name": "Beef",
-          "price": 48.0
-        },
-        {
-          "name": "Beef",
-          "price": 52.0
-        },
-        {
-          "name": "Combination",
-          "price": 55.0
-        }
-      ]
+      "id": 22072,
+      "name": "New York Roll (8 pcs)",
+      "price": 16.95,
+      "nameZh": "纽约卷（8个）"
+    },
+    {
+      "id": 22073,
+      "name": "St. Patrick's Roll (8 pcs)",
+      "price": 17.95,
+      "nameZh": "圣帕特里克卷（8个）"
+    },
+    {
+      "id": 22074,
+      "name": "Honey Roll (8 pcs)",
+      "price": 17.95,
+      "nameZh": "蜂蜜卷（8个）"
+    },
+    {
+      "id": 22075,
+      "name": "Hot Sexy Mama (8 pcs)",
+      "price": 17.95,
+      "nameZh": "火辣辣妈（8个）"
+    },
+    {
+      "id": 22076,
+      "name": "Fire Agate (8 pcs)",
+      "price": 17.95,
+      "nameZh": "火玛瑙（8个）"
+    },
+    {
+      "id": 22077,
+      "name": "Snow White (8 pcs)",
+      "price": 17.95,
+      "nameZh": "白雪公主（8个）"
+    },
+    {
+      "id": 22078,
+      "name": "Pink Lady (10 pcs)",
+      "price": 17.95,
+      "nameZh": "粉红佳人（10个）"
+    },
+    {
+      "id": 22079,
+      "name": "Sakura Roll (8 pcs)",
+      "price": 18.95,
+      "nameZh": "樱花卷（8个）"
+    },
+    {
+      "id": 22080,
+      "name": "Tiger Roll (10 pcs)",
+      "price": 19.95,
+      "nameZh": "老虎卷（10个）"
+    },
+    {
+      "id": 22081,
+      "name": "Godzilla Roll (10 pcs)",
+      "price": 19.95,
+      "nameZh": "哥斯拉卷（10个）"
+    },
+    {
+      "id": 22082,
+      "name": "Monster Roll (10 pcs)",
+      "price": 19.95,
+      "nameZh": "怪兽卷（10个）"
+    },
+    {
+      "id": 22083,
+      "name": "Caterpillar (10 pcs)",
+      "price": 20.95,
+      "nameZh": "毛毛虫卷（10个）"
+    },
+    {
+      "id": 114333,
+      "name": "Tuna Poke Roll",
+      "price": 16.95,
+      "nameZh": "金枪鱼刺身卷"
+    },
+    {
+      "id": 156499,
+      "name": "Thai Basil Shrimp(10pcs)",
+      "price": 17.95,
+      "nameZh": "泰式罗勒虾卷（10个）"
+    },
+    {
+      "id": 156500,
+      "name": "Christmas Roll(8pcs)",
+      "price": 14.95,
+      "nameZh": "圣诞卷（8个）"
+    },
+    {
+      "id": 156501,
+      "name": "Spicy Killer (8pcs)",
+      "price": 17.95,
+      "nameZh": "辣味杀手卷（8个）"
+    }
+  ],
+  "Sushi Dinner Comb": [
+    {
+      "id": 22094,
+      "name": "Vegetable Delight",
+      "price": 24.95,
+      "nameZh": "蔬菜拼盘"
+    },
+    {
+      "id": 22095,
+      "name": "Spicy Maki Combo",
+      "price": 25.95,
+      "nameZh": "辣味卷拼盘"
+    },
+    {
+      "id": 22096,
+      "name": "Unagi Don",
+      "price": 26.95,
+      "nameZh": "鳗鱼盖饭"
+    },
+    {
+      "id": 22097,
+      "name": "Maki Combo",
+      "price": 26.95,
+      "nameZh": "卷类拼盘"
+    },
+    {
+      "id": 22098,
+      "name": "Chirashi",
+      "price": 27.95,
+      "nameZh": "散寿司"
+    },
+    {
+      "id": 22099,
+      "name": "Sushi Deluxe",
+      "price": 35.95,
+      "nameZh": "豪华寿司"
+    },
+    {
+      "id": 22100,
+      "name": "Sashimi Deluxe",
+      "price": 35.95,
+      "nameZh": "豪华刺身"
+    },
+    {
+      "id": 22101,
+      "name": "Sushi Sashimi Combo",
+      "price": 33.95,
+      "nameZh": "寿司刺身组合"
+    },
+    {
+      "id": 22102,
+      "name": "Love Boat",
+      "price": 68.95,
+      "nameZh": "爱情船"
+    },
+    {
+      "id": 22103,
+      "name": "Party Boat",
+      "price": 92.95,
+      "nameZh": "派对船"
+    }
+  ],
+  "Teppanyaki (Hibachi)": [
+    {
+      "id": 22132,
+      "name": "Tepp Dinner Comb pick 2",
+      "price": 43.95,
+      "nameZh": "铁板晚餐组合（任选2款）"
+    },
+    {
+      "id": 22133,
+      "name": "Tepp Dinner Comb pick 3",
+      "price": 50.95,
+      "nameZh": "铁板晚餐组合（任选3款）"
+    },
+    {
+      "id": 22134,
+      "name": "Vegetable & Tofu Teppanyaki Dinner",
+      "price": 29.95,
+      "nameZh": "蔬菜豆腐铁板烧晚餐"
+    },
+    {
+      "id": 22135,
+      "name": "Chicken Teppanyaki Dinner",
+      "price": 35.95,
+      "nameZh": "鸡肉铁板烧晚餐"
+    },
+    {
+      "id": 22136,
+      "name": "Calamari Teppanyaki Dinner",
+      "price": 36.95,
+      "nameZh": "鱿鱼铁板烧晚餐"
+    },
+    {
+      "id": 22137,
+      "name": "Salmon Teppanyaki Dinner",
+      "price": 35.95,
+      "nameZh": "三文鱼铁板烧晚餐"
+    },
+    {
+      "id": 22138,
+      "name": "Red Snapper Teppanyaki Dinner",
+      "price": 35.95,
+      "nameZh": "红鲷鱼铁板烧晚餐"
+    },
+    {
+      "id": 22139,
+      "name": "Steak Teppanyaki Dinner",
+      "price": 41.95,
+      "nameZh": "铁板牛排晚餐"
+    },
+    {
+      "id": 22140,
+      "name": "Shrimp Teppanyaki Dinner",
+      "price": 36.95,
+      "nameZh": "铁板鲜虾晚餐"
+    },
+    {
+      "id": 22141,
+      "name": "Golden Shrimp Teppanyaki DInner",
+      "price": 38.95,
+      "nameZh": "黄金鲜虾铁板晚餐"
+    },
+    {
+      "id": 22142,
+      "name": "Garlic Shrimp Teppanyaki Dinner",
+      "price": 38.95,
+      "nameZh": "蒜香鲜虾铁板晚餐"
+    },
+    {
+      "id": 22143,
+      "name": "Scallop Teppanyaki Dinner",
+      "price": 37.95,
+      "nameZh": "铁板扇贝晚餐"
+    },
+    {
+      "id": 22144,
+      "name": "Filet Mignon Teppanyaki Dinner",
+      "price": 44.95,
+      "nameZh": "铁板菲力牛排晚餐"
+    },
+    {
+      "id": 22145,
+      "name": "Twin Tuna Teppanyaki Dinner",
+      "price": 37.95,
+      "nameZh": "双份金枪鱼铁板晚餐"
+    },
+    {
+      "id": 22146,
+      "name": "Seabass Teppanyaki Dinner",
+      "price": 44.95,
+      "nameZh": "铁板海鲈鱼晚餐"
+    },
+    {
+      "id": 22147,
+      "name": "Garlic Scallop Teppanyaki Dinner",
+      "price": 38.95,
+      "nameZh": "蒜香扇贝铁板晚餐"
+    },
+    {
+      "id": 41912,
+      "name": "Garlic Scallop Teppanyaki Dinner",
+      "price": 38.95,
+      "nameZh": "蒜香扇贝铁板晚餐"
+    },
+    {
+      "id": 144693,
+      "name": "Garlic Scallop Teppanyaki Dinner",
+      "price": 38.95,
+      "nameZh": "蒜香扇贝铁板烧晚餐"
+    },
+    {
+      "id": 41913,
+      "name": "Golden Scallop Teppanyaki Dinner",
+      "price": 38.95,
+      "nameZh": "黄金扇贝铁板烧晚餐"
+    },
+    {
+      "id": 22148,
+      "name": "Lamb Chop Teppanyaki Dinner",
+      "price": 48.95,
+      "nameZh": "羊排铁板烧晚餐"
+    },
+    {
+      "id": 22149,
+      "name": "Twin Lobster Teppanyaki Dinner (18oz)",
+      "price": 72.95,
+      "nameZh": "双龙虾铁板烧晚餐（18盎司）"
+    }
+  ],
+  "Sakura Kitchen Entree": [
+    {
+      "id": 21999,
+      "name": "Orange Chicken",
+      "price": 16.95,
+      "nameZh": "橙香鸡"
+    },
+    {
+      "id": 21995,
+      "name": "Sesame Chicken",
+      "price": 16.95,
+      "nameZh": "芝麻鸡"
+    },
+    {
+      "id": 21996,
+      "name": "Basil Plates",
+      "price": 17.95,
+      "nameZh": "罗勒拼盘"
+    },
+    {
+      "id": 41916,
+      "name": "Kung Pao Plate",
+      "price": 17.95,
+      "nameZh": "宫保拼盘"
+    },
+    {
+      "id": 21997,
+      "name": "Mongolian Plate",
+      "price": 17.95,
+      "nameZh": "蒙古风味拼盘"
+    },
+    {
+      "id": 22000,
+      "name": "Red Chili Plate",
+      "price": 17.95,
+      "nameZh": "红辣椒拼盘"
+    },
+    {
+      "id": 41917,
+      "name": "Broccoli Plate",
+      "price": 17.95,
+      "nameZh": "西兰花拼盘"
+    }
+  ],
+  "Teriyaki Plate": [
+    {
+      "id": 22181,
+      "name": "Teriyaki Chicken",
+      "price": 23.95,
+      "nameZh": "照烧鸡"
+    },
+    {
+      "id": 22182,
+      "name": "Teriyaki Salmon",
+      "price": 23.95,
+      "nameZh": "照烧三文鱼"
+    },
+    {
+      "id": 22184,
+      "name": "Teriyaki Scallop",
+      "price": 25.95,
+      "nameZh": "照烧扇贝"
+    },
+    {
+      "id": 22185,
+      "name": "Teriyaki Steak",
+      "price": 26.95,
+      "nameZh": "照烧牛排"
+    }
+  ],
+  "Noodle": [
+    {
+      "id": 22008,
+      "name": "Pad See Eiw",
+      "price": 15.95,
+      "nameZh": "泰式炒河粉"
+    },
+    {
+      "id": 22009,
+      "name": "Thai Crazy Noodle",
+      "price": 15.95,
+      "nameZh": "泰式疯狂面"
+    },
+    {
+      "id": 22010,
+      "name": "Pad Thai Noodle",
+      "price": 15.95,
+      "nameZh": "泰式炒面"
+    },
+    {
+      "id": 22011,
+      "name": "Hibachi Noodle",
+      "price": 15.95,
+      "nameZh": "铁板面"
+    }
+  ],
+  "Fried Rice": [
+    {
+      "id": 22001,
+      "name": "Thai Fried Rice",
+      "price": 13.95,
+      "nameZh": "泰式炒饭"
+    },
+    {
+      "id": 22002,
+      "name": "Pineapple Fried Rice",
+      "price": 13.95,
+      "nameZh": "菠萝炒饭"
+    },
+    {
+      "id": 22004,
+      "name": "Hibachi Fried Rice",
+      "price": 13.95,
+      "nameZh": "铁板炒饭"
+    }
+  ],
+  "Beverage": [
+    {
+      "id": 21988,
+      "name": "Japanese Soda",
+      "price": 5.5,
+      "nameZh": "日本苏打水"
+    },
+    {
+      "id": 21989,
+      "name": "Coke [can]",
+      "price": 3.5,
+      "nameZh": "可乐 [罐装]"
+    },
+    {
+      "id": 21990,
+      "name": "Diet Coke [can]",
+      "price": 3.5,
+      "nameZh": "零度可乐 [罐装]"
+    },
+    {
+      "id": 21991,
+      "name": "Sprite [can]",
+      "price": 3.5,
+      "nameZh": "雪碧 [罐装]"
+    }
+  ],
+  "Side Order": [
+    {
+      "id": 42153,
+      "name": "Sauce",
+      "price": 2.25,
+      "nameZh": "酱汁"
+    },
+    {
+      "id": 42154,
+      "name": "Hibachi Plain Noodle",
+      "price": 5.75,
+      "nameZh": "铁板素面"
+    },
+    {
+      "id": 42156,
+      "name": "White Rice",
+      "price": 3,
+      "nameZh": "白米饭"
+    },
+    {
+      "id": 42157,
+      "name": "Sushi Rice",
+      "price": 3,
+      "nameZh": "寿司饭"
+    },
+    {
+      "id": 46433,
+      "name": "Side Hibachi Vegtable",
+      "price": 4,
+      "nameZh": "铁板时蔬"
     }
   ]
 }
