@@ -838,6 +838,17 @@
         </div>
 
         <div class="settings-section">
+          <div class="settings-section-title">Order Flow</div>
+          <div class="settings-section-note">Auto accept will immediately print tickets when an order arrives.</div>
+          <div class="settings-grid">
+            <div class="field">
+              <label>Auto Accept Orders</label>
+              <input id="autoAcceptOrders" type="checkbox" />
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
           <div class="settings-section-title">Special Printer</div>
           <div class="settings-section-note">Choose whether the sushi shrimp/crab add-on ticket goes to Kitchen or Sushi.</div>
           <div class="settings-grid">
@@ -897,6 +908,7 @@
     let kitchenPrinter = localStorage.getItem("kitchenPrinter") || localStorage.getItem("selectedPrinter") || "";
     let sushiPrinter = localStorage.getItem("sushiPrinter") || "";
     let packerPrinter = localStorage.getItem("packerPrinter") || "";
+    let autoAcceptOrders = localStorage.getItem("autoAcceptOrders") === "1";
     let categoryPrinters = JSON.parse(localStorage.getItem("categoryPrinters") || "{}");
     let specialPrinters = JSON.parse(localStorage.getItem("specialPrinters") || "{}");
     let selfOrderMinimized = localStorage.getItem("selfOrderMinimized");
@@ -1021,8 +1033,39 @@
       localStorage.setItem("kitchenPrinter", kitchenPrinter);
       localStorage.setItem("sushiPrinter", sushiPrinter);
       localStorage.setItem("packerPrinter", packerPrinter);
+      localStorage.setItem("autoAcceptOrders", autoAcceptOrders ? "1" : "0");
       localStorage.setItem("categoryPrinters", JSON.stringify(categoryPrinters));
       localStorage.setItem("specialPrinters", JSON.stringify(specialPrinters));
+    }
+
+    async function saveServerSettings() {
+      try {
+        await fetch("/api/local_settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            autoAccept: !!autoAcceptOrders,
+            kitchenPrinter: kitchenPrinter || "",
+            sushiPrinter: sushiPrinter || "",
+            packerPrinter: packerPrinter || ""
+          })
+        });
+      } catch (e) {
+      }
+    }
+
+    async function loadServerSettings() {
+      try {
+        const res = await fetch("/api/local_settings");
+        if (!res.ok) return;
+        const data = await res.json();
+        autoAcceptOrders = !!data.autoAccept;
+        if (typeof data.kitchenPrinter === "string" && data.kitchenPrinter) kitchenPrinter = data.kitchenPrinter;
+        if (typeof data.sushiPrinter === "string" && data.sushiPrinter) sushiPrinter = data.sushiPrinter;
+        if (typeof data.packerPrinter === "string" && data.packerPrinter) packerPrinter = data.packerPrinter;
+        persistPrinterRouting();
+      } catch (e) {
+      }
     }
 
     function roleOptionsHtml() {
@@ -1479,6 +1522,7 @@
 
     async function openSettings() {
       document.getElementById("settingsModal").style.display = "flex";
+      await loadServerSettings();
       const [printerRes, menuRes] = await Promise.all([
         fetch("/api/printers"),
         fetch("/api/menu")
@@ -1498,6 +1542,7 @@
         kitchenSelect.onchange = () => {
           kitchenPrinter = kitchenSelect.value || "";
           persistPrinterRouting();
+          saveServerSettings();
         };
       }
       if (sushiSelect) {
@@ -1506,6 +1551,7 @@
         sushiSelect.onchange = () => {
           sushiPrinter = sushiSelect.value || "";
           persistPrinterRouting();
+          saveServerSettings();
         };
       }
       if (packerSelect) {
@@ -1514,6 +1560,17 @@
         packerSelect.onchange = () => {
           packerPrinter = packerSelect.value || "";
           persistPrinterRouting();
+          saveServerSettings();
+        };
+      }
+
+      const autoAcceptEl = document.getElementById("autoAcceptOrders");
+      if (autoAcceptEl) {
+        autoAcceptEl.checked = !!autoAcceptOrders;
+        autoAcceptEl.onchange = () => {
+          autoAcceptOrders = !!autoAcceptEl.checked;
+          persistPrinterRouting();
+          saveServerSettings();
         };
       }
 

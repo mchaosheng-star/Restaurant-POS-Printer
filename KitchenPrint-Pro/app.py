@@ -41,6 +41,7 @@ CSV_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 MENU_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/menu.json')
 PRINT_JOBS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'print_jobs')
 VIRTUAL_PRINTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'virtual_prints')
+LOCAL_SETTINGS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'local_settings.json')
 
 UBER_WEBHOOK_LOCK = threading.Lock()
 UBER_WEBHOOK_EVENT_IDS = set()
@@ -516,6 +517,46 @@ def _load_menu_cached():
     except Exception:
         return {}
 
+def _load_local_settings():
+    try:
+        with open(LOCAL_SETTINGS_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+def _save_local_settings(data):
+    try:
+        os.makedirs(os.path.dirname(LOCAL_SETTINGS_FILE), exist_ok=True)
+        with open(LOCAL_SETTINGS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data or {}, f, ensure_ascii=False, indent=2)
+        return True
+    except Exception:
+        return False
+
+@app.route('/api/local_settings', methods=['GET', 'POST'])
+def api_local_settings():
+    if request.method == 'GET':
+        cfg = _load_local_settings()
+        return jsonify({
+            "autoAccept": bool(cfg.get("autoAccept")),
+            "kitchenPrinter": normalize_print_text(cfg.get("kitchenPrinter", "")),
+            "sushiPrinter": normalize_print_text(cfg.get("sushiPrinter", "")),
+            "packerPrinter": normalize_print_text(cfg.get("packerPrinter", "")),
+        })
+    cfg = _load_local_settings()
+    data = request.json or {}
+    if "autoAccept" in data:
+        cfg["autoAccept"] = bool(data.get("autoAccept"))
+    if "kitchenPrinter" in data:
+        cfg["kitchenPrinter"] = normalize_print_text(data.get("kitchenPrinter", ""))
+    if "sushiPrinter" in data:
+        cfg["sushiPrinter"] = normalize_print_text(data.get("sushiPrinter", ""))
+    if "packerPrinter" in data:
+        cfg["packerPrinter"] = normalize_print_text(data.get("packerPrinter", ""))
+    ok = _save_local_settings(cfg)
+    return jsonify({"status": "success" if ok else "error"}), (200 if ok else 500)
+
 def _category_for_item_name(item_name):
     name_l = str(item_name or '').strip().lower()
     if not name_l:
@@ -623,6 +664,34 @@ def save_menu():
 def enqueue_incoming(order_data):
     global INCOMING_NEXT_ID
     order_data = normalize_order_data(order_data)
+    local_cfg = _load_local_settings()
+    if bool(local_cfg.get("autoAccept")):
+        if not order_data.get('kitchenPrinter') and local_cfg.get('kitchenPrinter'):
+            order_data['kitchenPrinter'] = normalize_print_text(local_cfg.get('kitchenPrinter'))
+        if not order_data.get('sushiPrinter') and local_cfg.get('sushiPrinter'):
+            order_data['sushiPrinter'] = normalize_print_text(local_cfg.get('sushiPrinter'))
+        if not order_data.get('packerPrinter') and local_cfg.get('packerPrinter'):
+            order_data['packerPrinter'] = normalize_print_text(local_cfg.get('packerPrinter'))
+        ok = False
+        try:
+            ok = bool(handle_order_internal(order_data))
+        except Exception as e:
+            app.logger.error(f"Auto accept error: {e}")
+            ok = False
+        accepted_id = INCOMING_NEXT_ID
+        INCOMING_NEXT_ID += 1
+        ACCEPTED_ORDERS.append({
+            'id': accepted_id,
+            'accepted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'finished_at': None,
+            'status': 'accepted' if ok else 'error',
+            'order': order_data
+        })
+        return {
+            'id': accepted_id,
+            'received_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'order': order_data
+        }
     oid = INCOMING_NEXT_ID
     INCOMING_NEXT_ID += 1
     entry = {
