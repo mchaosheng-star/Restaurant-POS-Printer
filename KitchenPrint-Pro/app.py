@@ -991,21 +991,18 @@ def handle_order_internal(order_data):
                     'universalComment': 'SUSHI ADD-ON - NOT APPETIZER',
                 }
                 kitchen_items.extend(copy.deepcopy(kitchen_order['items']))
-                if base_comment:
-                    kitchen_comment = f"{base_comment} | {kitchen_order['universalComment']}"
-                else:
-                    kitchen_comment = kitchen_order['universalComment']
+                kitchen_comment = kitchen_order['universalComment']
             else:
-                kitchen_comment = base_comment
+                kitchen_comment = ""
         else:
-            kitchen_comment = base_comment
+            kitchen_comment = ""
 
         if sushi_items and sushi_printer:
             sushi_order = {
                 'number': order_data.get('number'),
                 'tableNumber': order_data.get('tableNumber', 'N/A'),
                 'items': sushi_items,
-                'universalComment': base_comment,
+                'universalComment': "",
             }
             ok = print_kitchen_ticket(sushi_order, copy_info='Sushi', printer_name=sushi_printer)
             printed_any = printed_any or ok
@@ -1127,16 +1124,15 @@ def print_kitchen_ticket(order_data, copy_info="", original_timestamp_str=None, 
         if universal_comment:
             ticket_content += to_bytes("=" * NORMAL_FONT_LINE_WIDTH + "\n")
             ticket_lines.append("=" * NORMAL_FONT_LINE_WIDTH)
-            ticket_content += SelectFontA + DoubleHeight + BoldOn
-            ticket_content += to_bytes("ORDER NOTES\n")
+            ticket_content += SelectFontB + BoldOn
+            ticket_content += to_bytes("CUSTOMER NOTE\n")
             ticket_lines.append("ORDER NOTES")
-            ticket_content += NormalText + BoldOff
-            ticket_content += SelectFontA + DoubleHeight + BoldOn
-            wrapped_universal_comment_lines = word_wrap_text(universal_comment, NORMAL_FONT_LINE_WIDTH, initial_indent="", subsequent_indent="") 
+            ticket_content += BoldOff
+            wrapped_universal_comment_lines = word_wrap_text(universal_comment, SMALL_FONT_LINE_WIDTH, initial_indent="", subsequent_indent="") 
             for line in wrapped_universal_comment_lines:
                 ticket_content += to_bytes(line + "\n")
                 ticket_lines.append(line)
-            ticket_content += NormalText + BoldOff
+            ticket_content += SelectFontA + NormalText
             ticket_content += to_bytes("\n")
             ticket_lines.append("")
         

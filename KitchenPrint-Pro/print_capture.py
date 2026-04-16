@@ -538,6 +538,10 @@ def extract_comment_from_text(text: str) -> str:
         if capture:
             if any(p.search(normalized) for p in _NON_FOOD_PATTERNS):
                 continue
+            if _parse_item_line(normalized) is not None:
+                continue
+            if _menu_item_for_name(normalized) is not None:
+                continue
             if normalized:
                 note_lines.append(normalized)
                 continue
