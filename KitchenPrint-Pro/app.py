@@ -1099,9 +1099,49 @@ def handle_order_internal(order_data):
         return log_order_to_csv(order_data, printer_name=printer_name)
 
 # --- THIS IS THE MAIN MODIFIED FUNCTION ---
+def _print_raw_job_to_printer(job_path, printer_name):
+    if not job_path or not printer_name:
+        return False
+    ext = os.path.splitext(str(job_path))[1].lower()
+    if ext != ".bin":
+        return False
+    try:
+        with open(job_path, "rb") as f:
+            raw_data = f.read()
+    except Exception:
+        return False
+    if not raw_data:
+        return False
+    hprinter = None
+    try:
+        hprinter = win32print.OpenPrinter(printer_name)
+        try:
+            doc_name = f"OriginalRaw_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            win32print.StartDocPrinter(hprinter, 1, (doc_name, None, "RAW"))
+            win32print.StartPagePrinter(hprinter)
+            win32print.WritePrinter(hprinter, raw_data)
+            win32print.EndPagePrinter(hprinter)
+            win32print.EndDocPrinter(hprinter)
+        finally:
+            win32print.ClosePrinter(hprinter)
+        return True
+    except Exception as e:
+        app.logger.error(f"Raw passthrough print error: {str(e)}")
+        if hprinter:
+            try:
+                win32print.ClosePrinter(hprinter)
+            except Exception:
+                pass
+        return False
+
 def print_kitchen_ticket(order_data, copy_info="", original_timestamp_str=None, printer_name=None):
     hprinter = None
     try:
+        if str(copy_info or "").strip().lower() == "original":
+            raw_job_path = normalize_print_text(order_data.get('_captured_job_path', ''))
+            target_printer = printer_name or PRINTER_NAME
+            if raw_job_path and _print_raw_job_to_printer(raw_job_path, target_printer):
+                return True
         ticket_content = bytearray()
         ticket_lines = []
         ticket_content += InitializePrinter
@@ -1135,6 +1175,39 @@ def print_kitchen_ticket(order_data, copy_info="", original_timestamp_str=None, 
         time_to_display = original_timestamp_str if original_timestamp_str else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ticket_content += to_bytes(f"Time: {time_to_display}\n")
         ticket_lines.append(f"Time: {time_to_display}")
+
+        if str(copy_info or "").strip().lower() == "original":
+            platform = normalize_print_text(first_value(
+                order_data.get('orderSource'),
+                order_data.get('platform'),
+                order_data.get('marketplace'),
+                order_data.get('tableNumber'),
+            ))
+            customer_name = normalize_print_text(first_value(
+                order_data.get('customerName'),
+                order_data.get('customer_name'),
+                order_data.get('consumer', {}).get('name') if isinstance(order_data.get('consumer'), dict) else None,
+            ))
+            external_id = normalize_print_text(first_value(
+                order_data.get('uberOrderId'),
+                order_data.get('doorDashOrderId'),
+                order_data.get('grubhubOrderId'),
+                order_data.get('marketplaceOrderId'),
+            ))
+            ticket_content += SelectFontA + DoubleHeight + BoldOn
+            if platform:
+                line = f"Platform: {platform}"
+                ticket_content += to_bytes(line + "\n")
+                ticket_lines.append(line)
+            if customer_name:
+                line = f"Customer: {customer_name}"
+                ticket_content += to_bytes(line + "\n")
+                ticket_lines.append(line)
+            if external_id:
+                line = f"Order ID: {external_id}"
+                ticket_content += to_bytes(line + "\n")
+                ticket_lines.append(line)
+            ticket_content += NormalText + BoldOff
         
         ticket_content += to_bytes("-" * NORMAL_FONT_LINE_WIDTH + "\n")
         ticket_lines.append("-" * NORMAL_FONT_LINE_WIDTH)
@@ -1623,13 +1696,15 @@ if __name__ == '__main__':
         os.makedirs(VIRTUAL_PRINTS_DIR, exist_ok=True)
         app.logger.info("Virtual print preview enabled: %s", VIRTUAL_PRINTS_DIR)
 
-    def _enqueue_from_raw_job(data: bytes, peer: str):
+    def _enqueue_from_raw_job(data: bytes, peer: str, job_path: str | None = None):
         text = print_capture._bytes_to_text(data)
         source = print_capture.detect_order_source(text, fallback=f"RAW9100 {peer}")
         order_data = print_capture.parse_receipt_text_to_order(
             text=text,
             source=source,
         )
+        if job_path:
+            order_data['_captured_job_path'] = job_path
         if not str(first_value(order_data.get('printer'), order_data.get('printer_name'))).strip() and PRINTER_NAME:
             order_data['printer'] = PRINTER_NAME
         enqueue_incoming(order_data)

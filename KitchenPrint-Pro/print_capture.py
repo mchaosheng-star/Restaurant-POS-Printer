@@ -685,6 +685,7 @@ def build_order_from_saved_job(path: str) -> tuple[dict, str]:
             text = ""
     source = detect_order_source(text, fallback="IPP")
     order_data = parse_receipt_text_to_order(text, source=source, fallback_number=f"IPP-{_now_id()}")
+    order_data["_captured_job_path"] = path
     return order_data, text
 
 
@@ -752,7 +753,7 @@ class Raw9100Receiver:
         host: str,
         port: int,
         jobs_dir: str,
-        on_job: Callable[[bytes, str], None],
+        on_job: Callable[[bytes, str, Optional[str]], None],
         recv_timeout_sec: float = 10.0,
         max_bytes: int = 10 * 1024 * 1024,
     ):
@@ -823,8 +824,9 @@ class Raw9100Receiver:
         for idx, job_data in enumerate(jobs, start=1):
             job_id = _now_id()
             base = f"raw9100_{job_id}_{idx:02d}" if multi else f"raw9100_{job_id}"
+            bin_path = os.path.join(self.jobs_dir, base + ".bin")
             try:
-                with open(os.path.join(self.jobs_dir, base + ".bin"), "wb") as f:
+                with open(bin_path, "wb") as f:
                     f.write(job_data)
             except Exception:
                 pass
@@ -838,7 +840,7 @@ class Raw9100Receiver:
                 pass
 
             try:
-                self.on_job(job_data, f"{addr[0]}:{addr[1]}")
+                self.on_job(job_data, f"{addr[0]}:{addr[1]}", bin_path)
             except Exception:
                 pass
 

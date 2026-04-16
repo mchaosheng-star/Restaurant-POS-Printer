@@ -1,0 +1,12 @@
+UBER EATS ORDER #B6001
+Order ID: UE-123456789
+Customer: John Doe
+3 items
+Additional Instructions
+Please add extra ginger and wasabi. No chopsticks.
+1x CALIFORNIA ROLL
+- No Cucumber
+- Add Spicy Mayo
+1x MISO SOUP
+1x EDAMAME
+-----------------------
