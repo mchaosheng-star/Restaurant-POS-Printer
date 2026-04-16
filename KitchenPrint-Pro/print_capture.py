@@ -16,6 +16,9 @@ from datetime import datetime
 from typing import Callable, Optional
 
 logger = logging.getLogger(__name__)
+MENU_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "menu.json")
+_MENU_INDEX = None
+_MENU_INDEX_MTIME = None
 
 
 def _safe_makedirs(path: str):
@@ -115,13 +118,44 @@ def _build_txt_record(props: dict[bytes, bytes]) -> bytes:
 def _bytes_to_text(data: bytes) -> str:
     if not data:
         return ""
+    skip = 0
     filtered = bytearray()
-    for b in data:
+    i = 0
+    while i < len(data):
+        if skip:
+            skip -= 1
+            i += 1
+            continue
+        b = data[i]
+        if b == 0x1B:
+            if i + 1 < len(data):
+                cmd = data[i + 1]
+                if cmd in (0x40,):
+                    skip = 1
+                elif cmd in (0x45, 0x4D, 0x61, 0x21, 0x2D, 0x33):
+                    skip = 2
+                else:
+                    skip = 1
+            i += 1
+            continue
+        if b == 0x1D:
+            if i + 1 < len(data):
+                cmd = data[i + 1]
+                if cmd in (0x21, 0x56, 0x42, 0x68, 0x77):
+                    skip = 2
+                elif cmd == 0x76 and i + 7 < len(data) and data[i + 2] == 0x30:
+                    width = data[i + 4] + (data[i + 5] << 8)
+                    height = data[i + 6] + (data[i + 7] << 8)
+                    skip = 7 + (width * height)
+                else:
+                    skip = 1
+            i += 1
+            continue
         if b in (9, 10, 13):
             filtered.append(b)
-            continue
-        if 32 <= b <= 126:
+        elif 32 <= b <= 126:
             filtered.append(b)
+        i += 1
     try:
         return filtered.decode("utf-8", errors="replace")
     except Exception:
@@ -131,8 +165,8 @@ def _bytes_to_text(data: bytes) -> str:
 _LINE_ITEM_RE = re.compile(r"^\s*(?:(\d+)\s*[xX]\s+)?(.+?)\s*$")
 _PRICE_RE = re.compile(r"\s+\$?\d+(?:\.\d{2})?$")
 _QTY_SUFFIX_RE = re.compile(r"^(.*?)(?:\s+|\s*[xX]\s*)(\d+)$")
-_ITEMS_START_RE = re.compile(r"^\d+\s*items?\b", re.I)
-_ORDER_SECTION_END_RE = re.compile(r"^(subtotal|delivery\s*fee|service\s*fee|tax|taxes|tip|tips|total)\b", re.I)
+_ITEMS_START_RE = re.compile(r"^(?:\d+\s*items?\b|items?\b|your\s+order\b|order\s+details\b|order\s+summary\b)", re.I)
+_ORDER_SECTION_END_RE = re.compile(r"^(subtotal|delivery\s*fee|service\s*fee|tax|taxes|tip|tips|total|payment|paid|balance\s+due)\b", re.I)
 _ORDER_NUMBER_PATTERNS = [
     re.compile(r"\b(?:order\s*(?:number|no\.?|#|id)|delivery\s*id)\s*[:#]?\s*([A-Z0-9\-]{4,})\b", re.I),
     re.compile(r"\b#([A-Z0-9\-]{4,})\b"),
@@ -141,8 +175,10 @@ _COMMENT_MARKERS = ("note", "notes", "special instructions", "special requests",
 _SKIP_LINE_PATTERNS = [
     re.compile(p, re.I) for p in [
         r"^(subtotal|tax|fees?|tip|tips|discount|total|balance|payment|cash|card)\b",
+        r"^(menu\s*item|qty|quantity|description|amount|price)\b",
         r"^(merchant|restaurant|pickup|delivery|dropoff|drop-off|driver|dasher|courier)\b",
         r"^(order|receipt|customer|phone|address|email|placed|ready|eta|time|date)\b",
+        r"^(uber|ubereats|uber eats|doordash|door dash|grubhub|grub hub)\b",
         r"^(items?\s+\d+|page\s+\d+|kitchenprintpro)\b",
         r"^(thank you|thanks|enjoy)\b",
     ]
@@ -152,23 +188,54 @@ _NON_FOOD_PATTERNS = [
         r"confirmation\s*code",
         r"self\s*delivery",
         r"deliver\s*to",
+        r"pickup\s*by",
+        r"pickup\s*time",
         r"contact[- ]?free",
         r"leave order",
         r"text ?customer",
         r"house/?apartment",
         r"condiment packets",
         r"include\s*plates?\s*utensils?",
+        r"^[=\-_*]{3,}$",
         r"^no$",
         r"^[\d(). -]{7,}$",
         r"^[A-Z]{2}\d{4,}$",
     ]
 ]
+_MODIFIER_PREFIXES = (
+    "-",
+    "+",
+    "*",
+    "minus ",
+    "no ",
+    "add ",
+    "extra ",
+    "sub ",
+    "substitute ",
+    "with ",
+    "without ",
+    "remove ",
+    "side ",
+    "sauce ",
+    "sauces ",
+    "dressing ",
+    "allergy ",
+    "option ",
+    "choice ",
+)
 
 
 def _normalize_lines(text: str) -> list[str]:
     lines = []
     for raw in (text or "").splitlines():
-        s = " ".join(str(raw or "").replace("\x00", " ").split())
+        s = str(raw or "").replace("\x00", " ")
+        s = re.sub(r"^@a(?=[A-Za-z])", "", s)
+        s = re.sub(r"^@(?=[A-Za-z])", "", s)
+        s = re.sub(r"^!([0-9A-Fa-f])([0-9]+\s*[xX]\s+)", r"\2", s)
+        s = re.sub(r"^![0-9A-Fa-f]{2}(?=\s+[A-Za-z])", "", s)
+        s = re.sub(r"^!(?=[=\-_*]{3,})", "", s)
+        s = re.sub(r"^V$", "", s)
+        s = " ".join(s.split())
         if not s:
             continue
         lines.append(s[:240])
@@ -188,8 +255,83 @@ def _normalize_ocr_item_text(value: str) -> str:
     s = re.sub(r"([a-zA-Z])(\d)", r"\1 \2", s)
     s = re.sub(r"(\d)([a-zA-Z])", r"\1 \2", s)
     s = re.sub(r"\bof([A-Z])", r"of \1", s)
+    s = re.sub(r"(^|\s)![0-9A-Fa-f]{2}\s+[xX]\s+", r"\1", s)
+    s = re.sub(r"(^|\s)![0-9A-Fa-f]{2}(?=\s+[A-Za-z])", r"\1", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
+
+
+def _normalize_menu_lookup_name(value: str) -> str:
+    s = str(value or "").strip().lower()
+    if not s:
+        return ""
+    s = s.replace("&", " and ")
+    s = re.sub(r"\([^)]*\)", " ", s)
+    s = re.sub(r"\b(combo|meal|size|regular|large|medium|small)\b", " ", s)
+    s = re.sub(r"\bpcs?\b", " ", s)
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def _load_menu_index() -> dict[str, dict]:
+    global _MENU_INDEX, _MENU_INDEX_MTIME
+    try:
+        mtime = os.path.getmtime(MENU_FILE)
+        if _MENU_INDEX is not None and _MENU_INDEX_MTIME == mtime:
+            return _MENU_INDEX
+        with open(MENU_FILE, "r", encoding="utf-8") as f:
+            raw_menu = json.load(f)
+    except Exception:
+        _MENU_INDEX = {}
+        _MENU_INDEX_MTIME = None
+        return {}
+
+    index = {}
+    if isinstance(raw_menu, dict):
+        for category, items in raw_menu.items():
+            if not isinstance(items, list):
+                continue
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                name = str(item.get("name", "")).strip()
+                if not name:
+                    continue
+                key = _normalize_menu_lookup_name(name)
+                if not key or key in index:
+                    continue
+                index[key] = {
+                    "name": name,
+                    "nameZh": str(item.get("nameZh", "")).strip(),
+                    "category": str(category).strip(),
+                }
+    _MENU_INDEX = index
+    _MENU_INDEX_MTIME = mtime
+    return index
+
+
+def _menu_item_for_name(item_name: str):
+    key = _normalize_menu_lookup_name(item_name)
+    if not key:
+        return None
+    menu = _load_menu_index()
+    if key in menu:
+        return menu[key]
+    for menu_key, menu_item in menu.items():
+        if menu_key and (menu_key in key or key in menu_key):
+            return menu_item
+    return None
+
+
+def _attach_menu_metadata(item: dict) -> dict:
+    menu_item = _menu_item_for_name(item.get("name", ""))
+    if not menu_item:
+        return item
+    item["category"] = menu_item.get("category", "")
+    if menu_item.get("nameZh"):
+        item["nameZh"] = menu_item.get("nameZh", "")
+    return item
 
 
 def _extract_order_section_lines(text: str) -> list[str]:
@@ -239,6 +381,10 @@ def _looks_like_skip_line(line: str) -> bool:
         return True
     if len(s) <= 1:
         return True
+    if s == "V":
+        return True
+    if re.fullmatch(r"[=\-_*]{3,}", s):
+        return True
     if re.fullmatch(r"[\d\s:/$.\-]+", s):
         return True
     return any(p.search(s) for p in _SKIP_LINE_PATTERNS)
@@ -246,6 +392,7 @@ def _looks_like_skip_line(line: str) -> bool:
 
 def _clean_item_name(line: str) -> str:
     s = _normalize_ocr_item_text(_PRICE_RE.sub("", str(line or "").strip()))
+    s = re.sub(r"(^|\s)![0-9A-Fa-f]{2}\b", r"\1", s)
     s = re.sub(r"\s{2,}", " ", s)
     return s.strip(" -:")
 
@@ -277,13 +424,63 @@ def _parse_item_line(line: str):
         return None
     if _looks_like_skip_line(name):
         return None
-    return {
+    return _attach_menu_metadata({
         "name": name[:120],
         "quantity": qty,
         "price": 0.0,
         "selectedOptions": [],
         "comment": "",
-    }
+    })
+
+
+def _is_modifier_line(line: str) -> bool:
+    s = str(line or "").strip()
+    if not s:
+        return False
+    low = s.lower()
+    if any(low.startswith(prefix) for prefix in _MODIFIER_PREFIXES):
+        return True
+    if low.startswith("note:") or low.startswith("notes:") or low.startswith("comment:"):
+        return True
+    return False
+
+
+def _append_item_modifier(item: dict, line: str):
+    s = str(line or "").strip()
+    if not s:
+        return
+    if ":" in s and s.split(":", 1)[0].strip().lower() in _COMMENT_MARKERS:
+        text = s.split(":", 1)[1].strip()
+        if text:
+            current = str(item.get("comment", "")).strip()
+            item["comment"] = f"{current} | {text}".strip(" |")[:200] if current else text[:200]
+        return
+    text = s.lstrip("-+* ").strip()
+    if not text:
+        return
+    options = item.get("selectedOptions")
+    if not isinstance(options, list):
+        options = []
+        item["selectedOptions"] = options
+    options.append({"name": text[:120]})
+
+
+def _fallback_items_from_lines(lines: list[str]) -> list[dict]:
+    items = []
+    previous_item = None
+    for line in lines[:80]:
+        cleaned = _normalize_ocr_item_text(line)
+        if not cleaned:
+            continue
+        if previous_item is not None and _is_modifier_line(cleaned):
+            _append_item_modifier(previous_item, cleaned)
+            continue
+        parsed = _parse_item_line(cleaned)
+        if not parsed:
+            continue
+        items.append(parsed)
+        previous_item = parsed
+    return items
 
 
 def extract_items_from_text(text: str) -> list[dict]:
@@ -291,12 +488,19 @@ def extract_items_from_text(text: str) -> list[dict]:
     items = []
     previous_item = None
     for line in lines:
-        cleaned = _clean_item_name(line)
+        normalized = _normalize_ocr_item_text(line)
+        if not normalized:
+            continue
+        if previous_item is not None and _is_modifier_line(normalized):
+            _append_item_modifier(previous_item, normalized)
+            continue
+        cleaned = _clean_item_name(normalized)
         if not cleaned:
             continue
         low = cleaned.lower()
-        if cleaned.lower() == "plate" and previous_item is not None and "plate" not in str(previous_item.get("name", "")).lower():
+        if low == "plate" and previous_item is not None and "plate" not in str(previous_item.get("name", "")).lower():
             previous_item["name"] = f"{previous_item.get('name', '').strip()} Plate".strip()
+            _attach_menu_metadata(previous_item)
             continue
         if any(low.startswith(marker + ":") for marker in _COMMENT_MARKERS):
             if previous_item is not None:
@@ -481,44 +685,61 @@ def build_order_from_saved_job(path: str) -> tuple[dict, str]:
 
 
 def parse_receipt_text_to_order(text: str, source: str, fallback_number: Optional[str] = None) -> dict:
-    lines = []
-    for raw in (text or "").splitlines():
-        s = raw.strip()
-        if not s:
-            continue
-        if len(s) > 200:
-            s = s[:200]
-        lines.append(s)
-
-    items = []
-    for ln in lines:
-        m = _LINE_ITEM_RE.match(ln)
-        if not m:
-            continue
-        qty_raw, name = m.group(1), (m.group(2) or "").strip()
-        if not name:
-            continue
-        qty = 1
-        if qty_raw and qty_raw.isdigit():
-            try:
-                qty = int(qty_raw)
-            except Exception:
-                qty = 1
-        if qty < 1:
-            qty = 1
-        items.append({"name": name, "quantity": qty, "price": 0.0, "selectedOptions": [], "comment": ""})
-
+    lines = _extract_order_section_lines(text) or _normalize_lines(text)
+    items = extract_items_from_text(text)
     if not items and lines:
-        for ln in lines[:30]:
-            items.append({"name": ln, "quantity": 1, "price": 0.0, "selectedOptions": [], "comment": ""})
+        items = _fallback_items_from_lines(lines)
+    if not items:
+        items = [{
+            "name": f"Captured print job {extract_order_number(text, fallback_number)}",
+            "quantity": 1,
+            "price": 0.0,
+            "selectedOptions": [],
+            "comment": "",
+        }]
 
-    num = fallback_number or f"{source}-{_now_id()}"
+    source_name = detect_order_source(text, fallback=source)
+    num = extract_order_number(text, fallback_number or f"{source_name}-{_now_id()}")
     return {
         "number": num,
-        "tableNumber": source,
+        "tableNumber": source_name,
         "items": items,
-        "universalComment": "",
+        "universalComment": extract_comment_from_text(text),
     }
+
+
+def _escpos_cut_length(data: bytes, idx: int) -> int:
+    if idx + 2 >= len(data):
+        return 0
+    if data[idx] != 0x1D or data[idx + 1] != 0x56:
+        return 0
+    mode = data[idx + 2]
+    if mode in (65, 66):
+        return 4 if idx + 3 < len(data) else 3
+    return 3
+
+
+def split_escpos_jobs(data: bytes) -> list[bytes]:
+    if not data:
+        return []
+    jobs = []
+    start = 0
+    idx = 0
+    while idx < len(data):
+        cut_len = _escpos_cut_length(data, idx)
+        if not cut_len:
+            idx += 1
+            continue
+        end = min(len(data), idx + cut_len)
+        chunk = data[start:end]
+        if chunk.strip(b"\x00"):
+            jobs.append(chunk)
+        start = end
+        idx = end
+    tail = data[start:]
+    if tail.strip(b"\x00"):
+        jobs.append(tail)
+    return jobs or [data]
 
 
 class Raw9100Receiver:
@@ -593,26 +814,29 @@ class Raw9100Receiver:
         if not data:
             return
 
-        job_id = _now_id()
-        base = f"raw9100_{job_id}"
-        try:
-            with open(os.path.join(self.jobs_dir, base + ".bin"), "wb") as f:
-                f.write(data)
-        except Exception:
-            pass
+        jobs = split_escpos_jobs(data)
+        multi = len(jobs) > 1
+        for idx, job_data in enumerate(jobs, start=1):
+            job_id = _now_id()
+            base = f"raw9100_{job_id}_{idx:02d}" if multi else f"raw9100_{job_id}"
+            try:
+                with open(os.path.join(self.jobs_dir, base + ".bin"), "wb") as f:
+                    f.write(job_data)
+            except Exception:
+                pass
 
-        try:
-            txt = _bytes_to_text(data)
-            if txt.strip():
-                with open(os.path.join(self.jobs_dir, base + ".txt"), "w", encoding="utf-8", errors="replace") as f:
-                    f.write(txt)
-        except Exception:
-            pass
+            try:
+                txt = _bytes_to_text(job_data)
+                if txt.strip():
+                    with open(os.path.join(self.jobs_dir, base + ".txt"), "w", encoding="utf-8", errors="replace") as f:
+                        f.write(txt)
+            except Exception:
+                pass
 
-        try:
-            self.on_job(data, f"{addr[0]}:{addr[1]}")
-        except Exception:
-            pass
+            try:
+                self.on_job(job_data, f"{addr[0]}:{addr[1]}")
+            except Exception:
+                pass
 
 
 def start_ipp_receiver_if_available(jobs_dir: str, host: str, port: int, public_host: Optional[str] = None) -> bool:

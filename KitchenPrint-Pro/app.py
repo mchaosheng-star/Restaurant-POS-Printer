@@ -1,6 +1,7 @@
 # app.py
 from flask import Flask, request, jsonify, send_from_directory, make_response
 from datetime import datetime, timedelta
+import copy
 import csv
 import difflib
 import os
@@ -133,6 +134,7 @@ def normalize_order_data(order_data):
             items_out.append({
                 'name': name,
                 'nameZh': normalize_print_text(first_value(it.get('nameZh'), _name_zh_for_item_name(name))),
+                'category': normalize_print_text(first_value(it.get('category'), it.get('_category'))),
                 'quantity': qty,
                 'price': price,
                 'selectedOptions': it.get('selectedOptions', []) if isinstance(it.get('selectedOptions', []), list) else [],
@@ -152,6 +154,18 @@ def normalize_order_data(order_data):
             })
     normalized = dict(order_data)
     normalized['items'] = items_out
+    normalized['kitchenPrinter'] = normalize_print_text(first_value(
+        order_data.get('kitchenPrinter'),
+        order_data.get('kitchen_printer')
+    ))
+    normalized['sushiPrinter'] = normalize_print_text(first_value(
+        order_data.get('sushiPrinter'),
+        order_data.get('sushi_printer')
+    ))
+    normalized['packerPrinter'] = normalize_print_text(first_value(
+        order_data.get('packerPrinter'),
+        order_data.get('packer_printer')
+    ))
     normalized['universalComment'] = normalize_print_text(first_value(
         order_data.get('universalComment'),
         order_data.get('note'),
@@ -225,6 +239,15 @@ def _doordash_apply_store_config(order_data, cfg):
         order_data["categoryPrinters"] = cfg["categoryPrinters"]
     if isinstance(cfg.get("specialPrinters"), dict):
         order_data["specialPrinters"] = cfg["specialPrinters"]
+    kitchen_printer = str(first_value(cfg.get("kitchenPrinter"), cfg.get("kitchen_printer"))).strip()
+    if kitchen_printer:
+        order_data["kitchenPrinter"] = kitchen_printer
+    sushi_printer = str(first_value(cfg.get("sushiPrinter"), cfg.get("sushi_printer"))).strip()
+    if sushi_printer:
+        order_data["sushiPrinter"] = sushi_printer
+    packer_printer = str(first_value(cfg.get("packerPrinter"), cfg.get("packer_printer"))).strip()
+    if packer_printer:
+        order_data["packerPrinter"] = packer_printer
     printer_override = str(first_value(cfg.get("printer"), cfg.get("defaultPrinter"))).strip()
     if printer_override:
         order_data["printer"] = printer_override
@@ -313,6 +336,15 @@ def _uber_webhook_worker(payload):
         order_data["categoryPrinters"] = cfg["categoryPrinters"]
     if isinstance(cfg.get("specialPrinters"), dict):
         order_data["specialPrinters"] = cfg["specialPrinters"]
+    kitchen_printer = str(first_value(cfg.get("kitchenPrinter"), cfg.get("kitchen_printer"))).strip()
+    if kitchen_printer:
+        order_data["kitchenPrinter"] = kitchen_printer
+    sushi_printer = str(first_value(cfg.get("sushiPrinter"), cfg.get("sushi_printer"))).strip()
+    if sushi_printer:
+        order_data["sushiPrinter"] = sushi_printer
+    packer_printer = str(first_value(cfg.get("packerPrinter"), cfg.get("packer_printer"))).strip()
+    if packer_printer:
+        order_data["packerPrinter"] = packer_printer
     printer_override = (cfg.get("printer") or cfg.get("defaultPrinter") or "").strip()
     if printer_override:
         order_data["printer"] = printer_override
@@ -633,6 +665,15 @@ def api_incoming_accept(incoming_id):
         order_data['categoryPrinters'] = req_data.get('categoryPrinters')
     if isinstance(req_data.get('specialPrinters'), dict):
         order_data['specialPrinters'] = req_data.get('specialPrinters')
+    kitchen_printer = normalize_print_text(first_value(req_data.get('kitchenPrinter'), req_data.get('kitchen_printer')))
+    if kitchen_printer:
+        order_data['kitchenPrinter'] = kitchen_printer
+    sushi_printer = normalize_print_text(first_value(req_data.get('sushiPrinter'), req_data.get('sushi_printer')))
+    if sushi_printer:
+        order_data['sushiPrinter'] = sushi_printer
+    packer_printer = normalize_print_text(first_value(req_data.get('packerPrinter'), req_data.get('packer_printer')))
+    if packer_printer:
+        order_data['packerPrinter'] = packer_printer
     if 'number' not in order_data:
         order_data['number'] = int(datetime.now().timestamp() % 10000)
     ok = None
@@ -779,6 +820,36 @@ def api_doordash_store_hours_pull(store_location_id):
 def handle_order_internal(order_data):
     category_printers = order_data.get('categoryPrinters') or {}
     special_printers = order_data.get('specialPrinters') or {}
+    def _is_sushi_category_name(category_name):
+        cl = str(category_name or '').strip().lower()
+        if not cl:
+            return False
+        return ('roll' in cl) or cl.startswith('sushi') or ('sashimi' in cl) or ('nigiri' in cl) or ('maki' in cl)
+
+    def _is_sushi_item(item):
+        if not isinstance(item, dict):
+            return False
+        cat = str(item.get('category', '')).strip()
+        if not cat:
+            found = _category_for_item_name(item.get('name', ''))
+            if found:
+                item['category'] = found
+                cat = found
+        if _is_sushi_category_name(cat):
+            return True
+        name_l = str(item.get('name', '')).strip().lower()
+        return any(token in name_l for token in (
+            ' roll',
+            'sushi',
+            'sashimi',
+            'nigiri',
+            'maki',
+            'chirashi',
+            'naruto',
+            'unagi don',
+            'poke roll',
+        ))
+
     if not category_printers and (SUSHI_PRINTER_NAME or KITCHEN_PRINTER_NAME):
         menu = _load_menu_cached()
         if isinstance(menu, dict):
@@ -795,10 +866,50 @@ def handle_order_internal(order_data):
                         auto[c] = SUSHI_PRINTER_NAME
             if auto:
                 category_printers = auto
-    if isinstance(category_printers, dict) and category_printers:
+    explicit_station_printers = bool(
+        str(first_value(
+            order_data.get('kitchenPrinter'),
+            order_data.get('kitchen_printer'),
+            order_data.get('sushiPrinter'),
+            order_data.get('sushi_printer'),
+        )).strip()
+    )
+    if (isinstance(category_printers, dict) and category_printers) or explicit_station_printers:
         items = order_data.get('items', [])
         printed_any = False
         printed_all = True
+        original_order = copy.deepcopy(order_data)
+        base_comment = normalize_print_text(order_data.get('universalComment', ''))
+        sushi_printer = str(first_value(
+            order_data.get('sushiPrinter'),
+            order_data.get('sushi_printer')
+        )).strip() or None
+        kitchen_printer = str(first_value(
+            order_data.get('kitchenPrinter'),
+            order_data.get('kitchen_printer'),
+            KITCHEN_PRINTER_NAME,
+            PRINTER_NAME,
+        )).strip() or None
+        if not sushi_printer and isinstance(category_printers, dict):
+            for cat, printer in category_printers.items():
+                printer_name = str(printer or '').strip()
+                if printer_name and _is_sushi_category_name(cat):
+                    sushi_printer = printer_name
+                    break
+        sushi_printer = str(first_value(sushi_printer, SUSHI_PRINTER_NAME)).strip() or None
+        sushi_items = []
+        kitchen_items = []
+
+        packer_printer = str(first_value(
+            order_data.get('packerPrinter'),
+            order_data.get('packer_printer'),
+            special_printers.get('packer_original'),
+        )).strip()
+        if packer_printer:
+            packer_ok = print_kitchen_ticket(original_order, copy_info='Original', printer_name=packer_printer)
+            printed_any = printed_any or packer_ok
+            printed_all = printed_all and packer_ok
+            time.sleep(1)
         categories = {}
         for it in items:
             if not isinstance(it, dict):
@@ -811,6 +922,10 @@ def handle_order_internal(order_data):
                     cat = found
             cat = cat or 'Uncategorized'
             categories.setdefault(cat, []).append(it)
+            if _is_sushi_category_name(cat) or _is_sushi_item(it):
+                sushi_items.append(copy.deepcopy(it))
+            else:
+                kitchen_items.append(copy.deepcopy(it))
 
         # Sushi -> Kitchen add-ons
         addon_quantities = {}
@@ -854,17 +969,9 @@ def handle_order_internal(order_data):
             if 'caterpillar' in name_l:
                 addon_quantities['Crab'] = addon_quantities.get('Crab', 0) + qty
             if 'hot sexy mama' in name_l:
-                addon_quantities['Fried Calamari'] = addon_quantities.get('Fried Calamari', 0) + qty
+                addon_quantities['Sushi Fried Calamari'] = addon_quantities.get('Sushi Fried Calamari', 0) + qty
 
         if addon_quantities:
-            kitchen_printer = (
-                special_printers.get('sushi_addon')
-                or category_printers.get('Entree')
-                or category_printers.get('Teppanyaki')
-                or category_printers.get('entree')
-                or category_printers.get('teppanyaki')
-                or None
-            )
             if kitchen_printer:
                 kitchen_order = {
                     'number': order_data.get('number'),
@@ -883,45 +990,36 @@ def handle_order_internal(order_data):
                     ],
                     'universalComment': 'SUSHI ADD-ON - NOT APPETIZER',
                 }
-                ok = print_kitchen_ticket(kitchen_order, copy_info='Kitchen Add-on', printer_name=kitchen_printer)
-                printed_any = printed_any or ok
-                printed_all = printed_all and ok
-                time.sleep(1)
+                kitchen_items.extend(copy.deepcopy(kitchen_order['items']))
+                if base_comment:
+                    kitchen_comment = f"{base_comment} | {kitchen_order['universalComment']}"
+                else:
+                    kitchen_comment = kitchen_order['universalComment']
+            else:
+                kitchen_comment = base_comment
+        else:
+            kitchen_comment = base_comment
 
-        unmatched_items = []
-        for cat, cat_items in categories.items():
-            printer = category_printers.get(cat) or category_printers.get(cat.lower()) or None
-            if not printer:
-                unmatched_items.extend(cat_items)
-                continue
-            cat_order = {
+        if sushi_items and sushi_printer:
+            sushi_order = {
                 'number': order_data.get('number'),
                 'tableNumber': order_data.get('tableNumber', 'N/A'),
-                'items': cat_items,
-                'universalComment': normalize_print_text(order_data.get('universalComment', '')),
+                'items': sushi_items,
+                'universalComment': base_comment,
             }
-            ok = print_kitchen_ticket(cat_order, copy_info=cat, printer_name=printer)
+            ok = print_kitchen_ticket(sushi_order, copy_info='Sushi', printer_name=sushi_printer)
             printed_any = printed_any or ok
             printed_all = printed_all and ok
             time.sleep(1)
 
-        fallback_printer = (
-            category_printers.get('Entree')
-            or category_printers.get('Teppanyaki')
-            or category_printers.get('entree')
-            or category_printers.get('teppanyaki')
-            or KITCHEN_PRINTER_NAME
-            or PRINTER_NAME
-            or None
-        )
-        if unmatched_items and fallback_printer:
-            uncategorized_order = {
+        if kitchen_items and kitchen_printer:
+            kitchen_order = {
                 'number': order_data.get('number'),
                 'tableNumber': order_data.get('tableNumber', 'N/A'),
-                'items': unmatched_items,
-                'universalComment': normalize_print_text(order_data.get('universalComment', '')),
+                'items': kitchen_items,
+                'universalComment': kitchen_comment,
             }
-            ok = print_kitchen_ticket(uncategorized_order, copy_info='Uncategorized', printer_name=fallback_printer)
+            ok = print_kitchen_ticket(kitchen_order, copy_info='Kitchen', printer_name=kitchen_printer)
             printed_any = printed_any or ok
             printed_all = printed_all and ok
             time.sleep(1)
@@ -1462,10 +1560,13 @@ if __name__ == '__main__':
 
     def _enqueue_from_raw_job(data: bytes, peer: str):
         text = print_capture._bytes_to_text(data)
+        source = print_capture.detect_order_source(text, fallback=f"RAW9100 {peer}")
         order_data = print_capture.parse_receipt_text_to_order(
             text=text,
-            source=f"RAW9100 {peer}",
+            source=source,
         )
+        if not str(first_value(order_data.get('printer'), order_data.get('printer_name'))).strip() and PRINTER_NAME:
+            order_data['printer'] = PRINTER_NAME
         enqueue_incoming(order_data)
 
     raw_port = int(os.environ.get("PRINT_CAPTURE_RAW_PORT", "9100") or "9100")
@@ -1504,6 +1605,8 @@ if __name__ == '__main__':
             try:
                 for name in os.listdir(PRINT_JOBS_DIR):
                     if not name.lower().endswith((".pdf", ".urf", ".jpg", ".jpeg", ".bin")):
+                        continue
+                    if name.lower().startswith("raw9100_") and name.lower().endswith(".bin"):
                         continue
                     path = os.path.join(PRINT_JOBS_DIR, name)
                     marker = path + ".queued"

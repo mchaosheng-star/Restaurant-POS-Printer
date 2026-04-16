@@ -830,6 +830,10 @@
               <label>Sushi Printer</label>
               <select id="sushiPrinter"></select>
             </div>
+            <div class="field">
+              <label>Packer Printer</label>
+              <select id="packerPrinter"></select>
+            </div>
           </div>
         </div>
 
@@ -892,6 +896,7 @@
     let lineCounter = Number(localStorage.getItem("lineCounter") || "0") || 0;
     let kitchenPrinter = localStorage.getItem("kitchenPrinter") || localStorage.getItem("selectedPrinter") || "";
     let sushiPrinter = localStorage.getItem("sushiPrinter") || "";
+    let packerPrinter = localStorage.getItem("packerPrinter") || "";
     let categoryPrinters = JSON.parse(localStorage.getItem("categoryPrinters") || "{}");
     let specialPrinters = JSON.parse(localStorage.getItem("specialPrinters") || "{}");
     let selfOrderMinimized = localStorage.getItem("selfOrderMinimized");
@@ -1015,6 +1020,7 @@
     function persistPrinterRouting() {
       localStorage.setItem("kitchenPrinter", kitchenPrinter);
       localStorage.setItem("sushiPrinter", sushiPrinter);
+      localStorage.setItem("packerPrinter", packerPrinter);
       localStorage.setItem("categoryPrinters", JSON.stringify(categoryPrinters));
       localStorage.setItem("specialPrinters", JSON.stringify(specialPrinters));
     }
@@ -1229,6 +1235,9 @@
         items: currentOrder,
         universalComment: orderNotes,
         printer: kitchenPrinter || undefined,
+        kitchenPrinter: kitchenPrinter || undefined,
+        sushiPrinter: sushiPrinter || undefined,
+        packerPrinter: packerPrinter || undefined,
         categoryPrinters: buildResolvedCategoryPrinters(),
         specialPrinters: buildResolvedSpecialPrinters()
       };
@@ -1313,7 +1322,7 @@
           </div>
           <div class="order-right">
             <div class="actions actions-end">
-              ${isSimulated ? `<button class="btn secondary small" onclick="removeIncoming(${order.id})">Remove</button>` : ""}
+              <button class="btn secondary small" onclick="removeIncoming(${order.id})">Remove</button>
               <button class="btn primary small" onclick="acceptIncoming(${order.id})">Accept</button>
             </div>
           </div>
@@ -1409,6 +1418,9 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          kitchenPrinter: kitchenPrinter || undefined,
+          sushiPrinter: sushiPrinter || undefined,
+          packerPrinter: packerPrinter || undefined,
           categoryPrinters: buildResolvedCategoryPrinters(),
           specialPrinters: buildResolvedSpecialPrinters()
         })
@@ -1479,6 +1491,7 @@
       const printerOptions = `<option value="">(none)</option>` + (Array.isArray(printers) ? printers.map(p => `<option value="${String(p).replace(/"/g, "&quot;")}">${p}</option>`).join("") : "");
       const kitchenSelect = document.getElementById("kitchenPrinter");
       const sushiSelect = document.getElementById("sushiPrinter");
+      const packerSelect = document.getElementById("packerPrinter");
       if (kitchenSelect) {
         kitchenSelect.innerHTML = printerOptions;
         kitchenSelect.value = kitchenPrinter || "";
@@ -1492,6 +1505,14 @@
         sushiSelect.value = sushiPrinter || "";
         sushiSelect.onchange = () => {
           sushiPrinter = sushiSelect.value || "";
+          persistPrinterRouting();
+        };
+      }
+      if (packerSelect) {
+        packerSelect.innerHTML = printerOptions;
+        packerSelect.value = packerPrinter || "";
+        packerSelect.onchange = () => {
+          packerPrinter = packerSelect.value || "";
           persistPrinterRouting();
         };
       }

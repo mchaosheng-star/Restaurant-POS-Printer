@@ -7,6 +7,7 @@
   "webhookToken": "",
   "storeLocationId": "",
   "printer": "",
+  "packerPrinter": "",
   "categoryPrinters": {},
   "specialPrinters": {},
   "storeHours": {
