@@ -104,8 +104,8 @@
       min-height: 0;
     }
     .queue-card {
-      flex: 0 1 200px;
-      min-height: 180px;
+      flex: 1 1 280px;
+      min-height: 220px;
     }
     .queue-card .order-list {
       flex: 1;
@@ -133,13 +133,22 @@
     }
     .current-order-card {
       background: linear-gradient(180deg, #fffdf9 0%, #fff8f1 100%);
-      flex: 1.5 1 460px;
-      min-height: 430px;
+      flex: 0 0 auto;
+      min-height: 0;
     }
     .current-order-card .order-list {
       flex: 1;
       min-height: 220px;
       max-height: none;
+    }
+    .current-order-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+    }
+    .current-order-card.minimized .current-order-body {
+      display: none;
     }
     .row {
       display: flex;
@@ -647,23 +656,36 @@
       accent-color: var(--primary);
     }
     @media (max-width: 1100px) {
-      body { flex-direction: column; }
+      body {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
       .sidebar {
         width: 100%;
         min-width: 0;
         max-height: none;
         border-right: none;
         border-bottom: 1px solid var(--line-strong);
+        overflow: visible;
       }
       .queue-card {
-        flex: 0 1 180px;
+        flex: 0 0 auto;
       }
       .current-order-card {
-        flex: 1 1 360px;
-        min-height: 360px;
+        flex: 0 0 auto;
+        min-height: 0;
       }
       .content {
         padding: 16px;
+        overflow: visible;
+      }
+      .main-shell,
+      .content-card,
+      .order-list {
+        overflow: visible;
       }
       .title {
         font-size: 26px;
@@ -698,7 +720,10 @@
         align-items: center;
       }
       .current-order-card {
-        min-height: 320px;
+        min-height: 0;
+      }
+      .queue-card {
+        min-height: 0;
       }
       .history-select {
         width: 100%;
@@ -744,15 +769,20 @@
           <div class="subtitle">Order #<span id="orderNumber">1</span></div>
           <div class="section-note">Build the current ticket here.</div>
         </div>
-        <button class="btn secondary small" onclick="newOrder()">New</button>
+        <div class="main-header-actions">
+          <button class="btn secondary small" id="toggleSelfOrderBtn" onclick="toggleSelfOrderCard()">Expand</button>
+          <button class="btn secondary small" onclick="newOrder()">New</button>
+        </div>
       </div>
-      <div class="order-list" id="currentOrder"></div>
-      <div class="row" style="justify-content:flex-end;">
-        <button class="btn primary" onclick="sendOrder()">Send</button>
-      </div>
-      <div class="field">
-        <label>Order Notes</label>
-        <textarea id="orderNotes" rows="3"></textarea>
+      <div class="current-order-body">
+        <div class="order-list" id="currentOrder"></div>
+        <div class="row" style="justify-content:flex-end;">
+          <button class="btn primary" onclick="sendOrder()">Send</button>
+        </div>
+        <div class="field">
+          <label>Order Notes</label>
+          <textarea id="orderNotes" rows="3"></textarea>
+        </div>
       </div>
     </div>
   </div>
@@ -789,22 +819,26 @@
       </div>
       <div class="settings-layout">
         <div class="settings-section">
-          <div class="settings-section-title">Default Printer</div>
-          <div class="settings-section-note">Used when no category printer is assigned.</div>
+          <div class="settings-section-title">Printer Assignment</div>
+          <div class="settings-section-note">Choose which real device is the Kitchen printer and which is the Sushi printer.</div>
           <div class="settings-grid">
             <div class="field">
-              <label>Printer</label>
-              <select id="defaultPrinter"></select>
+              <label>Kitchen Printer</label>
+              <select id="kitchenPrinter"></select>
+            </div>
+            <div class="field">
+              <label>Sushi Printer</label>
+              <select id="sushiPrinter"></select>
             </div>
           </div>
         </div>
 
         <div class="settings-section">
           <div class="settings-section-title">Special Printer</div>
-          <div class="settings-section-note">For sushi shrimp/crab add-on ticket.</div>
+          <div class="settings-section-note">Choose whether the sushi shrimp/crab add-on ticket goes to Kitchen or Sushi.</div>
           <div class="settings-grid">
             <div class="field">
-              <label>Sushi Add-on Printer</label>
+              <label>Sushi Add-on Route</label>
               <select id="sushiAddonPrinter"></select>
             </div>
           </div>
@@ -812,7 +846,7 @@
 
         <div class="settings-section">
           <div class="settings-section-title">Category To Printer</div>
-          <div class="settings-section-note">Choose which printer handles each menu category.</div>
+          <div class="settings-section-note">Each category can only go to Kitchen or Sushi.</div>
           <div class="stack" id="categoryPrinterMapping"></div>
         </div>
       </div>
@@ -856,9 +890,12 @@
     let orderNotes = localStorage.getItem("orderNotes") || "";
     let orderNumber = Number(localStorage.getItem("orderNumber") || "1") || 1;
     let lineCounter = Number(localStorage.getItem("lineCounter") || "0") || 0;
-    let selectedPrinter = localStorage.getItem("selectedPrinter") || "";
+    let kitchenPrinter = localStorage.getItem("kitchenPrinter") || localStorage.getItem("selectedPrinter") || "";
+    let sushiPrinter = localStorage.getItem("sushiPrinter") || "";
     let categoryPrinters = JSON.parse(localStorage.getItem("categoryPrinters") || "{}");
     let specialPrinters = JSON.parse(localStorage.getItem("specialPrinters") || "{}");
+    let selfOrderMinimized = localStorage.getItem("selfOrderMinimized");
+    selfOrderMinimized = selfOrderMinimized === null ? true : selfOrderMinimized === "1";
     let incomingOrders = [];
     let acceptedOrders = [];
     let historyOrders = [];
@@ -877,6 +914,20 @@
       setTimeout(() => t.style.display = "none", 1600);
     }
 
+    function applySelfOrderCardState() {
+      const card = document.querySelector(".current-order-card");
+      const btn = document.getElementById("toggleSelfOrderBtn");
+      if (!card || !btn) return;
+      card.classList.toggle("minimized", !!selfOrderMinimized);
+      btn.textContent = selfOrderMinimized ? "Expand" : "Minimize";
+    }
+
+    function toggleSelfOrderCard() {
+      selfOrderMinimized = !selfOrderMinimized;
+      localStorage.setItem("selfOrderMinimized", selfOrderMinimized ? "1" : "0");
+      applySelfOrderCardState();
+    }
+
     function escapeHtml(s) {
       return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
@@ -888,6 +939,25 @@
           <div class="empty-state-text">${escapeHtml(text)}</div>
         </div>
       `;
+    }
+
+    function buildQueueItemsHtml(items) {
+      const list = Array.isArray(items) ? items : [];
+      const rows = list
+        .map(item => {
+          const qty = Number(item?.quantity || 1) || 1;
+          const name = String(item?.name || "").trim();
+          if (!name) return "";
+          return `<div class="order-summary">${escapeHtml(`${qty}x ${name}`)}</div>`;
+        })
+        .filter(Boolean);
+      return rows.join("") || `<div class="order-summary">No items</div>`;
+    }
+
+    function buildQueueNoteHtml(note) {
+      const text = String(note || "").trim();
+      if (!text) return "";
+      return `<div class="order-meta">Note: ${escapeHtml(text)}</div>`;
     }
 
     const CATEGORY_ICONS = {
@@ -932,6 +1002,79 @@
       localStorage.setItem("orderNotes", orderNotes);
       localStorage.setItem("orderNumber", String(orderNumber));
       localStorage.setItem("lineCounter", String(lineCounter));
+    }
+
+    function normalizePrinterRole(value) {
+      const v = String(value || "").trim();
+      if (v === "kitchen" || v === "sushi") return v;
+      if (v && v === kitchenPrinter) return "kitchen";
+      if (v && v === sushiPrinter) return "sushi";
+      return "";
+    }
+
+    function persistPrinterRouting() {
+      localStorage.setItem("kitchenPrinter", kitchenPrinter);
+      localStorage.setItem("sushiPrinter", sushiPrinter);
+      localStorage.setItem("categoryPrinters", JSON.stringify(categoryPrinters));
+      localStorage.setItem("specialPrinters", JSON.stringify(specialPrinters));
+    }
+
+    function roleOptionsHtml() {
+      return `
+        <option value="">(none)</option>
+        <option value="kitchen">Kitchen</option>
+        <option value="sushi">Sushi</option>
+      `;
+    }
+
+    function resolvePrinterRole(role) {
+      const normalized = normalizePrinterRole(role);
+      if (normalized === "kitchen") return kitchenPrinter || "";
+      if (normalized === "sushi") return sushiPrinter || "";
+      return "";
+    }
+
+    function buildResolvedCategoryPrinters() {
+      const resolved = {};
+      Object.entries(categoryPrinters || {}).forEach(([category, role]) => {
+        const printer = resolvePrinterRole(role);
+        if (printer) resolved[category] = printer;
+      });
+      return resolved;
+    }
+
+    function buildResolvedSpecialPrinters() {
+      const resolved = {};
+      Object.entries(specialPrinters || {}).forEach(([key, role]) => {
+        const printer = resolvePrinterRole(role);
+        if (printer) resolved[key] = printer;
+      });
+      return resolved;
+    }
+
+    function migrateLegacyPrinterMappings() {
+      let changed = false;
+      Object.keys(categoryPrinters || {}).forEach(category => {
+        const normalized = normalizePrinterRole(categoryPrinters[category]);
+        if (normalized) {
+          if (categoryPrinters[category] !== normalized) changed = true;
+          categoryPrinters[category] = normalized;
+        } else {
+          delete categoryPrinters[category];
+          changed = true;
+        }
+      });
+      Object.keys(specialPrinters || {}).forEach(key => {
+        const normalized = normalizePrinterRole(specialPrinters[key]);
+        if (normalized) {
+          if (specialPrinters[key] !== normalized) changed = true;
+          specialPrinters[key] = normalized;
+        } else {
+          delete specialPrinters[key];
+          changed = true;
+        }
+      });
+      if (changed) persistPrinterRouting();
     }
 
     async function loadMenu() {
@@ -1085,9 +1228,9 @@
         number: orderNumber,
         items: currentOrder,
         universalComment: orderNotes,
-        printer: selectedPrinter || undefined,
-        categoryPrinters: categoryPrinters || {},
-        specialPrinters: specialPrinters || {}
+        printer: kitchenPrinter || undefined,
+        categoryPrinters: buildResolvedCategoryPrinters(),
+        specialPrinters: buildResolvedSpecialPrinters()
       };
       const res = await fetch("/api/orders", {
         method: "POST",
@@ -1152,7 +1295,6 @@
       }
       (incomingOrders || []).slice().reverse().forEach(order => {
         const data = order.order || {};
-        const summary = (data.items || []).map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
         const isSimulated =
           String(data.tableNumber || "").toLowerCase() === "uber" ||
           String(data.universalComment || "").toLowerCase() === "simulated" ||
@@ -1166,8 +1308,8 @@
               <div class="order-title">#${escapeHtml(data.number || order.id)}</div>
               ${isSimulated ? `<div class="order-chip">Simulated</div>` : ""}
             </div>
-            <div class="order-meta">${escapeHtml(order.received_at || "")}</div>
-            <div class="order-summary">${escapeHtml(summary)}</div>
+            ${buildQueueItemsHtml(data.items)}
+            ${buildQueueNoteHtml(data.universalComment)}
           </div>
           <div class="order-right">
             <div class="actions actions-end">
@@ -1192,14 +1334,13 @@
 
       active.slice().reverse().forEach(order => {
         const data = order.order || {};
-        const summary = (data.items || []).map(i => `${i.quantity || 1}x ${i.name || ""}`).join(" | ");
         const row = document.createElement("div");
         row.className = "order-item";
         row.innerHTML = `
           <div class="order-main">
             <div class="order-title">#${escapeHtml(data.number || order.id)}</div>
-            <div class="order-meta">${escapeHtml(order.accepted_at || "")}</div>
-            <div class="order-summary">${escapeHtml(summary)}</div>
+            ${buildQueueItemsHtml(data.items)}
+            ${buildQueueNoteHtml(data.universalComment)}
           </div>
           <div class="order-right">
             <button class="btn green small" onclick="finishAccepted(${order.id})">Done</button>
@@ -1268,8 +1409,8 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          categoryPrinters: categoryPrinters || {},
-          specialPrinters: specialPrinters || {}
+          categoryPrinters: buildResolvedCategoryPrinters(),
+          specialPrinters: buildResolvedSpecialPrinters()
         })
       });
       if (res.ok) {
@@ -1333,24 +1474,36 @@
       const printers = await printerRes.json();
       const liveMenu = await menuRes.json();
       menu = liveMenu || menu;
+      migrateLegacyPrinterMappings();
 
-      const printerOptions = `<option value="">(auto)</option>` + (Array.isArray(printers) ? printers.map(p => `<option value="${String(p).replace(/"/g, "&quot;")}">${p}</option>`).join("") : "");
-      const defaultSelect = document.getElementById("defaultPrinter");
-      defaultSelect.innerHTML = printerOptions;
-      defaultSelect.value = selectedPrinter || "";
-      defaultSelect.onchange = () => {
-        selectedPrinter = defaultSelect.value || "";
-        localStorage.setItem("selectedPrinter", selectedPrinter);
-      };
+      const printerOptions = `<option value="">(none)</option>` + (Array.isArray(printers) ? printers.map(p => `<option value="${String(p).replace(/"/g, "&quot;")}">${p}</option>`).join("") : "");
+      const kitchenSelect = document.getElementById("kitchenPrinter");
+      const sushiSelect = document.getElementById("sushiPrinter");
+      if (kitchenSelect) {
+        kitchenSelect.innerHTML = printerOptions;
+        kitchenSelect.value = kitchenPrinter || "";
+        kitchenSelect.onchange = () => {
+          kitchenPrinter = kitchenSelect.value || "";
+          persistPrinterRouting();
+        };
+      }
+      if (sushiSelect) {
+        sushiSelect.innerHTML = printerOptions;
+        sushiSelect.value = sushiPrinter || "";
+        sushiSelect.onchange = () => {
+          sushiPrinter = sushiSelect.value || "";
+          persistPrinterRouting();
+        };
+      }
 
       const sushiAddonSelect = document.getElementById("sushiAddonPrinter");
       if (sushiAddonSelect) {
-        sushiAddonSelect.innerHTML = printerOptions;
-        sushiAddonSelect.value = specialPrinters.sushi_addon || "";
+        sushiAddonSelect.innerHTML = roleOptionsHtml();
+        sushiAddonSelect.value = normalizePrinterRole(specialPrinters.sushi_addon);
         sushiAddonSelect.onchange = () => {
           if (sushiAddonSelect.value) specialPrinters.sushi_addon = sushiAddonSelect.value;
           else delete specialPrinters.sushi_addon;
-          localStorage.setItem("specialPrinters", JSON.stringify(specialPrinters));
+          persistPrinterRouting();
         };
       }
 
@@ -1366,12 +1519,12 @@
         row.className = "settings-map-row";
         row.innerHTML = `<div class="settings-map-name"><span class="settings-cat-icon" aria-hidden="true">${categoryIcon(category)}</span><span>${escapeHtml(category)}</span></div><select></select>`;
         const select = row.querySelector("select");
-        select.innerHTML = `<option value="">(none)</option>` + (Array.isArray(printers) ? printers.map(p => `<option value="${String(p).replace(/"/g, "&quot;")}">${p}</option>`).join("") : "");
-        select.value = categoryPrinters[category] || "";
+        select.innerHTML = roleOptionsHtml();
+        select.value = normalizePrinterRole(categoryPrinters[category]);
         select.onchange = () => {
           if (select.value) categoryPrinters[category] = select.value;
           else delete categoryPrinters[category];
-          localStorage.setItem("categoryPrinters", JSON.stringify(categoryPrinters));
+          persistPrinterRouting();
         };
         wrap.appendChild(row);
       });
@@ -1467,6 +1620,8 @@
       optionMax = 0;
     }
 
+    migrateLegacyPrinterMappings();
+    applySelfOrderCardState();
     loadMenu();
     pollQueues();
     setInterval(pollQueues, 2000);
