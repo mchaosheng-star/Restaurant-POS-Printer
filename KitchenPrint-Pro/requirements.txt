@@ -1,0 +1,10 @@
+flask
+pywin32
+ippserver
+zeroconf
+pypdf
+pymupdf
+pillow
+rapidocr-onnxruntime
+pytesseract
+psutil

@@ -2,7 +2,9 @@
 from flask import Flask, request, jsonify, send_from_directory, make_response
 from datetime import datetime, timedelta
 import csv
+import difflib
 import os
+import re
 import win32con # type: ignore
 import win32print # type: ignore
 import win32ui # type: ignore
@@ -14,6 +16,7 @@ import threading
 
 import doordash
 import ubereats
+import print_capture
 
 app = Flask(__name__)
 
@@ -35,6 +38,8 @@ KITCHEN_PRINTER_NAME = "Brother MFC-L5850DW series (Copy 1)"
 # CSV and Menu File Configuration
 CSV_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 MENU_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/menu.json')
+PRINT_JOBS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'print_jobs')
+VIRTUAL_PRINTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'virtual_prints')
 
 UBER_WEBHOOK_LOCK = threading.Lock()
 UBER_WEBHOOK_EVENT_IDS = set()
@@ -489,22 +494,47 @@ def _category_for_item_name(item_name):
     return None
 
 def _menu_item_for_name(item_name):
-    name_l = str(item_name or '').strip().lower()
-    if not name_l:
+    raw_name = str(item_name or '').strip()
+    if not raw_name:
         return None
     menu = _load_menu_cached()
     if not isinstance(menu, dict):
         return None
+    name_l = raw_name.lower()
+    normalized_name = _normalize_menu_lookup_name(raw_name)
+    exact_normalized = None
+    fuzzy_candidates = []
     for cat, items in menu.items():
         if not isinstance(items, list):
             continue
         for it in items:
             if not isinstance(it, dict):
                 continue
-            if str(it.get('name', '')).strip().lower() == name_l:
+            menu_name = str(it.get('name', '')).strip()
+            if not menu_name:
+                continue
+            menu_name_l = menu_name.lower()
+            if menu_name_l == name_l:
                 menu_item = dict(it)
                 menu_item['_category'] = str(cat)
                 return menu_item
+            menu_norm = _normalize_menu_lookup_name(menu_name)
+            if normalized_name and menu_norm == normalized_name and exact_normalized is None:
+                menu_item = dict(it)
+                menu_item['_category'] = str(cat)
+                exact_normalized = menu_item
+            fuzzy_candidates.append((menu_norm, str(cat), dict(it)))
+    if exact_normalized:
+        return exact_normalized
+    if normalized_name and fuzzy_candidates:
+        names = [candidate[0] for candidate in fuzzy_candidates if candidate[0]]
+        matches = difflib.get_close_matches(normalized_name, names, n=1, cutoff=0.84)
+        if matches:
+            best = matches[0]
+            for candidate_norm, candidate_cat, candidate_item in fuzzy_candidates:
+                if candidate_norm == best:
+                    candidate_item['_category'] = candidate_cat
+                    return candidate_item
     return None
 
 def _name_zh_for_item_name(item_name):
@@ -517,6 +547,18 @@ def _name_zh_for_item_name(item_name):
     if isinstance(menu_item, dict):
         return normalize_print_text(menu_item.get('nameZh', ''))
     return ""
+
+def _normalize_menu_lookup_name(value):
+    s = str(value or '').strip().lower()
+    if not s:
+        return ""
+    s = s.replace('&', ' and ')
+    s = re.sub(r'\([^)]*\)', ' ', s)
+    s = re.sub(r'\b(combo|meal|size|regular|large|medium|small)\b', ' ', s)
+    s = re.sub(r'\bpcs?\b', ' ', s)
+    s = re.sub(r'[^a-z0-9]+', ' ', s)
+    s = re.sub(r'\s+', ' ', s).strip()
+    return s
 
 @app.route('/')
 def serve_index():
@@ -846,9 +888,11 @@ def handle_order_internal(order_data):
                 printed_all = printed_all and ok
                 time.sleep(1)
 
+        unmatched_items = []
         for cat, cat_items in categories.items():
             printer = category_printers.get(cat) or category_printers.get(cat.lower()) or None
             if not printer:
+                unmatched_items.extend(cat_items)
                 continue
             cat_order = {
                 'number': order_data.get('number'),
@@ -861,7 +905,30 @@ def handle_order_internal(order_data):
             printed_all = printed_all and ok
             time.sleep(1)
 
-        status = 'Yes (routed)' if printed_all else ('Partial (routed)' if printed_any else 'No (routed)')
+        fallback_printer = (
+            category_printers.get('Entree')
+            or category_printers.get('Teppanyaki')
+            or category_printers.get('entree')
+            or category_printers.get('teppanyaki')
+            or KITCHEN_PRINTER_NAME
+            or PRINTER_NAME
+            or None
+        )
+        if unmatched_items and fallback_printer:
+            uncategorized_order = {
+                'number': order_data.get('number'),
+                'tableNumber': order_data.get('tableNumber', 'N/A'),
+                'items': unmatched_items,
+                'universalComment': normalize_print_text(order_data.get('universalComment', '')),
+            }
+            ok = print_kitchen_ticket(uncategorized_order, copy_info='Uncategorized', printer_name=fallback_printer)
+            printed_any = printed_any or ok
+            printed_all = printed_all and ok
+            time.sleep(1)
+
+        if not printed_any:
+            printed_all = False
+        status = 'Yes (routed)' if printed_any and printed_all else ('Partial (routed)' if printed_any else 'No (routed)')
         return log_order_to_csv(order_data, skip_print=True, printed_status_override=status)
     else:
         printer_name = order_data.get('printer') or order_data.get('printer_name')
@@ -991,6 +1058,21 @@ def print_kitchen_ticket(order_data, copy_info="", original_timestamp_str=None, 
 
         target_printer = printer_name or PRINTER_NAME
         doc_name = f"Order_{order_data.get('number', 'N/A')}_Ticket_{copy_info.replace(' ','_')}"
+        if str(os.environ.get("VIRTUAL_PRINT", "")).strip().lower() in ("1", "true", "yes", "on"):
+            os.makedirs(VIRTUAL_PRINTS_DIR, exist_ok=True)
+            safe_printer = re.sub(r'[^A-Za-z0-9._-]+', '_', str(target_printer or 'default')).strip('_') or 'default'
+            safe_doc = re.sub(r'[^A-Za-z0-9._-]+', '_', str(doc_name or 'ticket')).strip('_') or 'ticket'
+            stamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+            preview_path = os.path.join(VIRTUAL_PRINTS_DIR, f"{stamp}__{safe_printer}__{safe_doc}.txt")
+            with open(preview_path, 'w', encoding='utf-8') as f:
+                f.write(f"TARGET_PRINTER: {target_printer}\n")
+                f.write(f"DOC_NAME: {doc_name}\n")
+                f.write(f"COPY_INFO: {copy_info}\n")
+                f.write("=" * 48 + "\n")
+                f.write("\n".join(ticket_lines))
+                f.write("\n")
+            app.logger.info("Virtual print saved to %s", preview_path)
+            return True
         if any(any(ord(ch) > 127 for ch in line) for line in ticket_lines):
             hdc = win32ui.CreateDC()
             try:
@@ -1372,4 +1454,88 @@ if __name__ == '__main__':
         app.logger.info(f"Attempting to use printer: {PRINTER_NAME}")
     else:
         app.logger.warning("Warning: PRINTER_NAME is not set. Printing will likely fail.")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+    os.makedirs(PRINT_JOBS_DIR, exist_ok=True)
+    if str(os.environ.get("VIRTUAL_PRINT", "")).strip().lower() in ("1", "true", "yes", "on"):
+        os.makedirs(VIRTUAL_PRINTS_DIR, exist_ok=True)
+        app.logger.info("Virtual print preview enabled: %s", VIRTUAL_PRINTS_DIR)
+
+    def _enqueue_from_raw_job(data: bytes, peer: str):
+        text = print_capture._bytes_to_text(data)
+        order_data = print_capture.parse_receipt_text_to_order(
+            text=text,
+            source=f"RAW9100 {peer}",
+        )
+        enqueue_incoming(order_data)
+
+    raw_port = int(os.environ.get("PRINT_CAPTURE_RAW_PORT", "9100") or "9100")
+    raw_host = str(os.environ.get("PRINT_CAPTURE_RAW_HOST", "0.0.0.0") or "0.0.0.0")
+    try:
+        recv = print_capture.Raw9100Receiver(
+            host=raw_host,
+            port=raw_port,
+            jobs_dir=PRINT_JOBS_DIR,
+            on_job=_enqueue_from_raw_job,
+        )
+        recv.start()
+        app.logger.info("RAW9100 receiver listening on %s:%s", raw_host, raw_port)
+    except Exception as e:
+        app.logger.error("RAW9100 receiver failed: %s", e)
+
+    ipp_port = int(os.environ.get("PRINT_CAPTURE_IPP_PORT", "8631") or "8631")
+    ipp_host = str(os.environ.get("PRINT_CAPTURE_IPP_HOST", "0.0.0.0") or "0.0.0.0")
+    mdns_host = str(os.environ.get("PRINT_CAPTURE_MDNS_HOST", "") or "").strip() or print_capture.detect_lan_ip()
+    ipp_enabled = print_capture.start_ipp_receiver_if_available(PRINT_JOBS_DIR, ipp_host, ipp_port, public_host=mdns_host)
+    if ipp_enabled:
+        app.logger.info("IPP receiver listening on %s:%s", ipp_host, ipp_port)
+        svc_name = str(os.environ.get("PRINT_CAPTURE_AIRPRINT_NAME", "KitchenPrintPro") or "KitchenPrintPro")
+        app.logger.info("AirPrint advertise IP %s interface_index=%s", mdns_host, print_capture.get_interface_index_for_ip(mdns_host))
+        native_airprint = print_capture.start_native_airprint_mdns_if_available(svc_name, mdns_host, ipp_port)
+        if native_airprint:
+            app.logger.info("Native AirPrint mDNS advertised as %s on %s", svc_name, mdns_host)
+        else:
+            app.logger.warning("AirPrint mDNS not advertised")
+    else:
+        app.logger.warning("IPP receiver not started (install ippserver)")
+
+    def _watch_ipp_pdfs():
+        recent_hashes = {}
+        while True:
+            try:
+                for name in os.listdir(PRINT_JOBS_DIR):
+                    if not name.lower().endswith((".pdf", ".urf", ".jpg", ".jpeg", ".bin")):
+                        continue
+                    path = os.path.join(PRINT_JOBS_DIR, name)
+                    marker = path + ".queued"
+                    if os.path.exists(marker):
+                        continue
+                    digest = ""
+                    try:
+                        digest = print_capture.sha1_file(path)
+                    except Exception:
+                        digest = ""
+                    now_ts = time.time()
+                    recent_hashes = {
+                        k: v for k, v in recent_hashes.items()
+                        if now_ts - v < 45
+                    }
+                    if digest and digest in recent_hashes:
+                        with open(marker, "w", encoding="utf-8") as f:
+                            f.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                        continue
+                    order_data, extracted_text = print_capture.build_order_from_saved_job(path)
+                    text_path = path + ".txt"
+                    if extracted_text and not os.path.exists(text_path):
+                        with open(text_path, "w", encoding="utf-8", errors="replace") as f:
+                            f.write(extracted_text)
+                    enqueue_incoming(order_data)
+                    if digest:
+                        recent_hashes[digest] = now_ts
+                    with open(marker, "w", encoding="utf-8") as f:
+                        f.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            except Exception:
+                pass
+            time.sleep(1.0)
+
+    threading.Thread(target=_watch_ipp_pdfs, daemon=True).start()
+    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)

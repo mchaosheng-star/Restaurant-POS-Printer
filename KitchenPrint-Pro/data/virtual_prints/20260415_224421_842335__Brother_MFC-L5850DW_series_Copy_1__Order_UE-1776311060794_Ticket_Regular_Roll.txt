@@ -1,0 +1,23 @@
+TARGET_PRINTER: Brother MFC-L5850DW series (Copy 1)
+DOC_NAME: Order_UE-1776311060794_Ticket_Regular_Roll
+COPY_INFO: Regular Roll
+================================================
+Sakura
+Kitchen Order - REGULAR ROLL
+Order #: UE-1776311060794
+Time: 2026-04-15 22:44:21
+------------------------------------------
+1x California Roll
+  加州卷
+..........................................
+1x Shrimp Tempura
+Roll
+  天妇罗虾卷
+------------------------------------------
+==========================================
+ORDER NOTES
+Simulated
+
+
+This is not a legal receipt and is for informational
+purposes only.
