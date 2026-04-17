@@ -1019,6 +1019,9 @@ class NativeBonjourAdvertiser:
 
 
 def start_native_airprint_mdns_if_available(service_name: str, host: str, port: int):
+    flag = str(os.environ.get("PRINT_CAPTURE_USE_NATIVE_MDNS", "")).strip().lower()
+    if flag not in ("1", "true", "yes", "on"):
+        return None
     adv = NativeBonjourAdvertiser(service_name=service_name, host=host, port=port)
     if adv.start():
         return adv
