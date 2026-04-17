@@ -223,6 +223,17 @@ _MODIFIER_PREFIXES = (
     "option ",
     "choice ",
 )
+_PROTEIN_CHOICE_CATEGORIES = {
+    "fried rice",
+    "noodle",
+}
+_PROTEIN_OPTION_NAMES = {
+    "vegetable",
+    "chicken",
+    "beef",
+    "shrimp",
+    "combination",
+}
 
 
 def _normalize_lines(text: str) -> list[str]:
@@ -465,6 +476,21 @@ def _append_item_modifier(item: dict, line: str):
     options.append({"name": text[:120]})
 
 
+def _standalone_option_text(line: str, previous_item: dict | None) -> str:
+    if not isinstance(previous_item, dict):
+        return ""
+    category = str(previous_item.get("category", "")).strip().lower()
+    if category not in _PROTEIN_CHOICE_CATEGORIES:
+        return ""
+    cleaned = _clean_item_name(line)
+    if not cleaned:
+        return ""
+    normalized = re.sub(r"\s+", " ", cleaned).strip().lower()
+    if normalized not in _PROTEIN_OPTION_NAMES:
+        return ""
+    return cleaned
+
+
 def _fallback_items_from_lines(lines: list[str]) -> list[dict]:
     items = []
     previous_item = None
@@ -474,6 +500,10 @@ def _fallback_items_from_lines(lines: list[str]) -> list[dict]:
             continue
         if previous_item is not None and _is_modifier_line(cleaned):
             _append_item_modifier(previous_item, cleaned)
+            continue
+        standalone_option = _standalone_option_text(cleaned, previous_item)
+        if standalone_option:
+            _append_item_modifier(previous_item, standalone_option)
             continue
         parsed = _parse_item_line(cleaned)
         if not parsed:
@@ -493,6 +523,10 @@ def extract_items_from_text(text: str) -> list[dict]:
             continue
         if previous_item is not None and _is_modifier_line(normalized):
             _append_item_modifier(previous_item, normalized)
+            continue
+        standalone_option = _standalone_option_text(normalized, previous_item)
+        if standalone_option:
+            _append_item_modifier(previous_item, standalone_option)
             continue
         cleaned = _clean_item_name(normalized)
         if not cleaned:

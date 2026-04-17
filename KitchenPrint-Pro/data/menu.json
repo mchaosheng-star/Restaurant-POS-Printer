@@ -804,13 +804,55 @@
       "id": 22132,
       "name": "Tepp Dinner Comb pick 2",
       "price": 43.95,
-      "nameZh": "铁板晚餐组合（任选2款）"
+      "nameZh": "铁板晚餐组合（任选2款）",
+      "selectMin": 2,
+      "selectMax": 2,
+      "options": [
+        { "name": "Vegetable & Tofu", "price": 0 },
+        { "name": "Chicken", "price": 0 },
+        { "name": "Calamari", "price": 0 },
+        { "name": "Salmon", "price": 0 },
+        { "name": "Red Snapper", "price": 0 },
+        { "name": "Steak", "price": 0 },
+        { "name": "Shrimp", "price": 0 },
+        { "name": "Golden Shrimp", "price": 0 },
+        { "name": "Garlic Shrimp", "price": 0 },
+        { "name": "Scallop", "price": 0 },
+        { "name": "Filet Mignon", "price": 0 },
+        { "name": "Twin Tuna", "price": 0 },
+        { "name": "Seabass", "price": 0 },
+        { "name": "Garlic Scallop", "price": 0 },
+        { "name": "Golden Scallop", "price": 0 },
+        { "name": "Lamb Chop", "price": 0 },
+        { "name": "Twin Lobster (18oz)", "price": 0 }
+      ]
     },
     {
       "id": 22133,
       "name": "Tepp Dinner Comb pick 3",
       "price": 50.95,
-      "nameZh": "铁板晚餐组合（任选3款）"
+      "nameZh": "铁板晚餐组合（任选3款）",
+      "selectMin": 3,
+      "selectMax": 3,
+      "options": [
+        { "name": "Vegetable & Tofu", "price": 0 },
+        { "name": "Chicken", "price": 0 },
+        { "name": "Calamari", "price": 0 },
+        { "name": "Salmon", "price": 0 },
+        { "name": "Red Snapper", "price": 0 },
+        { "name": "Steak", "price": 0 },
+        { "name": "Shrimp", "price": 0 },
+        { "name": "Golden Shrimp", "price": 0 },
+        { "name": "Garlic Shrimp", "price": 0 },
+        { "name": "Scallop", "price": 0 },
+        { "name": "Filet Mignon", "price": 0 },
+        { "name": "Twin Tuna", "price": 0 },
+        { "name": "Seabass", "price": 0 },
+        { "name": "Garlic Scallop", "price": 0 },
+        { "name": "Golden Scallop", "price": 0 },
+        { "name": "Lamb Chop", "price": 0 },
+        { "name": "Twin Lobster (18oz)", "price": 0 }
+      ]
     },
     {
       "id": 22134,
@@ -1002,25 +1044,61 @@
       "id": 22008,
       "name": "Pad See Eiw",
       "price": 15.95,
-      "nameZh": "泰式炒河粉"
+      "nameZh": "泰式炒河粉",
+      "selectMin": 1,
+      "selectMax": 1,
+      "options": [
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
+      ]
     },
     {
       "id": 22009,
       "name": "Thai Crazy Noodle",
       "price": 15.95,
-      "nameZh": "泰式疯狂面"
+      "nameZh": "泰式疯狂面",
+      "selectMin": 1,
+      "selectMax": 1,
+      "options": [
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
+      ]
     },
     {
       "id": 22010,
       "name": "Pad Thai Noodle",
       "price": 15.95,
-      "nameZh": "泰式炒面"
+      "nameZh": "泰式炒面",
+      "selectMin": 1,
+      "selectMax": 1,
+      "options": [
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
+      ]
     },
     {
       "id": 22011,
       "name": "Hibachi Noodle",
       "price": 15.95,
-      "nameZh": "铁板面"
+      "nameZh": "铁板面",
+      "selectMin": 1,
+      "selectMax": 1,
+      "options": [
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
+      ]
     }
   ],
   "Fried Rice": [
@@ -1028,19 +1106,46 @@
       "id": 22001,
       "name": "Thai Fried Rice",
       "price": 13.95,
-      "nameZh": "泰式炒饭"
+      "nameZh": "泰式炒饭",
+      "selectMin": 1,
+      "selectMax": 1,
+      "options": [
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
+      ]
     },
     {
       "id": 22002,
       "name": "Pineapple Fried Rice",
       "price": 13.95,
-      "nameZh": "菠萝炒饭"
+      "nameZh": "菠萝炒饭",
+      "selectMin": 1,
+      "selectMax": 1,
+      "options": [
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
+      ]
     },
     {
       "id": 22004,
       "name": "Hibachi Fried Rice",
       "price": 13.95,
-      "nameZh": "铁板炒饭"
+      "nameZh": "铁板炒饭",
+      "selectMin": 1,
+      "selectMax": 1,
+      "options": [
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
+      ]
     }
   ],
   "Beverage": [
