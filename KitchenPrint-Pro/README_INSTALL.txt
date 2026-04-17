@@ -35,6 +35,23 @@ python -m pip install -r requirements.txt
 py -m pip install ippserver
 setx PRINT_CAPTURE_MDNS_HOST "192.168.1.50"
 
+`````````````````````````````
+winget search airprint
+winget search bonjour
+
+winget install --id Apple.Bonjour -e
+# 把 <...> 换成真实 id（不要带尖括号），例如：
+# winget install --id Some.Publisher.AirPrintInstaller -e
+
+
+
+winget install --id Apple.BonjourPrintServices -e
+# 你现在只有虚拟打印机；把 KitchenPrint-Pro 要用的厨房打印机装到 Windows（厂商驱动/网络打印机）
+# 装好后确认它出现在列表里
+Get-Printer | ft Name,DriverName,PortName
+
+``````````````````````````````````````````````````
+
 
 4) Install your real printers in Windows
 1. Add/install the real printers (Kitchen / Sushi / Packer) in Windows first.
