@@ -32,6 +32,9 @@ In PowerShell (inside KitchenPrint-Pro):
 
 python -m pip install -r requirements.txt
 
+py -m pip install ippserver
+setx PRINT_CAPTURE_MDNS_HOST "192.168.1.50"
+
 
 4) Install your real printers in Windows
 1. Add/install the real printers (Kitchen / Sushi / Packer) in Windows first.
