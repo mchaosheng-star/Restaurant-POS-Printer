@@ -1735,7 +1735,11 @@ if __name__ == '__main__':
         if native_airprint:
             app.logger.info("Native AirPrint mDNS advertised as %s on %s", svc_name, mdns_host)
         else:
-            app.logger.warning("AirPrint mDNS not advertised")
+            zc_ok = print_capture.start_airprint_mdns_if_available(svc_name, mdns_host, ipp_port)
+            if zc_ok:
+                app.logger.info("AirPrint mDNS advertised as %s on %s", svc_name, mdns_host)
+            else:
+                app.logger.warning("AirPrint mDNS not advertised")
     else:
         app.logger.warning("IPP receiver not started (install ippserver)")
 

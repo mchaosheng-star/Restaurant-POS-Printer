@@ -1,0 +1,135 @@
+KitchenPrint-Pro Full Setup Guide for a New Restaurant PC
+
+Goal:
+Make an iPhone/iPad on the same Wi-Fi see "KitchenPrintPro" as an AirPrint printer and send print jobs into KitchenPrint-Pro.
+
+Requirements:
+- Windows PC
+- iPhone/iPad on the same Wi-Fi as the PC
+- KitchenPrint-Pro project folder on the PC
+- Python 3 installed
+
+Step 1: Copy the project to the PC
+Put the KitchenPrint-Pro folder somewhere on the PC, for example:
+
+C:\Users\YourName\Desktop\KitchenPrint-Pro
+
+Step 2: Install Python
+Install Python 3 for Windows.
+Important: during install, enable "Add Python to PATH".
+
+Verify:
+
+python --version
+
+Step 3: Open PowerShell in the project folder
+Example:
+
+cd "C:\Users\YourName\Desktop\KitchenPrint-Pro"
+
+Step 4: Install Python dependencies
+Run:
+
+python -m pip install -r requirements.txt
+
+Step 5: Find the correct LAN IP address and interface index
+Run:
+
+Get-NetIPAddress -AddressFamily IPv4 | Select-Object InterfaceIndex,IPAddress,InterfaceAlias | Format-Table -AutoSize
+
+Find the row for the network adapter the PC is actually using, usually "Wi-Fi".
+
+Example output:
+
+15   192.168.0.215   Wi-Fi
+
+In this example:
+- InterfaceIndex = 15
+- IPAddress = 192.168.0.215
+
+Step 6: Start KitchenPrint-Pro with the correct AirPrint settings
+Replace the values below with the real IPAddress and InterfaceIndex from Step 5.
+
+$env:PRINT_CAPTURE_MDNS_HOST="192.168.0.215"
+$env:PRINT_CAPTURE_INTERFACE_INDEX="15"
+$env:PRINT_CAPTURE_AIRPRINT_NAME="KitchenPrintPro"
+python .\app.py
+
+Keep this PowerShell window open.
+
+Step 7: What should appear when it starts correctly
+You should see lines similar to:
+
+IPP receiver listening on 0.0.0.0:8631
+AirPrint advertise IP 192.168.0.215 interface_index=15
+AirPrint mDNS advertised as KitchenPrintPro on 192.168.0.215
+Running on http://127.0.0.1:5000
+Running on http://192.168.0.215:5000
+
+Step 8: Test from the PC
+Open this in a browser on the PC:
+
+http://127.0.0.1:5000
+
+You can also test from another device on the same network:
+
+http://192.168.0.215:5000
+
+Replace the IP with the restaurant PC's real IP.
+
+Step 9: Test from iPhone/iPad
+- Make sure the iPhone/iPad is on the same Wi-Fi as the PC
+- Open an app that supports printing
+- Tap Print
+- Look for printer name: KitchenPrintPro
+
+Step 10: If iPhone/iPad still cannot see KitchenPrintPro
+Open PowerShell as Administrator and run:
+
+netsh advfirewall firewall add rule name="KitchenPrint AirPrint mDNS" dir=in action=allow protocol=UDP localport=5353
+netsh advfirewall firewall add rule name="KitchenPrint IPP" dir=in action=allow protocol=TCP localport=8631
+netsh advfirewall firewall add rule name="KitchenPrint Web UI" dir=in action=allow protocol=TCP localport=5000
+
+Then:
+- reconnect Wi-Fi on the iPhone/iPad
+- restart KitchenPrint-Pro
+- test printing again
+
+Step 11: Optional verification commands
+Check the web port and IPP port are listening:
+
+netstat -ano | findstr ":5000 :8631"
+
+You should see 5000 and 8631 in LISTENING state.
+
+Check the app is reachable from the browser:
+
+http://127.0.0.1:5000
+
+Step 12: If printing reaches the app but fails on the PC
+That means AirPrint discovery is working, but the selected Windows printer name is wrong or missing.
+In that case, install/configure the real kitchen printer in Windows and then set the printer names inside KitchenPrint-Pro settings.
+
+Summary of what was actually done on this PC
+1. Confirmed Python was installed
+2. Installed Python dependencies from requirements.txt
+3. Checked the PC LAN IPv4 address
+4. Checked the correct InterfaceIndex for the Wi-Fi adapter
+5. Started app.py with:
+   - PRINT_CAPTURE_MDNS_HOST
+   - PRINT_CAPTURE_INTERFACE_INDEX
+   - PRINT_CAPTURE_AIRPRINT_NAME
+6. Confirmed the app was listening on:
+   - TCP 5000
+   - TCP 8631
+7. Confirmed AirPrint mDNS was advertised as KitchenPrintPro
+
+Exact startup template to reuse on any restaurant PC
+
+cd "C:\Path\To\KitchenPrint-Pro"
+python -m pip install -r requirements.txt
+Get-NetIPAddress -AddressFamily IPv4 | Select-Object InterfaceIndex,IPAddress,InterfaceAlias | Format-Table -AutoSize
+$env:PRINT_CAPTURE_MDNS_HOST="REPLACE_WITH_PC_IP"
+$env:PRINT_CAPTURE_INTERFACE_INDEX="REPLACE_WITH_INTERFACE_INDEX"
+$env:PRINT_CAPTURE_AIRPRINT_NAME="KitchenPrintPro"
+python .\app.py
