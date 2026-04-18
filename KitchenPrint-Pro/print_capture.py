@@ -966,24 +966,41 @@ class NativeBonjourAdvertiser:
             b"kind": b"document,photo",
         })
 
-        ipp_ref = ctypes.c_void_p()
-        rc = self._DNSServiceRegister(
-            ctypes.byref(ipp_ref),
-            0,
-            self.interface_index,
-            self.service_name.encode("utf-8"),
-            b"_ipp._tcp,_universal",
-            None,
-            host_target,
-            socket.htons(self.port),
-            len(txt),
-            txt,
-            None,
-            None,
-        )
-        if rc != 0:
+        refs: list[ctypes.c_void_p] = []
+
+        def _register(regtype: bytes) -> bool:
+            ref = ctypes.c_void_p()
+            rc = self._DNSServiceRegister(
+                ctypes.byref(ref),
+                0,
+                self.interface_index,
+                self.service_name.encode("utf-8"),
+                regtype,
+                None,
+                host_target,
+                socket.htons(self.port),
+                len(txt),
+                txt,
+                None,
+                None,
+            )
+            if rc != 0:
+                return False
+            refs.append(ref)
+            return True
+
+        if not _register(b"_ipp._tcp,_universal"):
             return False
-        self._refs = [ipp_ref]
+        if not _register(b"_ipp._tcp"):
+            for ref in refs:
+                try:
+                    self._DNSServiceRefDeallocate(ref)
+                except Exception:
+                    pass
+            return False
+        _register(b"_printer._tcp")
+
+        self._refs = refs
         self._thread = threading.Thread(target=self._pump, daemon=True)
         self._thread.start()
         return True
