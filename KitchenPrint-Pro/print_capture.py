@@ -934,10 +934,10 @@ def start_ipp_receiver_if_available(jobs_dir: str, host: str, port: int, public_
 
 class NativeBonjourAdvertiser:
     def __init__(self, service_name: str, host: str, port: int):
-        self.service_name = service_name
-        self.host = host
+        self.service_name = str(service_name or "").strip().replace(" ", "")
+        self.host = str(host or "").strip()
         self.port = int(port)
-        self.interface_index = get_interface_index_for_ip(host)
+        self.interface_index = get_interface_index_for_ip(self.host)
         self._refs: list[ctypes.c_void_p] = []
         self._stop = threading.Event()
         self._thread: Optional[threading.Thread] = None
@@ -949,6 +949,7 @@ class NativeBonjourAdvertiser:
             return False
 
         self._configure_api(lib)
+        host_target = (self.service_name + ".local").encode("utf-8")
         txt = _build_txt_record({
             b"txtvers": b"1",
             b"qtotal": b"1",
@@ -973,7 +974,7 @@ class NativeBonjourAdvertiser:
             self.service_name.encode("utf-8"),
             b"_ipp._tcp,_universal",
             None,
-            None,
+            host_target,
             socket.htons(self.port),
             len(txt),
             txt,
