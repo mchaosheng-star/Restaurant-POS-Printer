@@ -1031,10 +1031,11 @@ def start_native_airprint_mdns_if_available(service_name: str, host: str, port: 
 def start_airprint_mdns_if_available(service_name: str, host: str, port: int) -> bool:
     try:
         from zeroconf import ServiceInfo, Zeroconf  # type: ignore
+        from zeroconf import InterfaceChoice, IPVersion  # type: ignore
     except Exception:
         return False
 
-    zc = Zeroconf()
+    zc = Zeroconf(interfaces=InterfaceChoice.All, ip_version=IPVersion.V4Only)
     props = {
         b"txtvers": b"1",
         b"qtotal": b"1",
@@ -1072,12 +1073,23 @@ def start_airprint_mdns_if_available(service_name: str, host: str, port: int) ->
             zc.close()
         except Exception:
             pass
-        return False
+        try:
+            zc2 = Zeroconf(interfaces=InterfaceChoice.Default, ip_version=IPVersion.V4Only)
+            zc2.register_service(ipp)
+            zc2.register_service(printer)
+            zc = zc2
+        except Exception:
+            try:
+                zc.close()
+            except Exception:
+                pass
+            return False
 
     def _keepalive():
         while True:
             time.sleep(3600)
 
     threading.Thread(target=_keepalive, daemon=True).start()
+    globals()["_kitchenprint_zeroconf"] = zc
     return True
 

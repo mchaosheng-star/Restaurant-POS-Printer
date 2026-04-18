@@ -50,9 +50,10 @@ In this example:
 Step 6: Start KitchenPrint-Pro with the correct AirPrint settings
 Replace the values below with the real IPAddress and InterfaceIndex from Step 5.
 
-$env:PRINT_CAPTURE_MDNS_HOST="192.168.0.215"
+$env:PRINT_CAPTURE_MDNS_HOST="192.168.1.201"
 $env:PRINT_CAPTURE_INTERFACE_INDEX="15"
 $env:PRINT_CAPTURE_AIRPRINT_NAME="KitchenPrintPro"
+$env:PRINT_CAPTURE_USE_NATIVE_MDNS="1"
 python .\app.py
 
 Keep this PowerShell window open.
