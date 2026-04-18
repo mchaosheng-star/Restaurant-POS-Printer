@@ -37,6 +37,12 @@ Run:
 
 Get-NetIPAddress -AddressFamily IPv4 | Select-Object InterfaceIndex,IPAddress,InterfaceAlias | Format-Table -AutoSize
 
+
+CMD run admin
+
+netsh interface ipv4 show interfaces
+
+
 Find the row for the network adapter the PC is actually using, usually "Wi-Fi".
 
 Example output:
