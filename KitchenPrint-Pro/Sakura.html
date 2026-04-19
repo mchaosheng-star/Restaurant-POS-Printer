@@ -958,13 +958,6 @@
       `;
     }
 
-    function formatOptionText(option) {
-      const name = String(option?.name || "").trim();
-      if (!name) return "";
-      const zh = String(option?.nameZh || "").trim();
-      return zh ? `${name} / ${zh}` : name;
-    }
-
     function buildQueueItemsHtml(items) {
       const list = Array.isArray(items) ? items : [];
       const rows = list
@@ -972,10 +965,7 @@
           const qty = Number(item?.quantity || 1) || 1;
           const name = String(item?.name || "").trim();
           if (!name) return "";
-          const zh = String(item?.nameZh || "").trim();
-          const options = Array.isArray(item?.selectedOptions) ? item.selectedOptions.map(formatOptionText).filter(Boolean).join(", ") : "";
-          const note = String(item?.comment || "").trim();
-          return `<div class="order-summary">${escapeHtml(`${qty}x ${name}`)}${zh ? ` / ${escapeHtml(zh)}` : ""}${options ? ` (Opts: ${escapeHtml(options)})` : ""}${note ? ` (Note: ${escapeHtml(note)})` : ""}</div>`;
+          return `<div class="order-summary">${escapeHtml(`${qty}x ${name}`)}</div>`;
         })
         .filter(Boolean);
       return rows.join("") || `<div class="order-summary">No items</div>`;
@@ -1208,7 +1198,7 @@
       }
 
       currentOrder.forEach(item => {
-        const optionsText = (item.selectedOptions || []).map(formatOptionText).filter(Boolean).join(", ");
+        const optionsText = (item.selectedOptions || []).map(o => o.name).join(", ");
         const zh = String(item.nameZh || "").trim();
 
         const row = document.createElement("div");
@@ -1429,7 +1419,7 @@
         const open = !!historyExpanded[key];
         const itemLines = items.map(i => {
           const zh = String(i.nameZh || "").trim();
-          const options = Array.isArray(i.selectedOptions) ? i.selectedOptions.map(formatOptionText).filter(Boolean).join(", ") : "";
+          const options = Array.isArray(i.selectedOptions) ? i.selectedOptions.map(o => o.name).filter(Boolean).join(", ") : "";
           const note = String(i.comment || "").trim();
           return `<div class="order-meta detail-line">${escapeHtml(`${i.quantity || 1}x ${i.name || ""}`)}${zh ? ` / ${escapeHtml(zh)}` : ""}${options ? ` (Opts: ${escapeHtml(options)})` : ""}${note ? ` (Note: ${escapeHtml(note)})` : ""}</div>`;
         }).join("");
@@ -1640,15 +1630,11 @@
       list.innerHTML = "";
       (item.options || []).forEach(opt => {
         const name = typeof opt === "string" ? opt : opt.name;
-        const nameZh = typeof opt === "string" ? "" : String(opt.nameZh || "").trim();
         const row = document.createElement("label");
         row.className = "order-item option-row";
-        row.dataset.optionName = String(name || "").trim();
-        row.dataset.optionZh = nameZh;
         row.innerHTML = `
           <div class="order-main">
             <div class="order-title option-name">${escapeHtml(name)}</div>
-            ${nameZh ? `<div class="order-meta">${escapeHtml(nameZh)}</div>` : ""}
           </div>
           <input type="checkbox">
         `;
@@ -1686,9 +1672,8 @@
       rows.forEach(row => {
         const checked = row.querySelector("input").checked;
         if (!checked) return;
-        const name = String(row.dataset.optionName || "").trim();
-        const nameZh = String(row.dataset.optionZh || "").trim();
-        selected.push({ name, nameZh, price: 0 });
+        const name = row.querySelector(".option-name").textContent;
+        selected.push({ name, price: 0 });
       });
 
       lineCounter += 1;

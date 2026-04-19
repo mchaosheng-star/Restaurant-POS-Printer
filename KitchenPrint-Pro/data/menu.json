@@ -808,23 +808,23 @@
       "selectMin": 2,
       "selectMax": 2,
       "options": [
-        { "name": "Vegetable & Tofu", "nameZh": "蔬菜豆腐", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 0 },
-        { "name": "Calamari", "nameZh": "鱿鱼", "price": 0 },
-        { "name": "Salmon", "nameZh": "三文鱼", "price": 0 },
-        { "name": "Red Snapper", "nameZh": "红鲷鱼", "price": 0 },
-        { "name": "Steak", "nameZh": "牛排", "price": 0 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 0 },
-        { "name": "Golden Shrimp", "nameZh": "黄金虾", "price": 0 },
-        { "name": "Garlic Shrimp", "nameZh": "蒜香虾", "price": 0 },
-        { "name": "Scallop", "nameZh": "扇贝", "price": 0 },
-        { "name": "Filet Mignon", "nameZh": "菲力牛排", "price": 0 },
-        { "name": "Twin Tuna", "nameZh": "双份金枪鱼", "price": 0 },
-        { "name": "Seabass", "nameZh": "海鲈鱼", "price": 0 },
-        { "name": "Garlic Scallop", "nameZh": "蒜香扇贝", "price": 0 },
-        { "name": "Golden Scallop", "nameZh": "黄金扇贝", "price": 0 },
-        { "name": "Lamb Chop", "nameZh": "羊排", "price": 0 },
-        { "name": "Twin Lobster (18oz)", "nameZh": "双龙虾（18盎司）", "price": 0 }
+        { "name": "Vegetable & Tofu", "price": 0 },
+        { "name": "Chicken", "price": 0 },
+        { "name": "Calamari", "price": 0 },
+        { "name": "Salmon", "price": 0 },
+        { "name": "Red Snapper", "price": 0 },
+        { "name": "Steak", "price": 0 },
+        { "name": "Shrimp", "price": 0 },
+        { "name": "Golden Shrimp", "price": 0 },
+        { "name": "Garlic Shrimp", "price": 0 },
+        { "name": "Scallop", "price": 0 },
+        { "name": "Filet Mignon", "price": 0 },
+        { "name": "Twin Tuna", "price": 0 },
+        { "name": "Seabass", "price": 0 },
+        { "name": "Garlic Scallop", "price": 0 },
+        { "name": "Golden Scallop", "price": 0 },
+        { "name": "Lamb Chop", "price": 0 },
+        { "name": "Twin Lobster (18oz)", "price": 0 }
       ]
     },
     {
@@ -835,23 +835,23 @@
       "selectMin": 3,
       "selectMax": 3,
       "options": [
-        { "name": "Vegetable & Tofu", "nameZh": "蔬菜豆腐", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 0 },
-        { "name": "Calamari", "nameZh": "鱿鱼", "price": 0 },
-        { "name": "Salmon", "nameZh": "三文鱼", "price": 0 },
-        { "name": "Red Snapper", "nameZh": "红鲷鱼", "price": 0 },
-        { "name": "Steak", "nameZh": "牛排", "price": 0 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 0 },
-        { "name": "Golden Shrimp", "nameZh": "黄金虾", "price": 0 },
-        { "name": "Garlic Shrimp", "nameZh": "蒜香虾", "price": 0 },
-        { "name": "Scallop", "nameZh": "扇贝", "price": 0 },
-        { "name": "Filet Mignon", "nameZh": "菲力牛排", "price": 0 },
-        { "name": "Twin Tuna", "nameZh": "双份金枪鱼", "price": 0 },
-        { "name": "Seabass", "nameZh": "海鲈鱼", "price": 0 },
-        { "name": "Garlic Scallop", "nameZh": "蒜香扇贝", "price": 0 },
-        { "name": "Golden Scallop", "nameZh": "黄金扇贝", "price": 0 },
-        { "name": "Lamb Chop", "nameZh": "羊排", "price": 0 },
-        { "name": "Twin Lobster (18oz)", "nameZh": "双龙虾（18盎司）", "price": 0 }
+        { "name": "Vegetable & Tofu", "price": 0 },
+        { "name": "Chicken", "price": 0 },
+        { "name": "Calamari", "price": 0 },
+        { "name": "Salmon", "price": 0 },
+        { "name": "Red Snapper", "price": 0 },
+        { "name": "Steak", "price": 0 },
+        { "name": "Shrimp", "price": 0 },
+        { "name": "Golden Shrimp", "price": 0 },
+        { "name": "Garlic Shrimp", "price": 0 },
+        { "name": "Scallop", "price": 0 },
+        { "name": "Filet Mignon", "price": 0 },
+        { "name": "Twin Tuna", "price": 0 },
+        { "name": "Seabass", "price": 0 },
+        { "name": "Garlic Scallop", "price": 0 },
+        { "name": "Golden Scallop", "price": 0 },
+        { "name": "Lamb Chop", "price": 0 },
+        { "name": "Twin Lobster (18oz)", "price": 0 }
       ]
     },
     {
@@ -1048,11 +1048,11 @@
       "selectMin": 1,
       "selectMax": 1,
       "options": [
-        { "name": "Vegetable", "nameZh": "蔬菜", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 1 },
-        { "name": "Beef", "nameZh": "牛肉", "price": 2 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 2 },
-        { "name": "Combination", "nameZh": "组合", "price": 3 }
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
       ]
     },
     {
@@ -1063,11 +1063,11 @@
       "selectMin": 1,
       "selectMax": 1,
       "options": [
-        { "name": "Vegetable", "nameZh": "蔬菜", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 1 },
-        { "name": "Beef", "nameZh": "牛肉", "price": 2 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 2 },
-        { "name": "Combination", "nameZh": "组合", "price": 3 }
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
       ]
     },
     {
@@ -1078,11 +1078,11 @@
       "selectMin": 1,
       "selectMax": 1,
       "options": [
-        { "name": "Vegetable", "nameZh": "蔬菜", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 1 },
-        { "name": "Beef", "nameZh": "牛肉", "price": 2 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 2 },
-        { "name": "Combination", "nameZh": "组合", "price": 3 }
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
       ]
     },
     {
@@ -1093,11 +1093,11 @@
       "selectMin": 1,
       "selectMax": 1,
       "options": [
-        { "name": "Vegetable", "nameZh": "蔬菜", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 1 },
-        { "name": "Beef", "nameZh": "牛肉", "price": 2 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 2 },
-        { "name": "Combination", "nameZh": "组合", "price": 3 }
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
       ]
     }
   ],
@@ -1110,11 +1110,11 @@
       "selectMin": 1,
       "selectMax": 1,
       "options": [
-        { "name": "Vegetable", "nameZh": "蔬菜", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 1 },
-        { "name": "Beef", "nameZh": "牛肉", "price": 2 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 2 },
-        { "name": "Combination", "nameZh": "组合", "price": 3 }
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
       ]
     },
     {
@@ -1125,11 +1125,11 @@
       "selectMin": 1,
       "selectMax": 1,
       "options": [
-        { "name": "Vegetable", "nameZh": "蔬菜", "price": 0 },
-        { "name": "Chicken", "nameZh": "鸡肉", "price": 1 },
-        { "name": "Beef", "nameZh": "牛肉", "price": 2 },
-        { "name": "Shrimp", "nameZh": "虾", "price": 2 },
-        { "name": "Combination", "nameZh": "组合", "price": 3 }
+        { "name": "Vegetable", "price": 0 },
+        { "name": "Chicken", "price": 1 },
+        { "name": "Beef", "price": 2 },
+        { "name": "Shrimp", "price": 2 },
+        { "name": "Combination", "price": 3 }
       ]
     },
     {
